@@ -1,0 +1,12 @@
+<h2>Page d'accueil</h2>
+<p>Bienvenue sur la page d'accueil de l'application.</p>
+
+@if (helloMessage) {
+  <div>
+    <h3>{{ helloMessage }}</h3>
+  </div>
+} @else {
+  <div>
+    <p>Chargement du message...</p>
+  </div>
+}
