@@ -1,15 +1,12 @@
-import { provideRouter, RouterModule } from '@angular/router';
-import { provideAnimations } from '@angular/platform-browser/animations';
-import { HomeComponent } from './home/home.component';
-import { provideHttpClient } from '@angular/common/http';
+import {provideRouter} from '@angular/router';
+import {provideAnimations} from '@angular/platform-browser/animations';
+import {provideHttpClient} from '@angular/common/http';
+import {routes} from './app.routes';
 
 export const appConfig = {
   providers: [
     provideHttpClient(),
-    provideRouter([
-      { path: 'home', component: HomeComponent },
-      // Vous pouvez ajouter ici d'autres routes
-    ]),
-    provideAnimations()  // Pour les animations de routage (si nécessaire)
+    provideRouter(routes),
+    provideAnimations()
   ],
 };

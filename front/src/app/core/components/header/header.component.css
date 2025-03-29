@@ -1,0 +1,45 @@
+.ui-menu-icons p {
+  font-size: 12px;
+  margin: 0 10px;
+  color: black;
+}
+
+.ui-menu-icons{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  padding-right: 1rem;
+}
+.header-content{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  margin: 0;
+}
+.user img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.user{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.user-info{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header-right{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
