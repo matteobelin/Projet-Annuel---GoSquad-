@@ -1,0 +1,18 @@
+<aside class="menu">
+  <!-- Logo -->
+  <div class="menu-logo">
+    <img src="assets/img/gogolog3.png" alt="logo" class="logo" />
+  </div>
+
+  @for (item of featureItems; track item.label) {
+    <div class="menu-item">
+      <a
+        [routerLink]="item.routerLink"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{exact: true}">
+        <i class="{{ item.icon }}"></i>
+        <span>{{ item.label }}</span>
+      </a>
+    </div>
+  }
+</aside>

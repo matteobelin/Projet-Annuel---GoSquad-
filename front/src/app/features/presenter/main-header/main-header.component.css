@@ -1,0 +1,23 @@
+.content{
+  display: flex;
+  align-items: center;
+  padding: 0.875rem;
+  gap: 1rem;
+}
+.content .logo img{
+  width: 7rem;
+  height: auto;
+}
+
+.separator{
+  height: 3rem;
+  width: 0.09rem;
+  background-color: #000000;
+}
+
+.content-title{
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.2rem;
+}
