@@ -1,5 +1,7 @@
 package com.gosquad.data;
 
+import com.gosquad.core.exceptions.NotFoundException;
+
 import java.sql.SQLException;
 import java.util.List;
 import java.sql.Connection;
@@ -29,9 +31,26 @@ public abstract class Repository<T extends Model> {
                 results.add(item);
             }
         }
-
         return results;
     }
+
+    public T getById(int id) throws SQLException, NotFoundException {
+        String query = "SELECT * FROM " + tableName + " WHERE id = ?";
+        try (Connection connection = DataConfig.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return mapResultSetToEntity(rs);
+            } else {
+                throw new NotFoundException("No record found with ID: " + id);
+            }
+        }
+    }
+
+
 
     protected abstract T mapResultSetToEntity(ResultSet rs) throws SQLException;
 }

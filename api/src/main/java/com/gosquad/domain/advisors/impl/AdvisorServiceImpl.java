@@ -1,5 +1,6 @@
 package com.gosquad.domain.advisors.impl;
 
+import com.gosquad.core.exceptions.NotFoundException;
 import com.gosquad.data.advisors.AdvisorModel;
 import com.gosquad.data.advisors.AdvisorRepository;
 import com.gosquad.domain.advisors.AdvisorEntity;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
+
 
 @Service
 public class AdvisorServiceImpl implements AdvisorService {
@@ -25,5 +27,11 @@ public class AdvisorServiceImpl implements AdvisorService {
     public List<AdvisorEntity> getAllAdvisors() throws SQLException {
         List<AdvisorModel> advisorModels = advisorRepository.getAll();
         return advisorMapper.modelToEntity(advisorModels);
+    }
+
+    @Override
+    public AdvisorEntity getAdvisorById(int id) throws SQLException,NotFoundException {
+        AdvisorModel advisorModel = advisorRepository.getById(id);
+        return advisorMapper.modelToEntity(advisorModel);
     }
 }
