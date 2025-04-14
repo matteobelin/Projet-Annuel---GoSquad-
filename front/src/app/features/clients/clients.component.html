@@ -2,4 +2,23 @@
   [icon]="'fas fa-users'"
   [title]="'Clients'"
 ></app-main-header>
-<p>clients works!</p>
+
+<div class="clients-container">
+  @if (loading) {
+    <div class="loading">
+      <p>Chargement des clients...</p>
+    </div>
+  } @else if (error) {
+    <div class="error">
+      <p>{{ error }}</p>
+      <button (click)="loadClients()" class="btn-retry">Réessayer</button>
+    </div>
+  } @else {
+    <app-client-list
+      [clients]="clients"
+      (viewClient)="handleViewClient($event)"
+      (editClient)="handleEditClient($event)"
+      (deleteClient)="handleDeleteClient($event)"
+    ></app-client-list>
+  }
+</div>
