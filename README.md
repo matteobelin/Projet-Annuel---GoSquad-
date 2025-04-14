@@ -1,59 +1,64 @@
-# Projet-Annuel---GoSquad-
-Projet Annuel ESGI 2025 
+# GoSquad - Plateforme de Gestion pour Agences de Voyage
 
-# Roadmap du Projet GOSQUAD
+GoSquad est une application complète de gestion de voyages pour les agences de voyage, conçue pour simplifier la gestion des clients, des voyages, des devis et des factures.
 
-## 1. Conception & Préparation (1-2 semaines)
+Projet Annuel ESGI 2025
+
+## 🚀 État du Projet
+
+Le projet est actuellement en développement actif. Voici l'état d'avancement des différentes fonctionnalités :
+
+### Fonctionnalités Implémentées
 ✅ Définition des **besoins** et rédaction du cahier des charges.  
 ✅ Élaboration des **modèles de données** (clients, voyages, activités, devis, facturation…).  
 ✅ Création du **schéma API** (routes REST, endpoints principaux).  
 ✅ Mise en place de l’**environnement de développement** (Git, Angular, Spring Boot, MongoDB).  
 ✅ Configuration de **l’authentification** avec JWT.  
 
-## 2. MVP (4-6 semaines)
-✅ Développement des **modules essentiels** :
-- Gestion des utilisateurs (connexion, rôles, permissions).  
-- Création et gestion des **clients**.  
-- Création et gestion des **voyages** (destination, budget, participants).  
-- Création et gestion des **devis et factures**.  
-- Suivi des **paiements** et rappels automatiques.  
+### Fonctionnalités en Cours de Développement
+🔄 Développement des **modules essentiels** :
+- 🔄 Gestion des utilisateurs (connexion, rôles, permissions).  
+- 🔄 Création et gestion des **clients**.  
+- 🔄 Création et gestion des **voyages** (destination, budget, participants).  
+- 🔄 Création et gestion des **devis et factures**.  
+- 🔄 Suivi des **paiements** et rappels automatiques.  
 ✅ Déploiement d’un **premier prototype** sur Heroku/Vercel pour tests internes.  
 
-## 3. Fonctionnalités avancées (6-8 semaines)
-✅ Ajout des **suggestions automatiques** basées sur le budget.  
-✅ Intégration de **paiements en ligne** (Stripe, PayPal).  
-✅ Système de **notifications** (email, push).  
-✅ Intégration avec **Google Calendar**.  
-✅ Système de **chat en ligne**.  
-✅ Optimisation de la sécurité et conformité RGPD.  
+### Fonctionnalités Planifiées
+📅 Ajout des **suggestions automatiques** basées sur le budget.  
+📅 Intégration de **paiements en ligne** (Stripe, PayPal).  
+📅 Système de **notifications** (email, push).  
+📅 Intégration avec **Google Calendar**.  
+📅 Système de **chat en ligne**.  
+📅 Optimisation de la sécurité et conformité RGPD.  
 
-## 4. Tests & Lancement (3-4 semaines)
-✅ Tests unitaires et E2E avec Cypress/JUnit.  
-✅ Corrections des bugs et optimisation des performances.  
-✅ Déploiement final et communication avec les agences.  
+📅 Tests unitaires et E2E avec Cypress/JUnit.  
+📅 Corrections des bugs et optimisation des performances.  
+📅 Déploiement final et communication avec les agences.  
 
 # Architecture Technique
 
 Pour une documentation détaillée de l'architecture, veuillez consulter le fichier [ARCHITECTURE.md](ARCHITECTURE.md).
 
-## 📌 Stack technique
+## 🛠️ Stack Technique
 | Composant  | Technologie |
 |------------|-------------|
-| **Front-end** | Angular, Angular Material, NgRx (optionnel) |
-| **Back-end** | Spring Boot (REST API) |
-| **Base de données** | MongoDB Atlas |
+| **Frontend** | Angular 17+, Angular Material |
+| **Backend** | Spring Boot 3.x (REST API) |
+| **Base de données** | PostgreSQL 15+ |
 | **Auth & Sécurité** | JWT, Spring Security |
-| **Déploiement** | Vercel (Front), Railway/Heroku (Back), MongoDB Atlas (DB) |
+| **Déploiement** | Vercel (Frontend), Railway/Heroku (Backend), PostgreSQL (Database) |
+| **DevOps** | Docker, GitHub Actions |
 
-## 📌 Schéma API REST
-### Authentification
+## 🔌 API REST
+### Authentification (Planifiée)
 ```
 POST /api/auth/register  - Inscription d’un utilisateur
 POST /api/auth/login     - Connexion et génération d’un JWT
 GET  /api/auth/me        - Récupérer les infos de l’utilisateur connecté
 ```
 
-### Gestion des clients
+### Gestion des clients (En développement)
 ```
 POST   /api/clients       - Ajouter un nouveau client
 GET    /api/clients       - Récupérer la liste des clients
@@ -62,7 +67,7 @@ PUT    /api/clients/{id}  - Modifier un client
 DELETE /api/clients/{id}  - Supprimer un client
 ```
 
-### Gestion des voyages
+### Gestion des voyages (En développement)
 ```
 POST   /api/voyages       - Ajouter un voyage
 GET    /api/voyages       - Récupérer la liste des voyages
@@ -71,7 +76,13 @@ PUT    /api/voyages/{id}  - Modifier un voyage
 DELETE /api/voyages/{id}  - Supprimer un voyage
 ```
 
-### Gestion des devis & factures
+### Gestion des conseillers (Implémentée)
+```
+GET    /getAllAdvisor     - Récupérer la liste des conseillers
+GET    /getAdvisor/{id}   - Récupérer un conseiller spécifique
+```
+
+### Gestion des devis & factures (Planifiée)
 ```
 POST   /api/devis       - Créer un devis
 GET    /api/devis/{id}  - Récupérer un devis
@@ -79,7 +90,36 @@ POST   /api/factures    - Générer une facture
 GET    /api/factures/{id} - Récupérer une facture
 ```
 
-## 📌 Modèle de données (MongoDB)
+## 📋 Structure du Projet
+
+```
+projet/
+├── api/                  # Backend Spring Boot
+│   └── src/
+│       └── main/
+│           ├── java/
+│           │   └── com/
+│           │       └── gosquad/
+│           │           ├── core/              # Exceptions, utilitaires
+│           │           ├── data/              # Couche d'accès aux données
+│           │           ├── domain/            # Logique métier
+│           │           ├── infrastructure/    # Configuration, sécurité
+│           │           └── presentation/      # Contrôleurs REST
+│           └── resources/                     # Configuration, migrations
+├── front/                # Frontend Angular
+│   └── src/
+│       └── app/
+│           ├── core/                          # Composants et services partagés
+│           ├── features/                      # Modules fonctionnels
+│           │   ├── clients/
+│           │   ├── voyages/
+│           │   ├── payments/
+│           │   └── ...
+│           └── shared/                        # Composants partagés
+└── diagrams/             # Diagrammes d'architecture
+```
+
+## 📌 Modèle de données (PostgreSQL)
 ### Client
 ```json
 {
@@ -121,23 +161,34 @@ GET    /api/factures/{id} - Récupérer une facture
 }
 ```
 
-# Plan de développement détaillé
-## 📌 Semaine 1-2 : Configuration et Authentification
+## 🚀 Démarrage du Projet
+
+### Prérequis
 - Mise en place de l’environnement (Angular, Spring Boot, MongoDB Atlas).
 - Développement de l’authentification (JWT).
 - Création du premier tableau de bord.
 
-## 📌 Semaine 3-4 : Gestion des clients & voyages
-- API pour la gestion des clients.
-- API pour la gestion des voyages.
-- Interface Angular pour afficher les clients et voyages.
+## 📝 Plan de Développement
 
-## 📌 Semaine 5-6 : Gestion des paiements & facturation
-- Ajout des factures et suivi des paiements.
-- Génération de devis et export en PDF.
+### Phase 1: MVP (En cours)
+- Finalisation de l'authentification
+- Implémentation complète des API clients et voyages
+- Développement du système de devis et facturation
 
-## 📌 Semaine 7-8 : Finalisation et tests
-- Optimisation UI et UX.
-- Déploiement et tests finaux.
+### Phase 2: Fonctionnalités Avancées
+- Intégration des paiements en ligne
+- Système de notifications
+- Intégration avec Google Calendar
 
-🚀 **Prêt à coder et à transformer cette vision en réalité !** 🎯
+### Phase 3: Optimisation et Finalisation
+- Système de chat en ligne
+- Optimisation des performances
+- Tests complets et déploiement final
+
+## 👥 Équipe
+
+Projet Annuel ESGI 2025
+
+## 📄 Licence
+
+Ce projet est sous licence [MIT](LICENSE).
