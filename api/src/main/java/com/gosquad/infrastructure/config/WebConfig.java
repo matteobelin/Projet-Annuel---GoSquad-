@@ -1,4 +1,4 @@
-package org.example.api.config;
+package com.gosquad.infrastructure.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

@@ -1,4 +1,4 @@
-package org.example.api;
+package com.gosquad.presentation;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
