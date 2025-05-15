@@ -6,9 +6,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DataConfig {
-    private static final Dotenv dotenv = Dotenv.configure()
-            .directory("../")
-            .load();
+    private static final Dotenv dotenv = Dotenv.load();
 
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/" + dotenv.get("POSTGRES_DB");
     private static final String DB_USER = dotenv.get("POSTGRES_USER");
