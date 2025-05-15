@@ -33,6 +33,9 @@ Projet Annuel ESGI 2025
 ✅ Déploiement final et communication avec les agences.  
 
 # Architecture Technique
+
+Pour une documentation détaillée de l'architecture, veuillez consulter le fichier [ARCHITECTURE.md](ARCHITECTURE.md).
+
 ## 📌 Stack technique
 | Composant  | Technologie |
 |------------|-------------|
@@ -138,4 +141,3 @@ GET    /api/factures/{id} - Récupérer une facture
 - Déploiement et tests finaux.
 
 🚀 **Prêt à coder et à transformer cette vision en réalité !** 🎯
-
