@@ -7,11 +7,12 @@ RUN npm install
 
 COPY . .
 
+ARG API_URL
+RUN echo "export const environment = { production: true, apiUrl: '${API_URL}' };" > ./src/environments/environment.prod.ts
+
 RUN npm run build --prod
 
-
 FROM nginx:alpine
-
 
 COPY --from=build /app/dist/front/browser /usr/share/nginx/html
 
