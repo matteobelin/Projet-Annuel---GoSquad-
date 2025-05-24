@@ -44,12 +44,26 @@
                   "maximumError": "8kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ]
             },
             "development": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "staging": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.staging.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -62,13 +76,15 @@
             },
             "development": {
               "buildTarget": "front:build:development"
+            },
+            "staging": {
+              "buildTarget": "front:build:staging"
             }
           },
           "defaultConfiguration": "development",
           "options": {
             "proxyConfig": "proxy.conf.json"
           }
-
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n"

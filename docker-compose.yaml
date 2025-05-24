@@ -1,12 +1,11 @@
-version: '3.8'
 
 services:
   postgres:
-    env_file:
-      - .env
     image: postgres:latest
     container_name: postgres_db
     restart: always
+    env_file:
+      - .env
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -15,6 +14,8 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
 
   adminer:
     image: adminer:latest
@@ -25,8 +26,46 @@ services:
     environment:
       ADMINER_DEFAULT_SERVER: postgres
       ADMINER_DESIGN: dracula
+    networks:
+      - app-network
+
+  app:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: java_app
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "8080:8080"
+    restart: always
+    networks:
+      - app-network
+
+  angular-app:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+      args:
+        - API_URL=http://localhost:8080
+    container_name: angular_app
+    ports:
+      - "4200:80"
+    restart: always
+    depends_on:
+      - app
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
 
-
+networks:
+  app-network:
+    driver: bridge
