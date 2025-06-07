@@ -14,7 +14,8 @@ public class AdvisorMapper {
                 advisorModel.getFirstname(),
                 advisorModel.getLastname(),
                 advisorModel.getEmail(),
-                advisorModel.getPhone()
+                advisorModel.getPhone(),
+                advisorModel.getRole()
         );
     }
 
@@ -32,7 +33,10 @@ public class AdvisorMapper {
                 advisorEntity.getFirstname(),
                 advisorEntity.getLastname(),
                 advisorEntity.getEmail(),
-                advisorEntity.getPhone()
+                advisorEntity.getPhone(),
+                null,
+                null,
+                advisorEntity.getRole()
         );
     }
 

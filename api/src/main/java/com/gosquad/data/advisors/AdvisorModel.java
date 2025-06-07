@@ -13,8 +13,9 @@ public class AdvisorModel extends Model {
     private String phone;
     private Integer compagnyId;
     private String password;
+    private String role;
 
-    public AdvisorModel(Integer id, String firstname, String lastname, String email, String phone, Integer compagnyId, String password) {
+    public AdvisorModel(Integer id, String firstname, String lastname, String email, String phone, Integer compagnyId, String password, String role) {
         super(id);
         this.firstname = firstname;
         this.lastname = lastname;
@@ -22,13 +23,16 @@ public class AdvisorModel extends Model {
         this.phone = phone;
         this.compagnyId = compagnyId;
         this.password = password;
+        this.role = role;
     }
 
-    public AdvisorModel(Integer id, String email, String password, Integer compagnyId) {
+    public AdvisorModel(Integer id, String email, String password, Integer compagnyId,String role) {
         super(id);
         this.email = email;
         this.password = password;
         this.compagnyId = compagnyId;
+        this.role = role;
     }
+
 
 }

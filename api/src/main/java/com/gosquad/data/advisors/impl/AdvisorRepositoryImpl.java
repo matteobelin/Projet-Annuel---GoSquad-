@@ -27,14 +27,16 @@ public class AdvisorRepositoryImpl extends Repository<AdvisorModel> implements A
                     rs.getString("email"),
                     rs.getString("phone_number"),
                     rs.getInt("compagny_id"),
-                    rs.getString("password")
+                    rs.getString("password"),
+                    rs.getString("role")
             );
         } catch (SQLException e) {
             return new AdvisorModel(
                     rs.getInt("id"),
                     rs.getString("email"),
                     rs.getString("password"),
-                    rs.getInt("compagny_id")
+                    rs.getInt("compagny_id"),
+                    rs.getString("role")
             );
         }
     }
@@ -42,7 +44,7 @@ public class AdvisorRepositoryImpl extends Repository<AdvisorModel> implements A
     @Override
     public AdvisorModel getByEmail(String email) throws SQLException, ConstraintViolationException {
         try {
-            return findBy("email", email, "id", "email", "password", "compagny_id"
+            return findBy("email", email, "id", "email", "password", "compagny_id","role"
             );
         } catch (NotFoundException e) {
             throw new ConstraintViolationException(e);

@@ -1,5 +1,6 @@
 package com.gosquad.domain.advisors.impl;
 
+import com.gosquad.core.exceptions.ConstraintViolationException;
 import com.gosquad.core.exceptions.NotFoundException;
 import com.gosquad.data.advisors.AdvisorModel;
 import com.gosquad.data.advisors.AdvisorRepository;
@@ -34,4 +35,5 @@ public class AdvisorServiceImpl implements AdvisorService {
         AdvisorModel advisorModel = advisorRepository.getById(id);
         return advisorMapper.modelToEntity(advisorModel);
     }
+
 }
