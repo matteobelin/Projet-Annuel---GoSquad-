@@ -50,6 +50,24 @@ public abstract class Repository<T extends Model> {
         }
     }
 
+    public T findBy(String column, Object value, String... selectedColumns) throws SQLException, NotFoundException {
+        String cols = (selectedColumns.length > 0) ? String.join(", ", selectedColumns) : "*";
+        String query = "SELECT " + cols + " FROM " + tableName + " WHERE " + column + " = ?";
+
+        try (Connection connection = DataConfig.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setObject(1, value);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return mapResultSetToEntity(rs);
+            } else {
+                throw new NotFoundException("No record found where " + column + " = " + value);
+            }
+        }
+    }
+
 
 
     protected abstract T mapResultSetToEntity(ResultSet rs) throws SQLException;

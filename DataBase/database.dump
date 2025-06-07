@@ -1,0 +1,43 @@
+-- Adminer 5.3.0 PostgreSQL 17.5 dump
+
+DROP TABLE IF EXISTS "Company";
+DROP SEQUENCE IF EXISTS "Company_id_seq";
+CREATE SEQUENCE "Company_id_seq" INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."Company" (
+    "id" integer DEFAULT nextval('"Company_id_seq"') NOT NULL,
+    "code" character(10) NOT NULL,
+    "name" character varying(255) NOT NULL,
+    CONSTRAINT "Company_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+INSERT INTO "Company" ("id", "code", "name") VALUES
+(1,	'GOSQUAD   ',	'Entreprise Gosquad');
+
+DROP TABLE IF EXISTS "advisor";
+DROP SEQUENCE IF EXISTS person_id_seq;
+CREATE SEQUENCE person_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."advisor" (
+    "id" integer DEFAULT nextval('person_id_seq') NOT NULL,
+    "firstname" character varying(255) NOT NULL,
+    "lastname" character varying(255) NOT NULL,
+    "email" character varying(255) NOT NULL UNIQUE,
+    "phone_number" character(10) NOT NULL,
+    "compagny_id" integer NOT NULL,
+    "password" character varying(255),
+    CONSTRAINT "person_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+CREATE UNIQUE INDEX advisor_email_key ON public.advisor USING btree (email);
+
+INSERT INTO "advisor" ("id", "firstname", "lastname", "email", "phone_number", "compagny_id", "password") VALUES
+(3,	'Matteo',	'Belin',	'matteo.belin@gosquad.com',	'678787878 ',	1,	NULL),
+(2,	'Jonas',	'Amozigh',	'jonas.amozigh@gmail.com',	'612345678 ',	1,	NULL),
+(1,	'Gedeon',	'Mutikanga',	'gedeon.mutikanga@gosquad.com',	'77777777  ',	1,	NULL);
+
+ALTER TABLE ONLY "public"."advisor" ADD CONSTRAINT "advisor_compagny_id_fkey" FOREIGN KEY (compagny_id) REFERENCES "Company"(id) NOT DEFERRABLE;
+
+-- 2025-06-07 12:07:04 UTC

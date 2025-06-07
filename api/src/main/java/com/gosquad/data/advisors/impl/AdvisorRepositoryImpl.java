@@ -1,5 +1,7 @@
 package com.gosquad.data.advisors.impl;
 
+import com.gosquad.core.exceptions.ConstraintViolationException;
+import com.gosquad.core.exceptions.NotFoundException;
 import com.gosquad.data.Repository;
 import com.gosquad.data.advisors.AdvisorModel;
 import com.gosquad.data.advisors.AdvisorRepository;
@@ -17,13 +19,33 @@ public class AdvisorRepositoryImpl extends Repository<AdvisorModel> implements A
 
     @Override
     protected AdvisorModel mapResultSetToEntity(ResultSet rs) throws SQLException {
-        return new AdvisorModel(
-                rs.getInt("id"),
-                rs.getString("firstname"),
-                rs.getString("lastname"),
-                rs.getString("email"),
-                rs.getString("phone_number")
-        );
+        try {
+            return new AdvisorModel(
+                    rs.getInt("id"),
+                    rs.getString("firstname"),
+                    rs.getString("lastname"),
+                    rs.getString("email"),
+                    rs.getString("phone_number"),
+                    rs.getInt("compagny_id"),
+                    rs.getString("password")
+            );
+        } catch (SQLException e) {
+            return new AdvisorModel(
+                    rs.getInt("id"),
+                    rs.getString("email"),
+                    rs.getString("password"),
+                    rs.getInt("compagny_id")
+            );
+        }
+    }
 
+    @Override
+    public AdvisorModel getByEmail(String email) throws SQLException, ConstraintViolationException {
+        try {
+            return findBy("email", email, "id", "email", "password", "compagny_id"
+            );
+        } catch (NotFoundException e) {
+            throw new ConstraintViolationException(e);
+        }
     }
 }
