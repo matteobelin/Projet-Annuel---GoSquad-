@@ -20,6 +20,10 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
+      - name: Make gradlew executable
+        working-directory: api
+        run: chmod +x ./gradlew
+
       - name: Build and run tests in api only
         working-directory: api
         run: ./gradlew clean build --no-daemon
