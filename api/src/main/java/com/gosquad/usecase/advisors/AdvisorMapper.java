@@ -1,5 +1,6 @@
-package com.gosquad.domain.advisors;
-import com.gosquad.data.advisors.AdvisorModel;
+package com.gosquad.usecase.advisors;
+import com.gosquad.domain.advisors.AdvisorEntity;
+import com.gosquad.infrastructure.persistence.advisors.AdvisorModel;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

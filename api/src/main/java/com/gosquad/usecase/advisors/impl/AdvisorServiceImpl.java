@@ -1,12 +1,11 @@
-package com.gosquad.domain.advisors.impl;
+package com.gosquad.usecase.advisors.impl;
 
-import com.gosquad.core.exceptions.ConstraintViolationException;
 import com.gosquad.core.exceptions.NotFoundException;
-import com.gosquad.data.advisors.AdvisorModel;
-import com.gosquad.data.advisors.AdvisorRepository;
+import com.gosquad.infrastructure.persistence.advisors.AdvisorModel;
+import com.gosquad.infrastructure.persistence.advisors.AdvisorRepository;
 import com.gosquad.domain.advisors.AdvisorEntity;
-import com.gosquad.domain.advisors.AdvisorMapper;
-import com.gosquad.domain.advisors.AdvisorService;
+import com.gosquad.usecase.advisors.AdvisorMapper;
+import com.gosquad.usecase.advisors.AdvisorService;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;

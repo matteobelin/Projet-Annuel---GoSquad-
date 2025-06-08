@@ -1,4 +1,4 @@
-package com.gosquad.domain.advisors.auth;
+package com.gosquad.usecase.auth;
 
 import com.gosquad.core.exceptions.ConstraintViolationException;
 import com.gosquad.core.exceptions.NotFoundException;

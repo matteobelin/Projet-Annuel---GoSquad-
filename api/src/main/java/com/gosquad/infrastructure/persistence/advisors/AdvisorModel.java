@@ -1,6 +1,6 @@
-package com.gosquad.data.advisors;
+package com.gosquad.infrastructure.persistence.advisors;
 
-import com.gosquad.data.Model;
+import com.gosquad.infrastructure.persistence.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

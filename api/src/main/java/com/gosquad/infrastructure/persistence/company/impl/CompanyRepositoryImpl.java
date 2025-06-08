@@ -1,8 +1,8 @@
-package com.gosquad.data.company.impl;
+package com.gosquad.infrastructure.persistence.company.impl;
 
-import com.gosquad.data.Repository;
-import com.gosquad.data.company.CompanyModel;
-import com.gosquad.data.company.CompanyRepository;
+import com.gosquad.infrastructure.persistence.Repository;
+import com.gosquad.infrastructure.persistence.company.CompanyModel;
+import com.gosquad.infrastructure.persistence.company.CompanyRepository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

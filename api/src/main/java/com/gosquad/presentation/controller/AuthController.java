@@ -2,7 +2,7 @@ package com.gosquad.presentation.controller;
 
 import com.gosquad.core.exceptions.ConstraintViolationException;
 import com.gosquad.core.exceptions.NotFoundException;
-import com.gosquad.domain.advisors.auth.AdvisorAuthService;
+import com.gosquad.usecase.auth.AdvisorAuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +34,7 @@ public class AuthController {
                     .body("Connexion réussie");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Échec de l'authentification");
+                    .body("Échec de l'authentification : code entreprise, email ou mot de passe invalide");
         }
     }
 }

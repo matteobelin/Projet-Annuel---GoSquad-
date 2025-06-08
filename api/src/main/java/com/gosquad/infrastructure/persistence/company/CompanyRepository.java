@@ -1,4 +1,4 @@
-package com.gosquad.data.company;
+package com.gosquad.infrastructure.persistence.company;
 import com.gosquad.core.exceptions.NotFoundException;
 
 

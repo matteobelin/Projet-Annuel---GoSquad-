@@ -1,4 +1,4 @@
-package com.gosquad.data;
+package com.gosquad.infrastructure.persistence;
 import lombok.Data;
 
 @Data

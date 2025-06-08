@@ -1,0 +1,53 @@
+package com.gosquad.infrastructure.jwt;
+
+import io.github.cdimascio.dotenv.Dotenv;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
+
+import java.security.Key;
+
+@Component
+public class JWTInterceptor implements HandlerInterceptor {
+
+    private static final Dotenv dotenv = Dotenv.load();
+
+    private static final String SECRET = dotenv.get("JWT_SECRET");
+    private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
+
+    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
+
+        final String authHeader  = request.getHeader("Authorization");
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Missing or invalid Authorization header");
+            return false;
+        }
+
+        String token = authHeader.substring(7);
+
+        try{
+            Claims claims = Jwts.parserBuilder()
+                                                .setSigningKey(key)
+                                                .build()
+                                                .parseClaimsJws(token)
+                                                .getBody();
+            request.setAttribute("advisorId", claims.getSubject());
+            request.setAttribute("role", claims.get("role"));
+            request.setAttribute("companyCode", claims.get("companyCode"));
+
+            return true;
+        }catch (Exception e){
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Invalid or expired token");
+            return false;
+        }
+
+    }
+
+}

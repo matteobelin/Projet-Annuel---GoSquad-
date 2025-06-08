@@ -1,11 +1,11 @@
-package com.gosquad.domain.advisors.auth;
+package com.gosquad.usecase.auth;
 
 import com.gosquad.core.exceptions.ConstraintViolationException;
 import com.gosquad.core.exceptions.NotFoundException;
-import com.gosquad.data.advisors.AdvisorModel;
-import com.gosquad.data.advisors.AdvisorRepository;
-import com.gosquad.data.company.CompanyModel;
-import com.gosquad.data.company.CompanyRepository;
+import com.gosquad.infrastructure.persistence.advisors.AdvisorModel;
+import com.gosquad.infrastructure.persistence.advisors.AdvisorRepository;
+import com.gosquad.infrastructure.persistence.company.CompanyModel;
+import com.gosquad.infrastructure.persistence.company.CompanyRepository;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

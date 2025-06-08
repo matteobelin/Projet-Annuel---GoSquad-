@@ -1,10 +1,10 @@
-package com.gosquad.data.advisors.impl;
+package com.gosquad.infrastructure.persistence.advisors.impl;
 
 import com.gosquad.core.exceptions.ConstraintViolationException;
 import com.gosquad.core.exceptions.NotFoundException;
-import com.gosquad.data.Repository;
-import com.gosquad.data.advisors.AdvisorModel;
-import com.gosquad.data.advisors.AdvisorRepository;
+import com.gosquad.infrastructure.persistence.advisors.AdvisorModel;
+import com.gosquad.infrastructure.persistence.Repository;
+import com.gosquad.infrastructure.persistence.advisors.AdvisorRepository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

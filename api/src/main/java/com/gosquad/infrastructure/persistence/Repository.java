@@ -1,6 +1,7 @@
-package com.gosquad.data;
+package com.gosquad.infrastructure.persistence;
 
 import com.gosquad.core.exceptions.NotFoundException;
+import com.gosquad.infrastructure.config.DataConfig;
 
 import java.sql.SQLException;
 import java.util.List;

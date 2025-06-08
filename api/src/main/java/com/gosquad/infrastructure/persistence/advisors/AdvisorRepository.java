@@ -1,4 +1,4 @@
-package com.gosquad.data.advisors;
+package com.gosquad.infrastructure.persistence.advisors;
 
 
 import com.gosquad.core.exceptions.ConstraintViolationException;

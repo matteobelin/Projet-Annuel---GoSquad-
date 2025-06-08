@@ -1,4 +1,4 @@
-package com.gosquad.data;
+package com.gosquad.infrastructure.config;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.Connection;
