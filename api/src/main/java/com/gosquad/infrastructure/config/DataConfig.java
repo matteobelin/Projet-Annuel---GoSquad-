@@ -26,6 +26,8 @@ public class DataConfig {
         return System.getenv(key);
     }
 
+    private static final boolean IS_TEST = Boolean.parseBoolean(System.getProperty("test.env", "false"));
+
     private static final String DB_HOST = (dotenv != null) ? "localhost" : "postgres";
 
     private static final String DB_URL = "jdbc:postgresql://" + DB_HOST + ":5432/" + getEnv("POSTGRES_DB");
@@ -33,6 +35,9 @@ public class DataConfig {
     private static final String DB_PASSWORD = getEnv("POSTGRES_PASSWORD");
 
     public static Connection getConnection() throws SQLException {
+        if (IS_TEST) {
+            return DriverManager.getConnection("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL", "sa", "");
+        }
         return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
     }
 }

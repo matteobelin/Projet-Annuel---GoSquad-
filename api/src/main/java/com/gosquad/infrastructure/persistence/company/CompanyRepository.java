@@ -6,5 +6,4 @@ import java.sql.SQLException;
 
 public interface CompanyRepository {
     CompanyModel getById(int id) throws SQLException, NotFoundException;
-
 }
