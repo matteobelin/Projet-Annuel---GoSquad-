@@ -13,12 +13,16 @@ import java.security.Key;
 
 @Component
 public class JWTInterceptor implements HandlerInterceptor {
+    private final Key key;
 
-    private static final Dotenv dotenv = Dotenv.load();
+    public JWTInterceptor() {
+        String secret = Dotenv.load().get("JWT_SECRET");
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+    }
 
-    private static final String SECRET = dotenv.get("JWT_SECRET");
-    private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
-
+    public JWTInterceptor(String jwtSecret) {
+        this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+    }
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
 
         final String authHeader  = request.getHeader("Authorization");

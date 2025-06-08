@@ -9,6 +9,7 @@ import com.gosquad.infrastructure.persistence.company.CompanyRepository;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -19,16 +20,23 @@ import java.util.Date;
 @Service
 public class AdvisorAuthServiceImpl implements AdvisorAuthService {
 
-    private static final Dotenv dotenv = Dotenv.load();
     private final AdvisorRepository advisorRepository;
     private final CompanyRepository companyRepository;
+    private final Key key;
 
-    private static final String SECRET = dotenv.get("JWT_SECRET");
-    private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
-
+    @Autowired
     public AdvisorAuthServiceImpl(AdvisorRepository advisorRepository, CompanyRepository companyRepository) {
         this.advisorRepository = advisorRepository;
         this.companyRepository = companyRepository;
+
+        String secret = Dotenv.load().get("JWT_SECRET");
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+    }
+
+    public AdvisorAuthServiceImpl(AdvisorRepository advisorRepository, CompanyRepository companyRepository, String jwtSecret) {
+        this.advisorRepository = advisorRepository;
+        this.companyRepository = companyRepository;
+        this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
     public boolean authentification(String email, String password, String companyCode)

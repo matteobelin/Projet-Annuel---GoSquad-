@@ -22,19 +22,24 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Map<String, Object> body) throws SQLException, NotFoundException, ConstraintViolationException {
-        String email = (String) body.get("email");
-        String password = (String) body.get("password");
-        String companyCode = (String) body.get("companyCode");
+        try {
+            String email = (String) body.get("email");
+            String password = (String) body.get("password");
+            String companyCode = (String) body.get("companyCode");
 
-        if (authService.authentification(email, password, companyCode)) {
-            String jwtToken = authService.generateJwtToken(email, companyCode);
+            if (authService.authentification(email, password, companyCode)) {
+                String jwtToken = authService.generateJwtToken(email, companyCode);
 
-            return ResponseEntity.ok()
-                    .header("Authorization", "Bearer " + jwtToken)
-                    .body("Connexion réussie");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Échec de l'authentification : code entreprise, email ou mot de passe invalide");
+                return ResponseEntity.ok()
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .body("Connexion réussie");
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Échec de l'authentification : code entreprise, email ou mot de passe invalide");
+            }
+        } catch (SQLException | NotFoundException | ConstraintViolationException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur serveur : " + e.getMessage());
         }
     }
 }
