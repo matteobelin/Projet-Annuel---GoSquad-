@@ -59,7 +59,7 @@ public class AdvisorAuthServiceImpl implements AdvisorAuthService {
         }
 
         long nowMillis = System.currentTimeMillis();
-        long expMillis = nowMillis + 3600000;
+        long expMillis = nowMillis + 12 * 60 * 60 * 1000;;
         Date now = new Date(nowMillis);
         Date exp = new Date(expMillis);
 
