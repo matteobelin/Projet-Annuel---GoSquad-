@@ -1,3 +1,19 @@
+-- Adminer 5.3.0 PostgreSQL 17.5 dump
+
+DROP TABLE IF EXISTS "addresses";
+DROP SEQUENCE IF EXISTS addresses_id_seq;
+CREATE SEQUENCE addresses_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."addresses" (
+    "id" integer DEFAULT nextval('addresses_id_seq') NOT NULL,
+    "address_line" character varying(255) NOT NULL,
+    "city_id" integer NOT NULL,
+    "country_id" integer NOT NULL,
+    CONSTRAINT "addresses_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+
 DROP TABLE IF EXISTS "advisor";
 DROP SEQUENCE IF EXISTS person_id_seq;
 CREATE SEQUENCE person_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
@@ -22,6 +38,20 @@ INSERT INTO "advisor" ("id", "firstname", "lastname", "email", "phone_number", "
 (3,	'Matteo',	'Belin',	'matteo.belin@gosquad.com',	'678787878',	1,	'$2a$10$EQnOV47sKy0qubaXOR6WYOXGrJ7MXkR9D4xzgfktXk0XRH2aBCw3K',	'admin'),
 (2,	'Jonas',	'Amozigh',	'jonas.amozigh@gmail.com',	'612345678',	1,	'$2a$10$EQnOV47sKy0qubaXOR6WYOXGrJ7MXkR9D4xzgfktXk0XRH2aBCw3K',	'admin');
 
+DROP TABLE IF EXISTS "cities";
+DROP SEQUENCE IF EXISTS cities_id_seq;
+CREATE SEQUENCE cities_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."cities" (
+    "id" integer DEFAULT nextval('cities_id_seq') NOT NULL,
+    "city_name" character varying(100) NOT NULL,
+    "postal_code" character varying(20) NOT NULL,
+    "country_id" integer NOT NULL,
+    CONSTRAINT "cities_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+
 DROP TABLE IF EXISTS "company";
 DROP SEQUENCE IF EXISTS "Company_id_seq";
 CREATE SEQUENCE "Company_id_seq" INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
@@ -37,4 +67,56 @@ WITH (oids = false);
 INSERT INTO "company" ("id", "code", "name") VALUES
 (1,	'GOSQUAD',	'Entreprise Gosquad');
 
+DROP TABLE IF EXISTS "countries";
+DROP SEQUENCE IF EXISTS countries_id_seq;
+CREATE SEQUENCE countries_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."countries" (
+    "id" integer DEFAULT nextval('countries_id_seq') NOT NULL,
+    "iso_code" character(2) NOT NULL UNIQUE,
+    "country_name" character varying(100) NOT NULL,
+    CONSTRAINT "countries_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "customer";
+DROP SEQUENCE IF EXISTS customer_id_seq;
+CREATE SEQUENCE customer_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."customer" (
+    "id" integer DEFAULT nextval('customer_id_seq') NOT NULL,
+    "firstname" character varying(255) NOT NULL,
+    "lastname" character varying(255) NOT NULL,
+    "email" character varying(255) NOT NULL,
+    "phone_number" character varying(10) NOT NULL,
+    "birth_date" date NOT NULL,
+    "id_card_number" character varying(50),
+    "id_card_expiration_date" date,
+    "id_card_copy_url" character varying(255),
+    "passport_number" character varying(50),
+    "passport_expiration_date" date,
+    "passport_copy_url" character varying(255),
+    "country_id" integer NOT NULL,
+    "address_id" integer NOT NULL,
+    "billing_address_id" integer NOT NULL,
+    "company_id" integer NOT NULL,
+    "customer_number" character varying(20) NOT NULL UNIQUE,
+    CONSTRAINT "customer_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+
+ALTER TABLE ONLY "public"."addresses" ADD CONSTRAINT "addresses_city_id_fkey" FOREIGN KEY (city_id) REFERENCES cities(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."addresses" ADD CONSTRAINT "addresses_country_id_fkey" FOREIGN KEY (country_id) REFERENCES countries(id) NOT DEFERRABLE;
+
 ALTER TABLE ONLY "public"."advisor" ADD CONSTRAINT "advisor_compagny_id_fkey" FOREIGN KEY (compagny_id) REFERENCES company(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."cities" ADD CONSTRAINT "cities_country_id_fkey" FOREIGN KEY (country_id) REFERENCES countries(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."customer" ADD CONSTRAINT "customer_address_id_fkey" FOREIGN KEY (address_id) REFERENCES addresses(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."customer" ADD CONSTRAINT "customer_billing_address_id_fkey" FOREIGN KEY (billing_address_id) REFERENCES addresses(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."customer" ADD CONSTRAINT "customer_company_id_fkey" FOREIGN KEY (company_id) REFERENCES company(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."customer" ADD CONSTRAINT "customer_id_country_fkey" FOREIGN KEY (country_id) REFERENCES countries(id) NOT DEFERRABLE;
+
+-- 2025-06-09 13:58:00 UTC

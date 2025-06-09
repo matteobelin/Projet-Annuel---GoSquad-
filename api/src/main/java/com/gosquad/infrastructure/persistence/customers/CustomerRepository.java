@@ -1,0 +1,17 @@
+package com.gosquad.infrastructure.persistence.customers;
+
+import com.gosquad.core.exceptions.ConstraintViolationException;
+
+
+import java.sql.SQLException;
+import java.util.List;
+
+public interface CustomerRepository {
+    CustomerModel getByCustomerNumber(String customerNumber,int companyId) throws SQLException, ConstraintViolationException;
+    List<CustomerModel> getAllCustomers(int companyId) throws ConstraintViolationException;
+    void addCustomer(CustomerModel customer) throws SQLException, ConstraintViolationException;
+    void updateCustomerPassport(CustomerModel customer) throws ConstraintViolationException;
+    void updateCustomerIdCard(CustomerModel customer) throws ConstraintViolationException;
+    void updateEmail(CustomerModel customer) throws ConstraintViolationException;
+    void updatePhone(CustomerModel customer) throws ConstraintViolationException;
+}
