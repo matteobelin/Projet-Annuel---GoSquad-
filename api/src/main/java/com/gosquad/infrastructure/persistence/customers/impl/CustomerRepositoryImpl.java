@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@org.springframework.stereotype.Repository
 public class CustomerRepositoryImpl extends Repository<CustomerModel> implements CustomerRepository{
 
     public static final String TABLE_NAME = "customer";

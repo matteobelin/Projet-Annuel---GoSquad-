@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+@org.springframework.stereotype.Repository
 public class CountryRepositoryImpl extends Repository<CountryModel> implements CountryRepository {
 
     public static final String TABLE_NAME = "countries";
@@ -39,7 +40,7 @@ public class CountryRepositoryImpl extends Repository<CountryModel> implements C
     public void addCountry(CountryModel country) throws SQLException{
         try {
             Map<String, Object> values = new HashMap<>();
-            values.put("iso_code", country.getIsoSode());
+            values.put("iso_code", country.getIsoCode());
             values.put("country_name", country.getCountryName());
 
             country.setId(insert(values));

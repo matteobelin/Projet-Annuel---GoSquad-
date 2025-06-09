@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+@org.springframework.stereotype.Repository
 public class CityRepositoryImpl extends Repository<CityModel> implements CityRepository {
     public static final String TABLE_NAME = "cities";
 

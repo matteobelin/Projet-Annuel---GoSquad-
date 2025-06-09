@@ -4,11 +4,11 @@ import lombok.Data;
 
 @Data
 public abstract class Entity {
-    private int id;
+    private Integer id;
 
     public Entity() {}
 
-    protected Entity(int id) {
+    protected Entity(Integer id) {
         this.id = id;
     }
 }

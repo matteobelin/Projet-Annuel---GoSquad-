@@ -2,6 +2,7 @@ package com.gosquad.presentation.controller;
 
 import com.gosquad.core.exceptions.ConstraintViolationException;
 import com.gosquad.core.exceptions.NotFoundException;
+import com.gosquad.presentation.DTO.AuthRequest;
 import com.gosquad.usecase.auth.AdvisorAuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.SQLException;
-import java.util.Map;
+
 
 @RestController
 public class AuthController {
@@ -21,14 +22,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Map<String, Object> body) throws SQLException, NotFoundException, ConstraintViolationException {
+    public ResponseEntity<String> login(@RequestBody AuthRequest body){
         try {
-            String email = (String) body.get("email");
-            String password = (String) body.get("password");
-            String companyCode = (String) body.get("companyCode");
-
-            if (authService.authentification(email, password, companyCode)) {
-                String jwtToken = authService.generateJwtToken(email, companyCode);
+            if (authService.authentification(body.getEmail(), body.getPassword(), body.getCompanyCode())) {
+                String jwtToken = authService.generateJwtToken(body.getEmail(), body.getCompanyCode());
 
                 return ResponseEntity.ok()
                         .header("Authorization", "Bearer " + jwtToken)

@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+@org.springframework.stereotype.Repository
 public class AddressRepositoryImpl extends Repository<AddressModel> implements AddressRepository {
     public static final String TABLE_NAME = "addresses";
 
