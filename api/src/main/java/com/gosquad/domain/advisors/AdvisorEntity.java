@@ -12,13 +12,15 @@ public class AdvisorEntity extends Entity {
     private String email;
     private String phone;
     private String role;
+    private Integer companyId;
 
-    public AdvisorEntity(Integer id,String firstname, String lastname, String email, String phone, String role) {
+    public AdvisorEntity(Integer id,String firstname, String lastname, String email, String phone, String role,Integer companyId) {
         super(id);
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.phone = phone;
         this.role = role;
+        this.companyId = companyId;
     }
 }

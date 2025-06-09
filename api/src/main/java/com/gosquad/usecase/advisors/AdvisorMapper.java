@@ -16,7 +16,8 @@ public class AdvisorMapper {
                 advisorModel.getLastname(),
                 advisorModel.getEmail(),
                 advisorModel.getPhone(),
-                advisorModel.getRole()
+                advisorModel.getRole(),
+                advisorModel.getCompagnyId()
         );
     }
 
