@@ -1,7 +1,7 @@
 package com.gosquad.presentation.controller;
 import com.gosquad.core.exceptions.NotFoundException;
 import com.gosquad.domain.advisors.AdvisorEntity;
-import com.gosquad.domain.advisors.AdvisorService;
+import com.gosquad.usecase.advisors.AdvisorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,6 +1,7 @@
-package com.gosquad.data;
+package com.gosquad.infrastructure.persistence;
 
 import com.gosquad.core.exceptions.NotFoundException;
+import com.gosquad.infrastructure.config.DataConfig;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -46,6 +47,24 @@ public abstract class Repository<T extends Model> {
                 return mapResultSetToEntity(rs);
             } else {
                 throw new NotFoundException("No record found with ID: " + id);
+            }
+        }
+    }
+
+    public T findBy(String column, Object value, String... selectedColumns) throws SQLException, NotFoundException {
+        String cols = (selectedColumns.length > 0) ? String.join(", ", selectedColumns) : "*";
+        String query = "SELECT " + cols + " FROM " + tableName + " WHERE " + column + " = ?";
+
+        try (Connection connection = DataConfig.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setObject(1, value);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return mapResultSetToEntity(rs);
+            } else {
+                throw new NotFoundException("No record found where " + column + " = " + value);
             }
         }
     }
