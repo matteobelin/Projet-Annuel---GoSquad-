@@ -5,9 +5,17 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.sql.Date;
+import java.util.regex.Pattern;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class CustomerEntity extends Entity {
+    private static final Pattern PHONE_PATTERN = Pattern.compile("^\\+?[0-9]{7,15}$");
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(
+            "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$",
+            Pattern.CASE_INSENSITIVE
+    );
+
     String firstname;
     String lastname;
     String email;
@@ -36,7 +44,17 @@ public class CustomerEntity extends Entity {
         super(id);
         this.firstname = firstname;
         this.lastname = lastname;
+
+        if (email == null || !EMAIL_PATTERN.matcher(email).matches()) {
+            throw new IllegalArgumentException("Invalid email format");
+        }
+
         this.email = email;
+
+        if (phoneNumber == null || !PHONE_PATTERN.matcher(phoneNumber).matches()) {
+            throw new IllegalArgumentException("Invalid phone number");
+        }
+
         this.phoneNumber = phoneNumber;
         this.birthDate = birthDate;
         this.idCardNumber = idCardNumber;
@@ -49,6 +67,11 @@ public class CustomerEntity extends Entity {
         this.addressId = addressId;
         this.billingAddressId = billingAddressId;
         this.companyId = companyId;
+
+        if(customer_number.length()>20){
+            throw new IllegalArgumentException("Invalid customer number");
+        }
+
         this.customer_number = customer_number;
     }
 }

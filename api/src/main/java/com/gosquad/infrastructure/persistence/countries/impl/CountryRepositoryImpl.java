@@ -1,6 +1,5 @@
 package com.gosquad.infrastructure.persistence.countries.impl;
 
-import com.gosquad.core.exceptions.ConstraintViolationException;
 import com.gosquad.core.exceptions.NotFoundException;
 import com.gosquad.infrastructure.persistence.Repository;
 import com.gosquad.infrastructure.persistence.countries.CountryModel;
@@ -29,12 +28,8 @@ public class CountryRepositoryImpl extends Repository<CountryModel> implements C
         );
     }
 
-    public CountryModel getByIsoCode(String isoCode) throws SQLException, ConstraintViolationException {
-        try{
-            return findBy("iso_code",isoCode,"id","iso_code","country_name");
-        }catch (NotFoundException e){
-            throw new ConstraintViolationException(e);
-        }
+    public CountryModel getByIsoCode(String isoCode) throws  SQLException, NotFoundException {
+        return findBy("iso_code",isoCode,"id","iso_code","country_name");
     }
 
     public void addCountry(CountryModel country) throws SQLException{

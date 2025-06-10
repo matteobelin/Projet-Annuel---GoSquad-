@@ -16,7 +16,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.mindrot.jbcrypt.BCrypt;
 
 import java.security.Key;
 import java.sql.SQLException;

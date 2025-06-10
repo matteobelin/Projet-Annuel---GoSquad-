@@ -37,8 +37,8 @@ public class AdvisorControllerTest {
 
     @Test
     public void testGetAllAdvisors_Success() throws Exception {
-        AdvisorEntity advisor1 = new AdvisorEntity(1, "John", "Doe", "john@example.com", "123456789", "ROLE_USER");
-        AdvisorEntity advisor2 = new AdvisorEntity(2, "Jane", "Smith", "jane@example.com", "987654321", "ROLE_ADMIN");
+        AdvisorEntity advisor1 = new AdvisorEntity(1, "John", "Doe", "john@example.com", "123456789", "ROLE_USER",1);
+        AdvisorEntity advisor2 = new AdvisorEntity(2, "Jane", "Smith", "jane@example.com", "987654321", "ROLE_ADMIN",1);
 
         when(advisorService.getAllAdvisors()).thenReturn(Arrays.asList(advisor1, advisor2));
 
@@ -60,7 +60,7 @@ public class AdvisorControllerTest {
 
     @Test
     public void testGetAdvisorById_Success() throws Exception {
-        AdvisorEntity advisor = new AdvisorEntity(1, "John", "Doe", "john@example.com", "123456789", "ROLE_USER");
+        AdvisorEntity advisor = new AdvisorEntity(1, "John", "Doe", "john@example.com", "123456789", "ROLE_USER",1);
 
         when(advisorService.getAdvisorById(1)).thenReturn(advisor);
 

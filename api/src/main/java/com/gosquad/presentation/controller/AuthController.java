@@ -2,7 +2,7 @@ package com.gosquad.presentation.controller;
 
 import com.gosquad.core.exceptions.ConstraintViolationException;
 import com.gosquad.core.exceptions.NotFoundException;
-import com.gosquad.presentation.DTO.AuthRequest;
+import com.gosquad.presentation.DTO.AuthRequestDTO;
 import com.gosquad.usecase.auth.AdvisorAuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody AuthRequest body){
+    public ResponseEntity<String> login(@RequestBody AuthRequestDTO body){
         try {
             if (authService.authentification(body.getEmail(), body.getPassword(), body.getCompanyCode())) {
                 String jwtToken = authService.generateJwtToken(body.getEmail(), body.getCompanyCode());

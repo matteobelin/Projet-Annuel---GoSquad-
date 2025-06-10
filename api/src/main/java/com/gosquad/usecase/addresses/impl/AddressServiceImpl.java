@@ -14,8 +14,8 @@ import java.sql.SQLException;
 @Service
 public class AddressServiceImpl implements AddressService {
 
-    private AddressRepository addressRepository;
-    private AddressMapper addressMapper;
+    private final AddressRepository addressRepository;
+    private final AddressMapper addressMapper;
 
     public AddressServiceImpl(AddressRepository addressRepository, AddressMapper addressMapper) {
         this.addressRepository = addressRepository;
