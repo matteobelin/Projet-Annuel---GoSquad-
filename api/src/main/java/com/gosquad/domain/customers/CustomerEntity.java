@@ -35,12 +35,11 @@ public class CustomerEntity extends Entity {
     Integer billingAddressId;
 
     Integer companyId;
-    String customer_number;
 
     public CustomerEntity(Integer id,String firstname,String lastname,String email, String phoneNumber
             , Date birthDate, String idCardNumber, Date idCardExpirationDate, String idCardCopyUrl, String passportNumber,
                          Date passportExpirationDate, String passportCopyUrl, Integer countryId, Integer addressId,Integer billingAddressId,
-                         Integer companyId, String customer_number) {
+                         Integer companyId) {
         super(id);
         this.firstname = firstname;
         this.lastname = lastname;
@@ -67,11 +66,5 @@ public class CustomerEntity extends Entity {
         this.addressId = addressId;
         this.billingAddressId = billingAddressId;
         this.companyId = companyId;
-
-        if(customer_number.length()>20){
-            throw new IllegalArgumentException("Invalid customer number");
-        }
-
-        this.customer_number = customer_number;
     }
 }

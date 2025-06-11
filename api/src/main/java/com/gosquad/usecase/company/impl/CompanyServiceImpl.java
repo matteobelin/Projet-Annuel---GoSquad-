@@ -26,4 +26,10 @@ public class CompanyServiceImpl implements CompanyService {
         CompanyModel companyModel = companyRepository.getById(id);
         return companyMapper.modelToEntity(companyModel);
     }
+
+    @Override
+    public CompanyEntity getCompanyByCode(String code) throws SQLException, NotFoundException {
+        CompanyModel companyModel = companyRepository.getByCode(code);
+        return companyMapper.modelToEntity(companyModel);
+    }
 }

@@ -27,7 +27,7 @@ public class AddressServiceImpl implements AddressService {
         return addressMapper.modelToEntity(addressModel);
     }
 
-    public AddressEntity getAddressByAddressLineByCityIdByCountryId(String addressLine, int cityId, int countryId) throws SQLException, ConstraintViolationException{
+    public AddressEntity getAddressByAddressLineByCityIdByCountryId(String addressLine, int cityId, int countryId) throws SQLException, NotFoundException, ConstraintViolationException {
         AddressModel addressModel = addressRepository.getByAddressLineByCityIdByCountryId(addressLine, cityId, countryId);
         return addressMapper.modelToEntity(addressModel);
     }

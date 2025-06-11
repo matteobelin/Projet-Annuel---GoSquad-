@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface CustomerService {
-    CustomerEntity getCustomerByCustomerNumber(String customerNumber, int companyId) throws SQLException, ConstraintViolationException;
+    CustomerEntity getCustomerByIdAndCompanyId(int id, int companyId) throws SQLException, ConstraintViolationException;
     List<CustomerEntity> getAllCustomers(int companyId) throws ConstraintViolationException;
     void addCustomer(CustomerEntity customer) throws SQLException, ConstraintViolationException;
     void updateCustomerPassport(CustomerEntity customer) throws ConstraintViolationException;

@@ -38,16 +38,15 @@ public class CustomerRepositoryImpl extends Repository<CustomerModel> implements
                 rs.getInt("country_id"),
                 rs.getInt("address_id"),
                 rs.getInt("billing_address_id"),
-                rs.getInt("company_id"),
-                rs.getString("customer_number")
+                rs.getInt("company_id")
         );
     }
 
     @Override
-    public CustomerModel getByCustomerNumber(String customerNumber,int companyId) throws SQLException, ConstraintViolationException {
+    public CustomerModel getByIdAndCompanyId(int id,int companyId) throws SQLException, ConstraintViolationException {
         try{
             Map<String, Object> conditions = new HashMap<>();
-            conditions.put("customer_number", customerNumber);
+            conditions.put("id", id);
             conditions.put("company_id", companyId);
             return findByMultiple(conditions);
         }catch(NotFoundException e){
@@ -83,7 +82,6 @@ public class CustomerRepositoryImpl extends Repository<CustomerModel> implements
             conditions.put("address_id", customer.getAddressId());
             conditions.put("billing_address_id", customer.getBillingAddressId());
             conditions.put("company_id", customer.getCompanyId());
-            conditions.put("customer_number",customer.getCustomer_number());
             customer.setId(insert(conditions));
         }catch(SQLException e){
             throw new ConstraintViolationException(e);
@@ -98,7 +96,7 @@ public class CustomerRepositoryImpl extends Repository<CustomerModel> implements
             updates.put("passport_expiration_date", customer.getPassportExpirationDate());
             updates.put("passport_copy_url", customer.getPassportCopyUrl());
 
-            updateBy("customer_number",customer.getCustomer_number(),updates);
+            updateBy("id",customer.getId(),updates);
         } catch (SQLException e) {
             throw new ConstraintViolationException(e);
         }
@@ -111,7 +109,7 @@ public class CustomerRepositoryImpl extends Repository<CustomerModel> implements
             updates.put("id_card_expiration_date", customer.getIdCardExpirationDate());
             updates.put("id_card_copy_url", customer.getIdCardCopyUrl());
 
-            updateBy("customer_number",customer.getCustomer_number(),updates);
+            updateBy("id",customer.getId(),updates);
         }catch (SQLException e) {
             throw new ConstraintViolationException(e);
         }
@@ -122,7 +120,7 @@ public class CustomerRepositoryImpl extends Repository<CustomerModel> implements
             Map<String, Object> updates = new HashMap<>();
             updates.put("email", customer.getEmail());
 
-            updateBy("customer_number",customer.getCustomer_number(),updates);
+            updateBy("id",customer.getId(),updates);
         }catch (SQLException e) {
             throw new ConstraintViolationException(e);
         }
@@ -133,7 +131,7 @@ public class CustomerRepositoryImpl extends Repository<CustomerModel> implements
             Map<String, Object> updates = new HashMap<>();
             updates.put("phone_number", customer.getPhoneNumber());
 
-            updateBy("customer_number",customer.getCustomer_number(),updates);
+            updateBy("id",customer.getId(),updates);
         }catch (SQLException e) {
             throw new ConstraintViolationException(e);
         }

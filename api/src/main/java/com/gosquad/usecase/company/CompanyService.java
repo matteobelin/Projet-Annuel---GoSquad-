@@ -7,4 +7,5 @@ import java.sql.SQLException;
 
 public interface CompanyService {
     CompanyEntity getCompanyById(int id) throws SQLException, NotFoundException;
+    CompanyEntity getCompanyByCode(String code) throws SQLException, NotFoundException;
 }

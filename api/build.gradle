@@ -24,6 +24,7 @@ repositories {
 }
 
 dependencies {
+	implementation 'software.amazon.awssdk:s3:2.25.32'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.postgresql:postgresql:42.2.5'

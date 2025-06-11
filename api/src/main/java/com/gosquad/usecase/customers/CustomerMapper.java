@@ -2,12 +2,20 @@ package com.gosquad.usecase.customers;
 
 import com.gosquad.domain.customers.CustomerEntity;
 import com.gosquad.infrastructure.persistence.customers.CustomerModel;
+import com.gosquad.usecase.security.EncryptionService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
 public class CustomerMapper {
+
+    private final EncryptionService encryptionService;
+
+    public CustomerMapper(EncryptionService encryptionService) {
+        this.encryptionService = encryptionService;
+    }
+
 
     public CustomerEntity modelToEntity(CustomerModel customerModel) {
         return new CustomerEntity(
@@ -17,23 +25,22 @@ public class CustomerMapper {
                 customerModel.getEmail(),
                 customerModel.getPhoneNumber(),
                 customerModel.getBirthDate(),
-                customerModel.getIdCardNumber(),
+                encryptionService.decrypt(customerModel.getIdCardNumber()),
                 customerModel.getIdCardExpirationDate(),
                 customerModel.getIdCardCopyUrl(),
-                customerModel.getPassportNumber(),
+                encryptionService.decrypt(customerModel.getPassportNumber()),
                 customerModel.getPassportExpirationDate(),
                 customerModel.getPassportCopyUrl(),
                 customerModel.getCountryId(),
                 customerModel.getAddressId(),
                 customerModel.getBillingAddressId(),
-                customerModel.getCompanyId(),
-                customerModel.getCustomer_number()
+                customerModel.getCompanyId()
         );
 
 
     }
     public CustomerModel entityToModel(CustomerEntity customerEntity){
-        return new CustomerModel(
+        return  new CustomerModel(
                 customerEntity.getId(),
                 customerEntity.getFirstname(),
                 customerEntity.getLastname(),
@@ -49,8 +56,7 @@ public class CustomerMapper {
                 customerEntity.getCountryId(),
                 customerEntity.getAddressId(),
                 customerEntity.getBillingAddressId(),
-                customerEntity.getCompanyId(),
-                customerEntity.getCustomer_number()
+                customerEntity.getCompanyId()
         );
     }
 

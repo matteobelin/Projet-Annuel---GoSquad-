@@ -29,17 +29,14 @@ public class AddressRepositoryImpl extends Repository<AddressModel> implements A
         );
     }
 
-    public AddressModel getByAddressLineByCityIdByCountryId(String addressLine, int cityId, int countryId) throws SQLException,ConstraintViolationException {
-        try {
+    public AddressModel getByAddressLineByCityIdByCountryId(String addressLine, int cityId, int countryId) throws SQLException, NotFoundException {
             Map<String, Object> conditions = new HashMap<>();
             conditions.put("address_line", addressLine);
             conditions.put("city_id", cityId);
             conditions.put("country_id", countryId);
 
             return findByMultiple(conditions);
-        }catch (NotFoundException e) {
-            throw new ConstraintViolationException(e);
-        }
+
     }
 
     @Override

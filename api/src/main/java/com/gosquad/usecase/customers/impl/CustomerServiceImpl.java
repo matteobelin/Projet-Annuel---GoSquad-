@@ -22,8 +22,8 @@ public class CustomerServiceImpl implements CustomerService {
         this.customerMapper = customerMapper;
     }
 
-    public CustomerEntity getCustomerByCustomerNumber(String customerNumber, int companyId) throws SQLException, ConstraintViolationException{
-        CustomerModel customerModel = customerRepository.getByCustomerNumber(customerNumber, companyId);
+    public CustomerEntity getCustomerByIdAndCompanyId(int id, int companyId) throws SQLException, ConstraintViolationException{
+        CustomerModel customerModel = customerRepository.getByIdAndCompanyId(id, companyId);
         return customerMapper.modelToEntity(customerModel);
     };
 
