@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.security.Key;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class JWTInterceptor implements HandlerInterceptor {
@@ -52,6 +54,22 @@ public class JWTInterceptor implements HandlerInterceptor {
             return false;
         }
 
+    }
+
+    public Map<String, Object> extractTokenInfo(String token) throws Exception {
+        Map<String, Object> tokenInfo = new HashMap<>();
+
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        tokenInfo.put("id", claims.getSubject());
+        tokenInfo.put("role", claims.get("role"));
+        tokenInfo.put("companyCode", claims.get("companyCode"));
+
+        return tokenInfo;
     }
 
 }

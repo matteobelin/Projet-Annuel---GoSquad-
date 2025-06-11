@@ -1,4 +1,4 @@
-package com.gosquad.presentation.DTO;
+package com.gosquad.presentation.DTO.customers;
 
 import lombok.Data;
 

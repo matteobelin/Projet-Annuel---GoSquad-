@@ -1,4 +1,4 @@
-package com.gosquad.presentation.controller;
+package com.gosquad.presentation.controller.customers;
 
 import com.gosquad.core.exceptions.ConstraintViolationException;
 import com.gosquad.core.exceptions.NotFoundException;
@@ -7,7 +7,7 @@ import com.gosquad.domain.cities.CityEntity;
 import com.gosquad.domain.company.CompanyEntity;
 import com.gosquad.domain.countries.CountryEntity;
 import com.gosquad.domain.customers.CustomerEntity;
-import com.gosquad.presentation.DTO.CustomerRequestDTO;
+import com.gosquad.presentation.DTO.customers.CustomerRequestDTO;
 import com.gosquad.usecase.addresses.AddressService;
 import com.gosquad.usecase.cities.CityService;
 import com.gosquad.usecase.company.CompanyService;
@@ -17,7 +17,6 @@ import com.gosquad.usecase.files.FileService;
 import com.gosquad.usecase.security.EncryptionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,7 +27,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 @RestController
-public class CustomerController {
+public class CustomerPostController {
 
     private final EncryptionService encryptionService;
     private final FileService fileService;
@@ -38,7 +37,7 @@ public class CustomerController {
     private final CustomerService customerService;
     private final CompanyService companyService;
 
-    public CustomerController(EncryptionService encryptionService, FileService fileService, CountryService countryService, AddressService addressService, CityService cityService, CustomerService customerService, CompanyService companyService) {
+    public CustomerPostController(EncryptionService encryptionService, FileService fileService, CountryService countryService, AddressService addressService, CityService cityService, CustomerService customerService, CompanyService companyService) {
         this.encryptionService = encryptionService;
         this.fileService = fileService;
         this.countryService = countryService;
