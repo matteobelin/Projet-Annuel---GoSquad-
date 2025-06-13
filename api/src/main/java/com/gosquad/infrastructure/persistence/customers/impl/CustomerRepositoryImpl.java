@@ -115,26 +115,23 @@ public class CustomerRepositoryImpl extends Repository<CustomerModel> implements
         }
     }
 
-    public void updateEmail(CustomerModel customer) throws ConstraintViolationException{
+    public void updateCustomer(CustomerModel customer) throws ConstraintViolationException{
         try {
             Map<String, Object> updates = new HashMap<>();
             updates.put("email", customer.getEmail());
-
-            updateBy("id",customer.getId(),updates);
-        }catch (SQLException e) {
-            throw new ConstraintViolationException(e);
-        }
-    }
-
-    public void updatePhone(CustomerModel customer) throws ConstraintViolationException{
-        try {
-            Map<String, Object> updates = new HashMap<>();
             updates.put("phone_number", customer.getPhoneNumber());
+            updates.put("firstname", customer.getFirstname());
+            updates.put("lastname", customer.getLastname());
+            updates.put("country_id", customer.getCountryId());
+            updates.put("address_id", customer.getAddressId());
+            updates.put("billing_address_id", customer.getBillingAddressId());
+            updates.put("birth_date", customer.getBirthDate());
 
             updateBy("id",customer.getId(),updates);
         }catch (SQLException e) {
             throw new ConstraintViolationException(e);
         }
     }
+
 
 }

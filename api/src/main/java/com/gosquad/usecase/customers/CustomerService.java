@@ -12,6 +12,5 @@ public interface CustomerService {
     void addCustomer(CustomerEntity customer) throws SQLException, ConstraintViolationException;
     void updateCustomerPassport(CustomerEntity customer) throws ConstraintViolationException;
     void updateCustomerIdCard(CustomerEntity customer) throws ConstraintViolationException;
-    void updateEmail(CustomerEntity customer) throws ConstraintViolationException;
-    void updatePhone(CustomerEntity customer) throws ConstraintViolationException;
+    void updateCustomer(CustomerEntity customer) throws ConstraintViolationException;
 }

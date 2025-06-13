@@ -64,15 +64,17 @@ public class CustomerGetController {
             CompanyEntity company = companyService.getCompanyByCode(companyCode);
             List<CustomerEntity> customers = customerService.getAllCustomers(company.getId());
 
-            List<GetAllCustomersResponseDTO> responseList = customers.stream().map(customer -> {
-                String uniqueId = companyCode + customer.getId();
-                return new GetAllCustomersResponseDTO(
-                        uniqueId,
-                        customer.getFirstname(),
-                        customer.getLastname(),
-                        customer.getEmail()
-                );
-            }).toList();
+            List<GetAllCustomersResponseDTO> responseList = customers.stream()
+                .filter(customer -> !"anonym".equalsIgnoreCase(customer.getFirstname()))
+                .map(customer -> {
+                    String uniqueId = companyCode + customer.getId();
+                    return new GetAllCustomersResponseDTO(
+                            uniqueId,
+                            customer.getFirstname(),
+                            customer.getLastname(),
+                            customer.getEmail()
+                    );
+                }).toList();
 
             return ResponseEntity.ok(responseList);
 

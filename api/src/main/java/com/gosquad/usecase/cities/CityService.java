@@ -11,4 +11,5 @@ public interface CityService {
     CityEntity getCityByNameByPostalCodeByCountry(String name,String postalCode,int countryId) throws SQLException, NotFoundException, ConstraintViolationException;
     void addCity(CityEntity city) throws SQLException;
     void updateCity(CityEntity city) throws ConstraintViolationException;
+    CityEntity getOrCreateCity(String cityName, String postalCode, Integer countryId) throws SQLException, NotFoundException, ConstraintViolationException;
 }

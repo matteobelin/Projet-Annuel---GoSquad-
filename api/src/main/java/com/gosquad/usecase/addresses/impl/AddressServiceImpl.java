@@ -42,4 +42,14 @@ public class AddressServiceImpl implements AddressService {
         AddressModel addressModel = addressMapper.entityToModel(address);
         addressRepository.updateAddress(addressModel);
     };
+
+    public AddressEntity getOrCreateAddress(String addressLine, Integer cityId, Integer countryId) throws SQLException, NotFoundException, ConstraintViolationException {
+        try {
+            return getAddressByAddressLineByCityIdByCountryId(addressLine, cityId, countryId);
+        } catch (NotFoundException | ConstraintViolationException e) {
+            AddressEntity newAddress = new AddressEntity(null, addressLine, cityId, countryId);
+            addAddress(newAddress);
+            return getAddressByAddressLineByCityIdByCountryId(addressLine, cityId, countryId);
+        }
+    }
 }

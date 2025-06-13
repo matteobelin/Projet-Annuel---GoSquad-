@@ -52,25 +52,7 @@ public class CustomerPostController {
             throw new IllegalArgumentException("Le " + fieldName + " ne peut pas être null ou vide");
         }
     }
-    private CityEntity getOrCreateCity(String cityName, String postalCode, Integer countryId) throws SQLException, NotFoundException, ConstraintViolationException {
-        try {
-            return cityService.getCityByNameByPostalCodeByCountry(cityName, postalCode, countryId);
-        } catch (NotFoundException | ConstraintViolationException e) {
-            CityEntity newCity = new CityEntity(null, cityName, postalCode, countryId);
-            cityService.addCity(newCity);
-            return cityService.getCityByNameByPostalCodeByCountry(cityName, postalCode, countryId);
-        }
-    }
 
-    private AddressEntity getOrCreateAddress(String addressLine, Integer cityId, Integer countryId) throws SQLException, NotFoundException, ConstraintViolationException {
-        try {
-            return addressService.getAddressByAddressLineByCityIdByCountryId(addressLine, cityId, countryId);
-        } catch (NotFoundException | ConstraintViolationException e) {
-            AddressEntity newAddress = new AddressEntity(null, addressLine, cityId, countryId);
-            addressService.addAddress(newAddress);
-            return addressService.getAddressByAddressLineByCityIdByCountryId(addressLine, cityId, countryId);
-        }
-    }
 
 
 
@@ -91,28 +73,28 @@ public class CustomerPostController {
             CountryEntity countryEntityForAddressBilling = countryService.getCountryByIsoCode(customerRequestDTO.getIsoCodeBilling());
 
             // Utilisation de getOrCreateCity pour la ville principale
-            CityEntity cityEntity = getOrCreateCity(
+            CityEntity cityEntity = cityService.getOrCreateCity(
                     customerRequestDTO.getCityName(),
                     customerRequestDTO.getPostalCode(),
                     countryEntityForAddress.getId()
             );
 
             // Utilisation de getOrCreateCity pour la ville de facturation
-            CityEntity cityEntityForBillingAddress = getOrCreateCity(
+            CityEntity cityEntityForBillingAddress = cityService.getOrCreateCity(
                     customerRequestDTO.getCityNameBilling(),
                     customerRequestDTO.getPostalCodeBilling(),
                     countryEntityForAddressBilling.getId()
             );
 
             // Adresse principale
-            AddressEntity addressEntity = getOrCreateAddress(
+            AddressEntity addressEntity = addressService.getOrCreateAddress(
                     customerRequestDTO.getAddressLine(),
                     cityEntity.getId(),
                     countryEntityForAddress.getId()
             );
 
             // Adresse de facturation
-            AddressEntity addressEntityForBillingAddress = getOrCreateAddress(
+            AddressEntity addressEntityForBillingAddress = addressService.getOrCreateAddress(
                     customerRequestDTO.getAddressLineBilling(),
                     cityEntityForBillingAddress.getId(),
                     countryEntityForAddressBilling.getId()

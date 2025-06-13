@@ -39,7 +39,7 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setId(customerModel.getId());
     };
 
-    public void updateCustomerPassport(CustomerEntity customer) throws ConstraintViolationException{
+    public void updateCustomerPassport(CustomerEntity customer) throws ConstraintViolationException {
         CustomerModel customerModel = customerMapper.entityToModel(customer);
         customerRepository.updateCustomerPassport(customerModel);
     };
@@ -49,13 +49,9 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.updateCustomerIdCard(customerModel);
     };
 
-    public void updateEmail(CustomerEntity customer) throws ConstraintViolationException{
+    public void updateCustomer(CustomerEntity customer) throws ConstraintViolationException{
         CustomerModel customerModel = customerMapper.entityToModel(customer);
-        customerRepository.updateEmail(customerModel);
+        customerRepository.updateCustomer(customerModel);
     };
 
-    public void updatePhone(CustomerEntity customer) throws ConstraintViolationException{
-        CustomerModel customerModel = customerMapper.entityToModel(customer);
-        customerRepository.updatePhone(customerModel);
-    };
 }

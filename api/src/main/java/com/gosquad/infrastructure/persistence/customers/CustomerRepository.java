@@ -12,6 +12,6 @@ public interface CustomerRepository {
     void addCustomer(CustomerModel customer) throws SQLException, ConstraintViolationException;
     void updateCustomerPassport(CustomerModel customer) throws ConstraintViolationException;
     void updateCustomerIdCard(CustomerModel customer) throws ConstraintViolationException;
-    void updateEmail(CustomerModel customer) throws ConstraintViolationException;
-    void updatePhone(CustomerModel customer) throws ConstraintViolationException;
+    void updateCustomer(CustomerModel customer) throws ConstraintViolationException;
+
 }

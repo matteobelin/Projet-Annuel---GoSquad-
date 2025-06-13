@@ -43,5 +43,15 @@ public class CityServiceImpl implements CityService {
         cityRepository.updateCity(cityModel);
     };
 
+    public CityEntity getOrCreateCity(String cityName, String postalCode, Integer countryId) throws SQLException, NotFoundException, ConstraintViolationException {
+        try {
+            return getCityByNameByPostalCodeByCountry(cityName, postalCode, countryId);
+        } catch (NotFoundException | ConstraintViolationException e) {
+            CityEntity newCity = new CityEntity(null, cityName, postalCode, countryId);
+            addCity(newCity);
+            return getCityByNameByPostalCodeByCountry(cityName, postalCode, countryId);
+        }
+    }
+
 
 }
