@@ -22,10 +22,12 @@ public class JWTInterceptor implements HandlerInterceptor {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public JWTInterceptor(String jwtSecret) {
-        this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
-    }
+    public JWTInterceptor(String jwtSecret) {this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes());}
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
+
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
 
         final String authHeader  = request.getHeader("Authorization");
 
