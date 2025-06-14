@@ -11,6 +11,7 @@ import com.gosquad.infrastructure.persistence.B2.B2Repository;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Base64;
 import java.util.UUID;
 
 @org.springframework.stereotype.Repository
@@ -66,12 +67,45 @@ public class B2RepositoryImpl implements B2Repository {
     @Override
     public void deleteImage(String url) {
         String key = extractKeyFromUrl(url);
-        DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
-                .bucket(bucketName)
-                .key(key)
-                .build();
 
-        s3Client.deleteObject(deleteRequest);
+        try {
+            // D'abord lister toutes les versions de ce fichier
+            ListObjectVersionsRequest listRequest = ListObjectVersionsRequest.builder()
+                    .bucket(bucketName)
+                    .prefix(key)
+                    .build();
+
+            ListObjectVersionsResponse response = s3Client.listObjectVersions(listRequest);
+
+            // Supprimer chaque version individuellement
+            for (ObjectVersion version : response.versions()) {
+                if (version.key().equals(key)) {
+                    DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
+                            .bucket(bucketName)
+                            .key(key)
+                            .versionId(version.versionId())
+                            .build();
+
+                    s3Client.deleteObject(deleteRequest);
+                }
+            }
+
+            // Supprimer aussi les "delete markers" (versions hide)
+            for (DeleteMarkerEntry marker : response.deleteMarkers()) {
+                if (marker.key().equals(key)) {
+                    DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
+                            .bucket(bucketName)
+                            .key(key)
+                            .versionId(marker.versionId())
+                            .build();
+
+                    s3Client.deleteObject(deleteRequest);
+                }
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de la suppression définitive: " + e.getMessage());
+        }
     }
 
     private String extractKeyFromUrl(String url) {

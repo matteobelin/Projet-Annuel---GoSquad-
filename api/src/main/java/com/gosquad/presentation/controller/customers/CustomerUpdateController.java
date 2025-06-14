@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -195,7 +196,7 @@ public class CustomerUpdateController {
     }
 
     @PutMapping("/updateCustomerIdCard")
-    public ResponseEntity<?> updateCustomerIdCard(HttpServletRequest request,@RequestPart("customer") CustomerUpdateDTO customerUpdateDTO, @RequestPart(value = "idCard", required = true) org.springframework.web.multipart.MultipartFile idCard) {
+    public ResponseEntity<?> updateCustomerIdCard(HttpServletRequest request,@RequestPart("customer") CustomerUpdateDTO customerUpdateDTO, @RequestPart(value = "idCard", required = true) MultipartFile idCard) {
         try {
             String authHeader = request.getHeader("Authorization");
             String token = authHeader.substring(7);
@@ -224,11 +225,11 @@ public class CustomerUpdateController {
             String idCardUrl = fileService.uploadFileImage(encryptedIdCard);
 
             customer.setIdCardCopyUrl(idCardUrl);
-            customer.setIdCardNumber(encryptionService.encrypt(customerUpdateDTO.getPassportNumber()));
-            customer.setIdCardExpirationDate(customerUpdateDTO.getPassportExpirationDate());
+            customer.setIdCardNumber(encryptionService.encrypt(customerUpdateDTO.getIdCardNumber()));
+            customer.setIdCardExpirationDate(customerUpdateDTO.getIdCardExpirationDate());
 
             customerService.updateCustomerIdCard(customer);
-            return ResponseEntity.ok("Customer passport updated successfully");
+            return ResponseEntity.ok("Customer id card updated successfully");
         } catch (SQLException e) {
             return ResponseEntity.status(500).body("Erreur SQL : " + e.getMessage());
         } catch (NotFoundException e) {
