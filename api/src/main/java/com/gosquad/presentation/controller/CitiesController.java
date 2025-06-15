@@ -28,8 +28,8 @@ public class CitiesController {
     @PostMapping("/city")
     public ResponseEntity<String> addCountry(@RequestBody CityRequestDTO body) {
         try {
-            int countryId = countryService.getCountryByIsoCode(body.getIsoCode()).getId();
-            cityService.addCity(new CityEntity(null, body.getCityName(), body.getPostalCode(), countryId));
+            int countryId = countryService.getCountryByIsoCode(body.isoCode()).getId();
+            cityService.addCity(new CityEntity(null, body.cityName(), body.postalCode(), countryId));
             return ResponseEntity.status(HttpStatus.CREATED).body("City created successfully");
         } catch (SQLException e) {
             return ResponseEntity.internalServerError()

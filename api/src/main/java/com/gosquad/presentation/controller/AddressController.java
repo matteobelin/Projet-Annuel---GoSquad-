@@ -30,9 +30,9 @@ public class AddressController {
     @PostMapping("/address")
     public ResponseEntity<String> addAddress(@RequestParam AddressRequestDTO body) {
         try{
-            int countryId = countryService.getCountryByIsoCode(body.getIsoCode()).getId();
-            int cityId = cityService.getCityByNameByPostalCodeByCountry(body.getCityName(), body.getPostalCode(), countryId).getId();
-            addressService.addAddress(new AddressEntity(null, body.getAddress_line(),cityId,countryId));
+            int countryId = countryService.getCountryByIsoCode(body.isoCode()).getId();
+            int cityId = cityService.getCityByNameByPostalCodeByCountry(body.cityName(), body.postalCode(), countryId).getId();
+            addressService.addAddress(new AddressEntity(null, body.address_line(),cityId,countryId));
 
             return ResponseEntity.status(HttpStatus.CREATED).body("address created successfully");
         } catch (SQLException e) {

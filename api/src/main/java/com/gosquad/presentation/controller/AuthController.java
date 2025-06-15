@@ -24,8 +24,8 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody AuthRequestDTO body){
         try {
-            if (authService.authentification(body.getEmail(), body.getPassword(), body.getCompanyCode())) {
-                String jwtToken = authService.generateJwtToken(body.getEmail(), body.getCompanyCode());
+            if (authService.authentification(body.email(), body.password(), body.companyCode())) {
+                String jwtToken = authService.generateJwtToken(body.email(), body.companyCode());
 
                 return ResponseEntity.ok()
                         .header("Authorization", "Bearer " + jwtToken)

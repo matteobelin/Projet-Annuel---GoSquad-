@@ -37,7 +37,7 @@ public class CountryController {
     @PostMapping("/country")
     public ResponseEntity<String> addCountry(@RequestBody CountryRequestDTO body) {
         try {
-            countryService.addCountry(new CountryEntity(null, body.getIsoCode(), body.getCountryName()));
+            countryService.addCountry(new CountryEntity(null, body.isoCode(), body.countryName()));
             return ResponseEntity.status(HttpStatus.CREATED).body("Country created successfully");
 
         } catch (SQLException e) {
