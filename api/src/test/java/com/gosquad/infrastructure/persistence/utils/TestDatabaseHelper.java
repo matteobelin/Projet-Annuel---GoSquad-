@@ -69,6 +69,12 @@ public class TestDatabaseHelper {
      * @throws SQLException en cas d'erreur SQL
      */
     public static void tearDown() throws SQLException {
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute("DROP TABLE IF EXISTS CUSTOMER CASCADE");
+            stmt.execute("DROP TABLE IF EXISTS ADDRESSES CASCADE");
+            stmt.execute("DROP TABLE IF EXISTS CITIES CASCADE");
+            stmt.execute("DROP TABLE IF EXISTS COUNTRIES CASCADE");
+        }
         if (connection != null && !connection.isClosed()) {
             connection.close();
             connection = null;

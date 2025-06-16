@@ -1,6 +1,7 @@
 package com.gosquad.usecase.customers.impl;
 
 import com.gosquad.core.exceptions.ConstraintViolationException;
+import com.gosquad.core.exceptions.NotFoundException;
 import com.gosquad.domain.customers.CustomerEntity;
 import com.gosquad.infrastructure.persistence.customers.CustomerModel;
 import com.gosquad.infrastructure.persistence.customers.CustomerRepository;
@@ -22,7 +23,7 @@ public class CustomerServiceImpl implements CustomerService {
         this.customerMapper = customerMapper;
     }
 
-    public CustomerEntity getCustomerByIdAndCompanyId(int id, int companyId) throws SQLException, ConstraintViolationException{
+    public CustomerEntity getCustomerByIdAndCompanyId(int id, int companyId) throws SQLException, ConstraintViolationException, NotFoundException {
         CustomerModel customerModel = customerRepository.getByIdAndCompanyId(id, companyId);
         return customerMapper.modelToEntity(customerModel);
     };

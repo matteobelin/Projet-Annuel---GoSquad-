@@ -1,7 +1,6 @@
 package com.gosquad.usecase.files.impl;
 
 import com.gosquad.infrastructure.persistence.B2.B2Repository;
-import com.gosquad.infrastructure.persistence.B2.impl.B2RepositoryImpl;
 import com.gosquad.usecase.files.FileService;
 import org.springframework.stereotype.Service;
 

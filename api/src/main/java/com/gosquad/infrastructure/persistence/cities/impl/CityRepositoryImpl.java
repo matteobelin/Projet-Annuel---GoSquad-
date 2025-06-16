@@ -29,17 +29,13 @@ public class CityRepositoryImpl extends Repository<CityModel> implements CityRep
         );
     }
 
-    public CityModel getByNameByPostalCodeByCountry(String name,String postalCode,int countryId) throws SQLException, ConstraintViolationException {
-        try {
+    public CityModel getByNameByPostalCodeByCountry(String name,String postalCode,int countryId) throws SQLException, NotFoundException {
             Map<String, Object> conditions = new HashMap<>();
             conditions.put("city_name", name);
             conditions.put("postal_code", postalCode);
             conditions.put("country_id", countryId);
 
             return findByMultiple(conditions);
-        }catch (NotFoundException e) {
-            throw new ConstraintViolationException(e);
-        }
     }
 
 

@@ -2,19 +2,12 @@ package com.gosquad.usecase.customers;
 
 import com.gosquad.domain.customers.CustomerEntity;
 import com.gosquad.infrastructure.persistence.customers.CustomerModel;
-import com.gosquad.usecase.security.EncryptionService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
 public class CustomerMapper {
-
-    private final EncryptionService encryptionService;
-
-    public CustomerMapper(EncryptionService encryptionService) {
-        this.encryptionService = encryptionService;
-    }
 
 
     public CustomerEntity modelToEntity(CustomerModel customerModel) {

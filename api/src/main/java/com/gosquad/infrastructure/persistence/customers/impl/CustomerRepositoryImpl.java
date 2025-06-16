@@ -43,15 +43,12 @@ public class CustomerRepositoryImpl extends Repository<CustomerModel> implements
     }
 
     @Override
-    public CustomerModel getByIdAndCompanyId(int id,int companyId) throws SQLException, ConstraintViolationException {
-        try{
+    public CustomerModel getByIdAndCompanyId(int id,int companyId) throws SQLException, NotFoundException {
             Map<String, Object> conditions = new HashMap<>();
             conditions.put("id", id);
             conditions.put("company_id", companyId);
             return findByMultiple(conditions);
-        }catch(NotFoundException e){
-            throw new ConstraintViolationException(e);
-        }
+
     }
 
     @Override
