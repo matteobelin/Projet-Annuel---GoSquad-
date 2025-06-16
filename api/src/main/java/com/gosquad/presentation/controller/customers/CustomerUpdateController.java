@@ -3,7 +3,7 @@ package com.gosquad.presentation.controller.customers;
 import com.gosquad.core.exceptions.ConstraintViolationException;
 import com.gosquad.core.exceptions.NotFoundException;
 import com.gosquad.infrastructure.jwt.JWTInterceptor;
-import com.gosquad.presentation.DTO.customers.CustomerUpdateDTO;
+import com.gosquad.presentation.DTO.customers.CustomerRequestDTO;
 import com.gosquad.usecase.customers.CustomerUpdateService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +29,7 @@ public class CustomerUpdateController {
     }
 
     @PutMapping("/updateCustomer")
-    public ResponseEntity<?> updateCustomer(HttpServletRequest request, @RequestBody CustomerUpdateDTO body) {
+    public ResponseEntity<?> updateCustomer(HttpServletRequest request, @RequestBody CustomerRequestDTO body) {
         return handleUpdate(() -> {
             String companyCode = null;
             try {
@@ -47,7 +47,7 @@ public class CustomerUpdateController {
 
     @PutMapping("/updateCustomerPassport")
     public ResponseEntity<?> updateCustomerPassport(HttpServletRequest request,
-                                                    @RequestPart("dto") CustomerUpdateDTO body,
+                                                    @RequestPart("dto") CustomerRequestDTO body,
                                                     @RequestPart("file") MultipartFile passport) {
         return handleUpdate(() -> {
             String companyCode = null;
@@ -66,7 +66,7 @@ public class CustomerUpdateController {
 
     @PutMapping("/updateCustomerIdCard")
     public ResponseEntity<?> updateCustomerIdCard(HttpServletRequest request,
-                                                  @RequestPart("dto") CustomerUpdateDTO body,
+                                                  @RequestPart("dto") CustomerRequestDTO body,
                                                   @RequestPart("file") MultipartFile idCard) {
         return handleUpdate(() -> {
             String companyCode = null;
@@ -84,7 +84,7 @@ public class CustomerUpdateController {
     }
 
     @PutMapping("/updateCustomerToAnonymous")
-    public ResponseEntity<?> anonymizeCustomer(HttpServletRequest request, @RequestBody CustomerUpdateDTO body) {
+    public ResponseEntity<?> anonymizeCustomer(HttpServletRequest request, @RequestBody CustomerRequestDTO body) {
         return handleUpdate(() -> {
             String companyCode = null;
             try {

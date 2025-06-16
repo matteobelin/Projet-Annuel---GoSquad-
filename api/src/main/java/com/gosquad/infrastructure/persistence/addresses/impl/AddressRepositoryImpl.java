@@ -24,16 +24,14 @@ public class AddressRepositoryImpl extends Repository<AddressModel> implements A
         return new AddressModel(
                 rs.getInt("id"),
                 rs.getString("address_line"),
-                rs.getInt("city_id"),
-                rs.getInt("country_id")
+                rs.getInt("city_id")
         );
     }
 
-    public AddressModel getByAddressLineByCityIdByCountryId(String addressLine, int cityId, int countryId) throws SQLException, NotFoundException {
+    public AddressModel getByAddressLineByCityId(String addressLine, int cityId) throws SQLException, NotFoundException {
             Map<String, Object> conditions = new HashMap<>();
             conditions.put("address_line", addressLine);
             conditions.put("city_id", cityId);
-            conditions.put("country_id", countryId);
 
             return findByMultiple(conditions);
 
@@ -45,7 +43,6 @@ public class AddressRepositoryImpl extends Repository<AddressModel> implements A
             Map<String, Object> values = new HashMap<>();
             values.put("address_line", address.getAddressLine());
             values.put("city_id", address.getCityId());
-            values.put("country_id", address.getCountryId());
             address.setId(insert(values));
         }catch (SQLException e) {
             throw new SQLException(e);
@@ -58,7 +55,6 @@ public class AddressRepositoryImpl extends Repository<AddressModel> implements A
             Map<String, Object> updates = new HashMap<>();
             updates.put("address_line", address.getAddressLine());
             updates.put("city_id", address.getCityId());
-            updates.put("country_id", address.getCountryId());
 
             updateBy("id",address.getId(),updates);
         }catch (SQLException e) {

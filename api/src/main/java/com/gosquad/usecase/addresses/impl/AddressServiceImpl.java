@@ -27,8 +27,8 @@ public class AddressServiceImpl implements AddressService {
         return addressMapper.modelToEntity(addressModel);
     }
 
-    public AddressEntity getAddressByAddressLineByCityIdByCountryId(String addressLine, int cityId, int countryId) throws SQLException, NotFoundException, ConstraintViolationException {
-        AddressModel addressModel = addressRepository.getByAddressLineByCityIdByCountryId(addressLine, cityId, countryId);
+    public AddressEntity getAddressByAddressLineByCityId(String addressLine, int cityId) throws SQLException, NotFoundException, ConstraintViolationException {
+        AddressModel addressModel = addressRepository.getByAddressLineByCityId(addressLine, cityId);
         return addressMapper.modelToEntity(addressModel);
     }
 
@@ -43,13 +43,13 @@ public class AddressServiceImpl implements AddressService {
         addressRepository.updateAddress(addressModel);
     };
 
-    public AddressEntity getOrCreateAddress(String addressLine, Integer cityId, Integer countryId) throws SQLException, NotFoundException, ConstraintViolationException {
+    public AddressEntity getOrCreateAddress(String addressLine, Integer cityId) throws SQLException, NotFoundException, ConstraintViolationException {
         try {
-            return getAddressByAddressLineByCityIdByCountryId(addressLine, cityId, countryId);
+            return getAddressByAddressLineByCityId(addressLine, cityId);
         } catch (NotFoundException | ConstraintViolationException e) {
-            AddressEntity newAddress = new AddressEntity(null, addressLine, cityId, countryId);
+            AddressEntity newAddress = new AddressEntity(null, addressLine, cityId);
             addAddress(newAddress);
-            return getAddressByAddressLineByCityIdByCountryId(addressLine, cityId, countryId);
+            return getAddressByAddressLineByCityId(addressLine, cityId);
         }
     }
 }

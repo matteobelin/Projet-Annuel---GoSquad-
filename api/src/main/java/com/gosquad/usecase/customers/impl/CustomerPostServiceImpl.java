@@ -2,19 +2,11 @@ package com.gosquad.usecase.customers.impl;
 
 import com.gosquad.core.exceptions.ConstraintViolationException;
 import com.gosquad.core.exceptions.NotFoundException;
-import com.gosquad.domain.addresses.AddressEntity;
-import com.gosquad.domain.cities.CityEntity;
-import com.gosquad.domain.company.CompanyEntity;
-import com.gosquad.domain.countries.CountryEntity;
 import com.gosquad.domain.customers.CustomerEntity;
-import com.gosquad.infrastructure.jwt.JWTInterceptor;
 import com.gosquad.presentation.DTO.customers.CustomerRequestDTO;
-import com.gosquad.usecase.addresses.AddressService;
-import com.gosquad.usecase.cities.CityService;
-import com.gosquad.usecase.company.CompanyService;
-import com.gosquad.usecase.countries.CountryService;
 import com.gosquad.usecase.customers.CustomerService;
 import com.gosquad.usecase.customers.CustomerPostService;
+import com.gosquad.usecase.customers.utils.CustomerValidationHelper;
 import com.gosquad.usecase.files.FileService;
 import com.gosquad.usecase.security.EncryptionService;
 import org.springframework.stereotype.Service;
@@ -30,51 +22,22 @@ public class CustomerPostServiceImpl implements CustomerPostService {
 
     private final EncryptionService encryptionService;
     private final FileService fileService;
-    private final CountryService countryService;
-    private final AddressService addressService;
-    private final CityService cityService;
     private final CustomerService customerService;
-    private final CompanyService companyService;
-    private final JWTInterceptor jwtInterceptor;
-
-    public CustomerPostServiceImpl(EncryptionService encryptionService, FileService fileService, CountryService countryService,
-                                   AddressService addressService, CityService cityService, CustomerService customerService,
-                                   CompanyService companyService, JWTInterceptor jwtInterceptor) {
+    private final CustomerValidationHelper validationHelper;
+    public CustomerPostServiceImpl(EncryptionService encryptionService, FileService fileService,
+                                   CustomerService customerService, CustomerValidationHelper validationHelper) {
         this.encryptionService = encryptionService;
         this.fileService = fileService;
-        this.countryService = countryService;
-        this.addressService = addressService;
-        this.cityService = cityService;
         this.customerService = customerService;
-        this.companyService = companyService;
-        this.jwtInterceptor = jwtInterceptor;
+        this.validationHelper = validationHelper;
     }
 
     @Override
     public void createCustomer(CustomerRequestDTO customerRequestDTO, MultipartFile idCard, MultipartFile passport)
             throws IOException, SQLException, ConstraintViolationException, NotFoundException {
 
-        validateIsoCode(customerRequestDTO.isoNationality(), "code ISO de nationalité");
-        validateIsoCode(customerRequestDTO.isoCode(), "code ISO d'adresse");
-        validateIsoCode(customerRequestDTO.isoCodeBilling(), "code ISO de facturation");
-
-        CompanyEntity companyEntity = companyService.getCompanyByCode(customerRequestDTO.companyCode());
-
-        CountryEntity nationalityCountry = countryService.getCountryByIsoCode(customerRequestDTO.isoNationality());
-        CountryEntity addressCountry = countryService.getCountryByIsoCode(customerRequestDTO.isoCode());
-        CountryEntity billingCountry = countryService.getCountryByIsoCode(customerRequestDTO.isoCodeBilling());
-
-        CityEntity city = cityService.getOrCreateCity(customerRequestDTO.cityName(),
-                customerRequestDTO.postalCode(), addressCountry.getId());
-
-        CityEntity billingCity = cityService.getOrCreateCity(customerRequestDTO.cityNameBilling(),
-                customerRequestDTO.postalCodeBilling(), billingCountry.getId());
-
-        AddressEntity address = addressService.getOrCreateAddress(customerRequestDTO.addressLine(),
-                city.getId(), addressCountry.getId());
-
-        AddressEntity billingAddress = addressService.getOrCreateAddress(customerRequestDTO.addressLineBilling(),
-                billingCity.getId(), billingCountry.getId());
+        CustomerValidationHelper.ValidatedCustomerData validatedData =
+                validationHelper.validateAndPrepareCustomerData(customerRequestDTO);
 
         CustomerEntity customerEntity = new CustomerEntity(
                 null,
@@ -89,10 +52,10 @@ public class CustomerPostServiceImpl implements CustomerPostService {
                 null,
                 null,
                 null,
-                nationalityCountry.getId(),
-                address.getId(),
-                billingAddress.getId(),
-                companyEntity.getId()
+                validatedData.getNationalityCountry().getId(),
+                validatedData.getAddress().getId(),
+                validatedData.getBillingAddress().getId(),
+                validatedData.getCompany().getId()
         );
 
         // ID Card processing
@@ -118,11 +81,6 @@ public class CustomerPostServiceImpl implements CustomerPostService {
         customerService.addCustomer(customerEntity);
     }
 
-    private void validateIsoCode(String code, String fieldName) {
-        if (code == null || code.isEmpty()) {
-            throw new IllegalArgumentException("Le " + fieldName + " ne peut pas être null ou vide");
-        }
-    }
 
     private boolean hasIdCardData(CustomerRequestDTO dto, MultipartFile idCard) throws IOException {
         return Stream.of(

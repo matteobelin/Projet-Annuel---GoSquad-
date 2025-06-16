@@ -9,12 +9,10 @@ import lombok.EqualsAndHashCode;
 public class AddressModel extends Model {
     String addressLine;
     Integer cityId;
-    Integer countryId;
 
-    public AddressModel(Integer id,String addressLine,Integer cityId, Integer countryId) {
+    public AddressModel(Integer id,String addressLine,Integer cityId) {
         super(id);
         this.addressLine = addressLine;
         this.cityId = cityId;
-        this.countryId = countryId;
     }
 }

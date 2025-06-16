@@ -10,8 +10,7 @@ public class AddressMapper {
         return new AddressEntity(
                 address.getId(),
                 address.getAddressLine(),
-                address.getCityId(),
-                address.getCountryId()
+                address.getCityId()
         );
     }
 
@@ -19,8 +18,7 @@ public class AddressMapper {
         return new AddressModel(
                 address.getId(),
                 address.getAddressLine(),
-                address.getCityId(),
-                address.getCountryId()
+                address.getCityId()
         );
     }
 }

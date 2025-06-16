@@ -9,12 +9,10 @@ import lombok.EqualsAndHashCode;
 public class AddressEntity extends Entity {
     String addressLine;
     Integer cityId;
-    Integer countryId;
 
-    public AddressEntity(Integer id,String addressLine,Integer cityId, Integer countryId) {
+    public AddressEntity(Integer id,String addressLine,Integer cityId) {
         super(id);
         this.addressLine = addressLine;
         this.cityId = cityId;
-        this.countryId = countryId;
     }
 }

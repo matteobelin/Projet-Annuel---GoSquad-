@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 public interface AddressRepository {
     AddressModel getById(int id) throws SQLException, NotFoundException;
-    AddressModel getByAddressLineByCityIdByCountryId(String addressLine, int cityId, int countryId) throws SQLException, ConstraintViolationException, NotFoundException;
+    AddressModel getByAddressLineByCityId(String addressLine, int cityId) throws SQLException, ConstraintViolationException, NotFoundException;
     void addAddress(AddressModel address) throws SQLException;
     void updateAddress(AddressModel address) throws SQLException, ConstraintViolationException;
 }

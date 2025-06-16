@@ -32,7 +32,7 @@ public class AddressController {
         try{
             int countryId = countryService.getCountryByIsoCode(body.isoCode()).getId();
             int cityId = cityService.getCityByNameByPostalCodeByCountry(body.cityName(), body.postalCode(), countryId).getId();
-            addressService.addAddress(new AddressEntity(null, body.address_line(),cityId,countryId));
+            addressService.addAddress(new AddressEntity(null, body.address_line(),cityId));
 
             return ResponseEntity.status(HttpStatus.CREATED).body("address created successfully");
         } catch (SQLException e) {

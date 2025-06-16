@@ -4,6 +4,7 @@ package com.gosquad.presentation.DTO.customers;
 import java.sql.Date;
 
 public record CustomerRequestDTO(
+        String uniqueCustomerId, // companyCode + customerId
         String firstName,
         String lastName,
         String email,
@@ -22,5 +23,7 @@ public record CustomerRequestDTO(
         String cityNameBilling,
         String postalCodeBilling,
         String isoCodeBilling,
-        String companyCode
+        String companyCode,
+        byte[] idCard,
+        byte[] passport
 ) {}

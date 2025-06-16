@@ -3,18 +3,13 @@ package com.gosquad.usecase.customers.impl;
 
 import com.gosquad.core.exceptions.ConstraintViolationException;
 import com.gosquad.core.exceptions.NotFoundException;
-import com.gosquad.domain.addresses.AddressEntity;
-import com.gosquad.domain.cities.CityEntity;
 import com.gosquad.domain.company.CompanyEntity;
-import com.gosquad.domain.countries.CountryEntity;
 import com.gosquad.domain.customers.CustomerEntity;
-import com.gosquad.presentation.DTO.customers.CustomerUpdateDTO;
-import com.gosquad.usecase.addresses.AddressService;
-import com.gosquad.usecase.cities.CityService;
+import com.gosquad.presentation.DTO.customers.CustomerRequestDTO;
 import com.gosquad.usecase.company.CompanyService;
-import com.gosquad.usecase.countries.CountryService;
 import com.gosquad.usecase.customers.CustomerService;
 import com.gosquad.usecase.customers.CustomerUpdateService;
+import com.gosquad.usecase.customers.utils.CustomerValidationHelper;
 import com.gosquad.usecase.files.FileService;
 import com.gosquad.usecase.security.EncryptionService;
 import org.springframework.stereotype.Service;
@@ -27,27 +22,21 @@ import java.util.stream.Stream;
 @Service
 public class CustomerUpdateServiceImpl implements CustomerUpdateService {
 
-    private final CountryService countryService;
-    private final AddressService addressService;
-    private final CityService cityService;
     private final CustomerService customerService;
     private final CompanyService companyService;
     private final FileService fileService;
     private final EncryptionService encryptionService;
+    private final CustomerValidationHelper validationHelper;
 
-    public CustomerUpdateServiceImpl(CountryService countryService,
-                                     AddressService addressService,
-                                     CityService cityService,
-                                     CustomerService customerService,
+    public CustomerUpdateServiceImpl(CustomerService customerService,
                                      CompanyService companyService,
-                                     FileService fileService, EncryptionService encryptionService) {
-        this.countryService = countryService;
-        this.addressService = addressService;
-        this.cityService = cityService;
+                                     FileService fileService, EncryptionService encryptionService, CustomerValidationHelper validationHelper) {
+
         this.customerService = customerService;
         this.companyService = companyService;
         this.fileService = fileService;
         this.encryptionService = encryptionService;
+        this.validationHelper = validationHelper;
     }
 
     private String processAndUploadFile(MultipartFile file) throws Exception {
@@ -57,51 +46,41 @@ public class CustomerUpdateServiceImpl implements CustomerUpdateService {
     }
 
     @Override
-    public void updateCustomer(CustomerUpdateDTO body, String companyCode) throws SQLException, NotFoundException, ConstraintViolationException {
-        validateIsoCode(body.isoNationality(), "code ISO de nationalité");
-        validateIsoCode(body.isoCode(), "code ISO d'adresse");
-        validateIsoCode(body.isoCodeBilling(), "code ISO de facturation");
+    public void updateCustomer(CustomerRequestDTO customerRequestDTO, String companyCode) throws SQLException, NotFoundException, ConstraintViolationException {
 
-        int customerId = Integer.parseInt(body.uniqueCustomerId().replaceAll(companyCode, ""));
+        int customerId = Integer.parseInt(customerRequestDTO.uniqueCustomerId().replaceAll(companyCode, ""));
+
         CompanyEntity company = companyService.getCompanyByCode(companyCode);
         CustomerEntity existingCustomer = customerService.getCustomerByIdAndCompanyId(customerId, company.getId());
 
-        CompanyEntity companyEntity = companyService.getCompanyByCode(body.companyCode());
+        CustomerValidationHelper.ValidatedCustomerData validatedData =
+                validationHelper.validateAndPrepareCustomerData(customerRequestDTO);
 
-        CountryEntity countryEntity = countryService.getCountryByIsoCode(body.isoNationality());
-        CountryEntity countryEntityForAddress = countryService.getCountryByIsoCode(body.isoCode());
-        CountryEntity countryEntityForAddressBilling = countryService.getCountryByIsoCode(body.isoCodeBilling());
-
-        CityEntity cityEntity = cityService.getOrCreateCity(body.cityName(), body.postalCode(), countryEntityForAddress.getId());
-        CityEntity cityEntityForBilling = cityService.getOrCreateCity(body.cityNameBilling(), body.postalCodeBilling(), countryEntityForAddressBilling.getId());
-
-        AddressEntity addressEntity = addressService.getOrCreateAddress(body.addressLine(), cityEntity.getId(), countryEntityForAddress.getId());
-        AddressEntity billingAddressEntity = addressService.getOrCreateAddress(body.addressLineBilling(), cityEntityForBilling.getId(), countryEntityForAddressBilling.getId());
 
         CustomerEntity customerToUpdate = new CustomerEntity(
                 null,
-                body.firstName(),
-                body.lastName(),
-                body.email(),
-                body.phoneNumber(),
-                body.birthDate(),
+                customerRequestDTO.firstName(),
+                customerRequestDTO.lastName(),
+                customerRequestDTO.email(),
+                customerRequestDTO.phoneNumber(),
+                customerRequestDTO.birthDate(),
                 existingCustomer.getIdCardNumber(),
                 existingCustomer.getIdCardExpirationDate(),
                 existingCustomer.getIdCardCopyUrl(),
                 existingCustomer.getPassportNumber(),
                 existingCustomer.getPassportExpirationDate(),
                 existingCustomer.getPassportCopyUrl(),
-                countryEntity.getId(),
-                addressEntity.getId(),
-                billingAddressEntity.getId(),
-                companyEntity.getId()
+                validatedData.getNationalityCountry().getId(),
+                validatedData.getAddress().getId(),
+                validatedData.getBillingAddress().getId(),
+                validatedData.getCompany().getId()
         );
 
         customerService.updateCustomer(customerToUpdate);
     }
 
     @Override
-    public void updateCustomerPassport(CustomerUpdateDTO body, MultipartFile passport, String companyCode) throws Exception {
+    public void updateCustomerPassport(CustomerRequestDTO body, MultipartFile passport, String companyCode) throws Exception {
         int customerId = Integer.parseInt(body.uniqueCustomerId().replaceAll(companyCode, ""));
         CompanyEntity company = companyService.getCompanyByCode(companyCode);
         CustomerEntity existingCustomer = customerService.getCustomerByIdAndCompanyId(customerId, company.getId());
@@ -144,7 +123,7 @@ public class CustomerUpdateServiceImpl implements CustomerUpdateService {
     }
 
     @Override
-    public void updateCustomerIdCard(CustomerUpdateDTO body, MultipartFile idCard, String companyCode) throws Exception {
+    public void updateCustomerIdCard(CustomerRequestDTO body, MultipartFile idCard, String companyCode) throws Exception {
         int customerId = Integer.parseInt(body.uniqueCustomerId().replaceAll(companyCode, ""));
         CompanyEntity company = companyService.getCompanyByCode(companyCode);
         CustomerEntity existingCustomer = customerService.getCustomerByIdAndCompanyId(customerId, company.getId());
@@ -187,7 +166,7 @@ public class CustomerUpdateServiceImpl implements CustomerUpdateService {
     }
 
     @Override
-    public void anonymizeCustomer(CustomerUpdateDTO body, String companyCode) throws SQLException, NotFoundException, ConstraintViolationException {
+    public void anonymizeCustomer(CustomerRequestDTO body, String companyCode) throws SQLException, NotFoundException, ConstraintViolationException {
         int customerId = Integer.parseInt(body.uniqueCustomerId().replaceAll(companyCode, ""));
         CompanyEntity company = companyService.getCompanyByCode(companyCode);
         CustomerEntity existingCustomer = customerService.getCustomerByIdAndCompanyId(customerId, company.getId());
@@ -214,9 +193,4 @@ public class CustomerUpdateServiceImpl implements CustomerUpdateService {
         customerService.updateCustomer(anonymousCustomer);
     }
 
-    private void validateIsoCode(String code, String fieldName) {
-        if (code == null || code.isEmpty()) {
-            throw new IllegalArgumentException("Le " + fieldName + " ne peut pas être null ou vide");
-        }
-    }
 }
