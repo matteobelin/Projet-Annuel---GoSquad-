@@ -1,3 +1,24 @@
+-- Adminer 5.3.0 PostgreSQL 17.5 dump
+
+DROP TABLE IF EXISTS "addresses";
+DROP SEQUENCE IF EXISTS addresses_id_seq;
+CREATE SEQUENCE addresses_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."addresses" (
+    "id" integer DEFAULT nextval('addresses_id_seq') NOT NULL,
+    "address_line" character varying(255) NOT NULL,
+    "city_id" integer NOT NULL,
+    CONSTRAINT "addresses_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+INSERT INTO "addresses" ("id", "address_line", "city_id") VALUES
+(1,	'10 Boulevard Haussmann',	2),
+(2,	'5 Rue Victor Hugo',	3),
+(3,	'123 Rue de la Paix',	4),
+(4,	'456 Avenue des Champs',	5),
+(5,	'12 Rue de la Paix',	4);
+
 DROP TABLE IF EXISTS "advisor";
 DROP SEQUENCE IF EXISTS person_id_seq;
 CREATE SEQUENCE person_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
@@ -22,19 +43,102 @@ INSERT INTO "advisor" ("id", "firstname", "lastname", "email", "phone_number", "
 (3,	'Matteo',	'Belin',	'matteo.belin@gosquad.com',	'678787878',	1,	'$2a$10$EQnOV47sKy0qubaXOR6WYOXGrJ7MXkR9D4xzgfktXk0XRH2aBCw3K',	'admin'),
 (2,	'Jonas',	'Amozigh',	'jonas.amozigh@gmail.com',	'612345678',	1,	'$2a$10$EQnOV47sKy0qubaXOR6WYOXGrJ7MXkR9D4xzgfktXk0XRH2aBCw3K',	'admin');
 
+DROP TABLE IF EXISTS "cities";
+DROP SEQUENCE IF EXISTS cities_id_seq;
+CREATE SEQUENCE cities_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."cities" (
+    "id" integer DEFAULT nextval('cities_id_seq') NOT NULL,
+    "city_name" character varying(100) NOT NULL,
+    "postal_code" character varying(20) NOT NULL,
+    "country_id" integer NOT NULL,
+    CONSTRAINT "cities_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+INSERT INTO "cities" ("id", "city_name", "postal_code", "country_id") VALUES
+(1,	'Nantes',	'44200',	1),
+(2,	'Paris',	'75009',	1),
+(3,	'Marseille',	'13001',	1),
+(4,	'Paris',	'75001',	1),
+(5,	'Lyon',	'69001',	1);
+
 DROP TABLE IF EXISTS "company";
 DROP SEQUENCE IF EXISTS "Company_id_seq";
 CREATE SEQUENCE "Company_id_seq" INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
 
 CREATE TABLE "public"."company" (
     "id" integer DEFAULT nextval('"Company_id_seq"') NOT NULL,
-    "code" character varying NOT NULL UNIQUE,
+    "code" character varying(7) NOT NULL UNIQUE,
     "name" character varying(255) NOT NULL,
     CONSTRAINT "Company_pkey" PRIMARY KEY ("id")
 )
 WITH (oids = false);
 
+CREATE UNIQUE INDEX company_code_key ON public.company USING btree (code);
+
 INSERT INTO "company" ("id", "code", "name") VALUES
 (1,	'GOSQUAD',	'Entreprise Gosquad');
 
+DROP TABLE IF EXISTS "countries";
+DROP SEQUENCE IF EXISTS countries_id_seq;
+CREATE SEQUENCE countries_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."countries" (
+    "id" integer DEFAULT nextval('countries_id_seq') NOT NULL,
+    "iso_code" character(2) NOT NULL UNIQUE,
+    "country_name" character varying(100) NOT NULL,
+    CONSTRAINT "countries_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+CREATE UNIQUE INDEX countries_iso_code_key ON public.countries USING btree (iso_code);
+
+INSERT INTO "countries" ("id", "iso_code", "country_name") VALUES
+(1,	'FR',	'France');
+
+DROP TABLE IF EXISTS "customer";
+DROP SEQUENCE IF EXISTS customer_id_seq;
+CREATE SEQUENCE customer_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."customer" (
+    "id" integer DEFAULT nextval('customer_id_seq') NOT NULL,
+    "firstname" character varying(255) NOT NULL,
+    "lastname" character varying(255) NOT NULL,
+    "email" character varying(255) NOT NULL,
+    "phone_number" character varying(15) NOT NULL,
+    "birth_date" date NOT NULL,
+    "id_card_number" character varying(50),
+    "id_card_expiration_date" date,
+    "id_card_copy_url" character varying(255),
+    "passport_number" character varying(50),
+    "passport_expiration_date" date,
+    "passport_copy_url" character varying(255),
+    "country_id" integer,
+    "address_id" integer,
+    "billing_address_id" integer,
+    "company_id" integer NOT NULL,
+    CONSTRAINT "customer_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+INSERT INTO "customer" ("id", "firstname", "lastname", "email", "phone_number", "birth_date", "id_card_number", "id_card_expiration_date", "id_card_copy_url", "passport_number", "passport_expiration_date", "passport_copy_url", "country_id", "address_id", "billing_address_id", "company_id") VALUES
+(2,	'anonym',	'anonym',	'anonym@gmail.com',	'0000000000',	'1900-01-01',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(3,	'Jean',	'Dupont',	'jean.dupont@email.com',	'+33123456789',	'1990-01-15',	'+25gpiK1S4Iva7TxoGp0wu38j+pbGLcD6gK5xYqMDLs=',	'2024-12-25',	's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_9e3ce013-7024-4aae-99b2-54843cceee4b.bin',	NULL,	NULL,	NULL,	1,	3,	4,	1),
+(4,	'Jean',	'Dupont',	'jean.dupont@email.com',	'+33123456789',	'1990-01-15',	'Cnri1wVXJDaIsnp7L61r9PRyVhcDAr2txx025C0IqLY=',	'2030-01-15',	's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_325234cd-4705-4c9e-bb40-43a019afee7d.bin',	NULL,	NULL,	NULL,	1,	3,	4,	1),
+(5,	'Jean',	'DEPUIS',	'jean.dupont@email.com',	'+33123456789',	'1990-01-15',	NULL,	NULL,	NULL,	'nsjBUxFTHiK3HPhr91jvIUHzRQ9hkQsSRb7450okbqE=',	'2029-01-15',	's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_96ba8862-dc3c-49b6-b215-5e72f203a0a5.bin',	1,	3,	4,	1),
+(6,	'Jean',	'DEPUIS',	'jean.dupont@email.com',	'+33123456789',	'1990-01-15',	NULL,	NULL,	NULL,	'b1hnGcWZeNYd+SKHsErsxcV9BgmKAhaidtJOGcfCaAc=',	'2029-01-15',	's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_51e4e08d-23ed-43b2-aa6d-50596e0e0a22.bin',	1,	5,	4,	1),
+(7,	'Matteo',	'BE',	'jean.dupont@email.com',	'+33123456789',	'1990-01-15',	NULL,	NULL,	NULL,	'JU2Y1tU6DrRVybCqnrq3SSzD064TK5bwciQoXFVUFlk=',	'2029-01-15',	's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_ae32d887-5af0-4406-b1e8-e5f53d0f5b8c.bin',	1,	5,	4,	1);
+
+ALTER TABLE ONLY "public"."addresses" ADD CONSTRAINT "addresses_city_id_fkey" FOREIGN KEY (city_id) REFERENCES cities(id) NOT DEFERRABLE;
+
 ALTER TABLE ONLY "public"."advisor" ADD CONSTRAINT "advisor_compagny_id_fkey" FOREIGN KEY (compagny_id) REFERENCES company(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."cities" ADD CONSTRAINT "cities_country_id_fkey" FOREIGN KEY (country_id) REFERENCES countries(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."customer" ADD CONSTRAINT "customer_address_id_fkey" FOREIGN KEY (address_id) REFERENCES addresses(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."customer" ADD CONSTRAINT "customer_billing_address_id_fkey" FOREIGN KEY (billing_address_id) REFERENCES addresses(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."customer" ADD CONSTRAINT "customer_company_id_fkey" FOREIGN KEY (company_id) REFERENCES company(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."customer" ADD CONSTRAINT "customer_id_country_fkey" FOREIGN KEY (country_id) REFERENCES countries(id) NOT DEFERRABLE;
+
+-- 2025-06-16 13:14:33 UTC
