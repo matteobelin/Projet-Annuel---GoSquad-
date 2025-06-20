@@ -1,13 +1,14 @@
 package com.gosquad.usecase.auth;
+
 import com.gosquad.core.exceptions.ConstraintViolationException;
 import com.gosquad.core.exceptions.NotFoundException;
-import com.gosquad.infrastructure.persistence.advisors.AdvisorModel;
-import com.gosquad.infrastructure.persistence.advisors.AdvisorRepository;
-import com.gosquad.infrastructure.persistence.company.CompanyModel;
-import com.gosquad.infrastructure.persistence.company.CompanyRepository;
+import com.gosquad.domain.advisors.AdvisorEntity;
+import com.gosquad.domain.company.CompanyEntity;
+import com.gosquad.usecase.advisors.AdvisorService;
+import com.gosquad.usecase.auth.impl.AdvisorAuthServiceImpl;
+import com.gosquad.usecase.company.CompanyService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mindrot.jbcrypt.BCrypt;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -17,11 +18,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 public class AdvisorAuthServiceTest {
-    @Mock
-    private AdvisorRepository advisorRepository;
 
     @Mock
-    private CompanyRepository companyRepository;
+    private AdvisorService advisorService;
+
+    @Mock
+    private CompanyService companyService;
 
     private AdvisorAuthServiceImpl authService;
 
@@ -29,7 +31,7 @@ public class AdvisorAuthServiceTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
         String fakeSecret = "12345678901234567890123456789012"; // 32 chars = 256 bits
-        authService = new AdvisorAuthServiceImpl(advisorRepository, companyRepository, fakeSecret);
+        authService = new AdvisorAuthServiceImpl(advisorService, companyService, fakeSecret);
     }
 
     @Test
@@ -37,18 +39,14 @@ public class AdvisorAuthServiceTest {
         // Arrange
         String email = "test@example.com";
         String rawPassword = "password123";
-        String hashedPassword = BCrypt.hashpw(rawPassword, BCrypt.gensalt());
         String companyCode = "COMP123";
 
-        AdvisorModel advisor = new AdvisorModel(1, email, hashedPassword, 1, "ROLE_ADVISOR");
-        advisor.setPassword(hashedPassword);
-        advisor.setCompagnyId(1);
+        AdvisorEntity advisorEntity = new AdvisorEntity(1, "John", "Doe", email, "123456789", "ROLE_ADVISOR", 1);
+        CompanyEntity companyEntity = new CompanyEntity(1, companyCode, "GoSquad Inc.");
 
-        CompanyModel company = new CompanyModel(1, companyCode, "GoSquad Inc.");;
-        company.setCode(companyCode);
-
-        when(advisorRepository.getByEmail(email)).thenReturn(advisor);
-        when(companyRepository.getById(1)).thenReturn(company);
+        when(advisorService.getAdvisorByEmail(email)).thenReturn(advisorEntity);
+        when(advisorService.validateAdvisorPassword(email, rawPassword)).thenReturn(true);
+        when(companyService.getCompanyById(1)).thenReturn(companyEntity);
 
         // Act
         boolean result = authService.authentification(email, rawPassword, companyCode);
@@ -61,22 +59,18 @@ public class AdvisorAuthServiceTest {
     public void testAuthentification_Fail_WrongPassword() throws SQLException, NotFoundException, ConstraintViolationException {
         // Arrange
         String email = "test@example.com";
-        String rawPassword = "wrongpassword";
-        String hashedPassword = BCrypt.hashpw("correctpassword", BCrypt.gensalt());
+        String wrongPassword = "wrongpassword";
         String companyCode = "COMP123";
 
-        AdvisorModel advisor = new AdvisorModel(1, email, hashedPassword, 1, "ROLE_ADVISOR");
-        advisor.setPassword(hashedPassword);
-        advisor.setCompagnyId(1);
+        AdvisorEntity advisorEntity = new AdvisorEntity(1, "John", "Doe", email, "123456789", "ROLE_ADVISOR", 1);
+        CompanyEntity companyEntity = new CompanyEntity(1, companyCode, "GoSquad Inc.");
 
-        CompanyModel company = new CompanyModel(1, companyCode, "GoSquad Inc.");;
-        company.setCode(companyCode);
-
-        when(advisorRepository.getByEmail(email)).thenReturn(advisor);
-        when(companyRepository.getById(1)).thenReturn(company);
+        when(advisorService.getAdvisorByEmail(email)).thenReturn(advisorEntity);
+        when(advisorService.validateAdvisorPassword(email, wrongPassword)).thenReturn(false);
+        when(companyService.getCompanyById(1)).thenReturn(companyEntity);
 
         // Act
-        boolean result = authService.authentification(email, rawPassword, companyCode);
+        boolean result = authService.authentification(email, wrongPassword, companyCode);
 
         // Assert
         assertFalse(result);
@@ -87,19 +81,15 @@ public class AdvisorAuthServiceTest {
         // Arrange
         String email = "test@example.com";
         String rawPassword = "password123";
-        String hashedPassword = BCrypt.hashpw(rawPassword, BCrypt.gensalt());
         String companyCode = "COMP123";
         String wrongCompanyCode = "WRONG";
 
-        AdvisorModel advisor = new AdvisorModel(1, email, hashedPassword, 1, "ROLE_ADVISOR");
-        advisor.setPassword(hashedPassword);
-        advisor.setCompagnyId(1);
+        AdvisorEntity advisorEntity = new AdvisorEntity(1, "John", "Doe", email, "123456789", "ROLE_ADVISOR", 1);
+        CompanyEntity companyEntity = new CompanyEntity(1, companyCode, "GoSquad Inc.");
 
-        CompanyModel company = new CompanyModel(1, companyCode, "GoSquad Inc.");;
-        company.setCode(companyCode);
-
-        when(advisorRepository.getByEmail(email)).thenReturn(advisor);
-        when(companyRepository.getById(1)).thenReturn(company);
+        when(advisorService.getAdvisorByEmail(email)).thenReturn(advisorEntity);
+        when(advisorService.validateAdvisorPassword(email, rawPassword)).thenReturn(true);
+        when(companyService.getCompanyById(1)).thenReturn(companyEntity);
 
         // Act
         boolean result = authService.authentification(email, rawPassword, wrongCompanyCode);
@@ -114,16 +104,11 @@ public class AdvisorAuthServiceTest {
         String email = "test@example.com";
         String companyCode = "COMP123";
 
-        AdvisorModel advisor = new AdvisorModel(1, email, "hashedPassword", 1, "ROLE_ADVISOR");
-        advisor.setId(42);
-        advisor.setRole("ROLE_ADVISOR");
-        advisor.setCompagnyId(1);
+        AdvisorEntity advisorEntity = new AdvisorEntity(42, "John", "Doe", email, "123456789", "ROLE_ADVISOR", 1);
+        CompanyEntity companyEntity = new CompanyEntity(1, companyCode, "GoSquad Inc.");
 
-        CompanyModel company = new CompanyModel(1, companyCode, "GoSquad Inc.");;
-        company.setCode(companyCode);
-
-        when(advisorRepository.getByEmail(email)).thenReturn(advisor);
-        when(companyRepository.getById(1)).thenReturn(company);
+        when(advisorService.getAdvisorByEmail(email)).thenReturn(advisorEntity);
+        when(companyService.getCompanyById(1)).thenReturn(companyEntity);
 
         // Act
         String jwt = authService.generateJwtToken(email, companyCode);
@@ -131,6 +116,8 @@ public class AdvisorAuthServiceTest {
         // Assert
         assertNotNull(jwt);
         assertTrue(jwt.length() > 0);
+        // Optionnel: vérifier que le JWT contient les bonnes claims
+        assertTrue(jwt.contains("."));
     }
 
     @Test
@@ -140,16 +127,11 @@ public class AdvisorAuthServiceTest {
         String companyCode = "COMP123";
         String wrongCompanyCode = "WRONG";
 
-        AdvisorModel advisor = new AdvisorModel(1, email, "hashedPassword", 1, "ROLE_ADVISOR");
-        advisor.setId(42);
-        advisor.setRole("ROLE_ADVISOR");
-        advisor.setCompagnyId(1);
+        AdvisorEntity advisorEntity = new AdvisorEntity(42, "John", "Doe", email, "123456789", "ROLE_ADVISOR", 1);
+        CompanyEntity companyEntity = new CompanyEntity(1, companyCode, "GoSquad Inc.");
 
-        CompanyModel company = new CompanyModel(1, companyCode, "GoSquad Inc.");;
-        company.setCode(companyCode);
-
-        when(advisorRepository.getByEmail(email)).thenReturn(advisor);
-        when(companyRepository.getById(1)).thenReturn(company);
+        when(advisorService.getAdvisorByEmail(email)).thenReturn(advisorEntity);
+        when(companyService.getCompanyById(1)).thenReturn(companyEntity);
 
         // Act & Assert
         ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> {
@@ -159,4 +141,24 @@ public class AdvisorAuthServiceTest {
         assertEquals("Company code incorrect", exception.getMessage());
     }
 
+    @Test
+    public void testAuthentification_Fail_PasswordValidationFalse() throws SQLException, NotFoundException, ConstraintViolationException {
+        // Arrange
+        String email = "test@example.com";
+        String password = "password123";
+        String companyCode = "COMP123";
+
+        AdvisorEntity advisorEntity = new AdvisorEntity(1, "John", "Doe", email, "123456789", "ROLE_ADVISOR", 1);
+        CompanyEntity companyEntity = new CompanyEntity(1, companyCode, "GoSquad Inc.");
+
+        when(advisorService.getAdvisorByEmail(email)).thenReturn(advisorEntity);
+        when(advisorService.validateAdvisorPassword(email, password)).thenReturn(false);
+        when(companyService.getCompanyById(1)).thenReturn(companyEntity);
+
+        // Act
+        boolean result = authService.authentification(email, password, companyCode);
+
+        // Assert
+        assertFalse(result);
+    }
 }

@@ -41,7 +41,7 @@ public class AdvisorRepositoryImpl extends Repository<AdvisorModel> implements A
         }
     }
 
-    @Override
+
     public AdvisorModel getByEmail(String email) throws SQLException, ConstraintViolationException {
         try {
             return findBy("email", email, "id", "email", "password", "compagny_id","role"

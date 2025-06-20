@@ -1,3 +1,50 @@
+-- Adminer 5.3.0 PostgreSQL 17.5 dump
+
+DROP TABLE IF EXISTS "activity";
+DROP SEQUENCE IF EXISTS activity_id_seq;
+CREATE SEQUENCE activity_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."activity" (
+    "id" integer DEFAULT nextval('activity_id_seq') NOT NULL,
+    "name" character varying(255) NOT NULL,
+    "description" character varying(255) NOT NULL,
+    "start_date" timestamp NOT NULL,
+    "end_date" timestamp NOT NULL,
+    "address_id" integer NOT NULL,
+    CONSTRAINT "activity_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "activity_customer";
+CREATE TABLE "public"."activity_customer" (
+    "activity_id" integer NOT NULL,
+    "customer_id" integer NOT NULL,
+    "participation" boolean NOT NULL,
+    "price_id" integer NOT NULL
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "addresses";
+DROP SEQUENCE IF EXISTS addresses_id_seq;
+CREATE SEQUENCE addresses_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."addresses" (
+    "id" integer DEFAULT nextval('addresses_id_seq') NOT NULL,
+    "address_line" character varying(255) NOT NULL,
+    "city_id" integer NOT NULL,
+    CONSTRAINT "addresses_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+INSERT INTO "addresses" ("id", "address_line", "city_id") VALUES
+(1,	'10 Boulevard Haussmann',	2),
+(2,	'5 Rue Victor Hugo',	3),
+(3,	'123 Rue de la Paix',	4),
+(4,	'456 Avenue des Champs',	5),
+(5,	'12 Rue de la Paix',	4);
+
 DROP TABLE IF EXISTS "advisor";
 DROP SEQUENCE IF EXISTS person_id_seq;
 CREATE SEQUENCE person_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
@@ -7,7 +54,7 @@ CREATE TABLE "public"."advisor" (
     "firstname" character varying(255) NOT NULL,
     "lastname" character varying(255) NOT NULL,
     "email" character varying(255) NOT NULL UNIQUE,
-    "phone_number" character varying NOT NULL,
+    "phone_number" character varying(20) NOT NULL,
     "compagny_id" integer NOT NULL,
     "password" character varying(255) NOT NULL,
     "role" character varying NOT NULL,
@@ -22,19 +69,431 @@ INSERT INTO "advisor" ("id", "firstname", "lastname", "email", "phone_number", "
 (3,	'Matteo',	'Belin',	'matteo.belin@gosquad.com',	'678787878',	1,	'$2a$10$EQnOV47sKy0qubaXOR6WYOXGrJ7MXkR9D4xzgfktXk0XRH2aBCw3K',	'admin'),
 (2,	'Jonas',	'Amozigh',	'jonas.amozigh@gmail.com',	'612345678',	1,	'$2a$10$EQnOV47sKy0qubaXOR6WYOXGrJ7MXkR9D4xzgfktXk0XRH2aBCw3K',	'admin');
 
+DROP TABLE IF EXISTS "aircraft_type";
+DROP SEQUENCE IF EXISTS aircraft_type_id_seq;
+CREATE SEQUENCE aircraft_type_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."aircraft_type" (
+    "id" integer DEFAULT nextval('aircraft_type_id_seq') NOT NULL,
+    "model" character varying(255) NOT NULL UNIQUE,
+    CONSTRAINT "aircraft_type_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "airline_company";
+DROP SEQUENCE IF EXISTS airline_company_id_seq;
+CREATE SEQUENCE airline_company_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."airline_company" (
+    "id" integer DEFAULT nextval('airline_company_id_seq') NOT NULL,
+    "nom" character varying(255) NOT NULL UNIQUE,
+    CONSTRAINT "airline_company_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "airport";
+DROP SEQUENCE IF EXISTS airport_id_seq;
+CREATE SEQUENCE airport_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."airport" (
+    "id" integer DEFAULT nextval('airport_id_seq') NOT NULL,
+    "nom" character varying(255) NOT NULL,
+    "address_id" integer NOT NULL,
+    CONSTRAINT "airport_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "booking_hotel_customer";
+DROP SEQUENCE IF EXISTS booking_hotel_customer_id_seq;
+CREATE SEQUENCE booking_hotel_customer_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."booking_hotel_customer" (
+    "id" integer DEFAULT nextval('booking_hotel_customer_id_seq') NOT NULL,
+    "reservation_number" character varying(255) NOT NULL UNIQUE,
+    "start_date" timestamp NOT NULL,
+    "end_date" timestamp NOT NULL,
+    "room_number" character varying(40) NOT NULL,
+    "price_id" integer NOT NULL,
+    "hotel_id" integer NOT NULL,
+    "customer_id" integer NOT NULL,
+    CONSTRAINT "booking_hotel_customer_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "booking_insurance";
+DROP SEQUENCE IF EXISTS booking_insurance_id_seq;
+CREATE SEQUENCE booking_insurance_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."booking_insurance" (
+    "id" integer DEFAULT nextval('booking_insurance_id_seq') NOT NULL,
+    "contract_number" character varying(255) NOT NULL UNIQUE,
+    "start_date" timestamp NOT NULL,
+    "end_date" timestamp NOT NULL,
+    "price_id" integer NOT NULL,
+    "insurance_id" integer NOT NULL,
+    CONSTRAINT "booking_insurance_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "cities";
+DROP SEQUENCE IF EXISTS cities_id_seq;
+CREATE SEQUENCE cities_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."cities" (
+    "id" integer DEFAULT nextval('cities_id_seq') NOT NULL,
+    "city_name" character varying(100) NOT NULL,
+    "postal_code" character varying(20) NOT NULL,
+    "country_id" integer NOT NULL,
+    CONSTRAINT "cities_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+INSERT INTO "cities" ("id", "city_name", "postal_code", "country_id") VALUES
+(1,	'Nantes',	'44200',	1),
+(2,	'Paris',	'75009',	1),
+(3,	'Marseille',	'13001',	1),
+(4,	'Paris',	'75001',	1),
+(5,	'Lyon',	'69001',	1);
+
 DROP TABLE IF EXISTS "company";
 DROP SEQUENCE IF EXISTS "Company_id_seq";
 CREATE SEQUENCE "Company_id_seq" INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
 
 CREATE TABLE "public"."company" (
     "id" integer DEFAULT nextval('"Company_id_seq"') NOT NULL,
-    "code" character varying NOT NULL UNIQUE,
+    "code" character varying(7) NOT NULL UNIQUE,
     "name" character varying(255) NOT NULL,
     CONSTRAINT "Company_pkey" PRIMARY KEY ("id")
 )
 WITH (oids = false);
 
+CREATE UNIQUE INDEX company_code_key ON public.company USING btree (code);
+
 INSERT INTO "company" ("id", "code", "name") VALUES
 (1,	'GOSQUAD',	'Entreprise Gosquad');
 
+DROP TABLE IF EXISTS "countries";
+DROP SEQUENCE IF EXISTS countries_id_seq;
+CREATE SEQUENCE countries_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."countries" (
+    "id" integer DEFAULT nextval('countries_id_seq') NOT NULL,
+    "iso_code" character(2) NOT NULL UNIQUE,
+    "country_name" character varying(100) NOT NULL UNIQUE,
+    CONSTRAINT "countries_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+CREATE UNIQUE INDEX countries_iso_code_key ON public.countries USING btree (iso_code);
+
+INSERT INTO "countries" ("id", "iso_code", "country_name") VALUES
+(1,	'FR',	'France');
+
+DROP TABLE IF EXISTS "customer";
+DROP SEQUENCE IF EXISTS customer_id_seq;
+CREATE SEQUENCE customer_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."customer" (
+    "id" integer DEFAULT nextval('customer_id_seq') NOT NULL,
+    "firstname" character varying(255) NOT NULL,
+    "lastname" character varying(255) NOT NULL,
+    "email" character varying(255) NOT NULL,
+    "phone_number" character varying(15) NOT NULL,
+    "birth_date" date NOT NULL,
+    "id_card_number" character varying(50),
+    "id_card_expiration_date" date,
+    "id_card_copy_url" character varying(255),
+    "passport_number" character varying(50),
+    "passport_expiration_date" date,
+    "passport_copy_url" character varying(255),
+    "country_id" integer,
+    "address_id" integer,
+    "billing_address_id" integer,
+    "company_id" integer NOT NULL,
+    CONSTRAINT "customer_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+INSERT INTO "customer" ("id", "firstname", "lastname", "email", "phone_number", "birth_date", "id_card_number", "id_card_expiration_date", "id_card_copy_url", "passport_number", "passport_expiration_date", "passport_copy_url", "country_id", "address_id", "billing_address_id", "company_id") VALUES
+(2,	'anonym',	'anonym',	'anonym@gmail.com',	'0000000000',	'1900-01-01',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(3,	'Jean',	'Dupont',	'jean.dupont@email.com',	'+33123456789',	'1990-01-15',	'+25gpiK1S4Iva7TxoGp0wu38j+pbGLcD6gK5xYqMDLs=',	'2024-12-25',	's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_9e3ce013-7024-4aae-99b2-54843cceee4b.bin',	NULL,	NULL,	NULL,	1,	3,	4,	1),
+(4,	'Jean',	'Dupont',	'jean.dupont@email.com',	'+33123456789',	'1990-01-15',	'Cnri1wVXJDaIsnp7L61r9PRyVhcDAr2txx025C0IqLY=',	'2030-01-15',	's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_325234cd-4705-4c9e-bb40-43a019afee7d.bin',	NULL,	NULL,	NULL,	1,	3,	4,	1),
+(5,	'Jean',	'DEPUIS',	'jean.dupont@email.com',	'+33123456789',	'1990-01-15',	NULL,	NULL,	NULL,	'nsjBUxFTHiK3HPhr91jvIUHzRQ9hkQsSRb7450okbqE=',	'2029-01-15',	's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_96ba8862-dc3c-49b6-b215-5e72f203a0a5.bin',	1,	3,	4,	1),
+(6,	'Jean',	'DEPUIS',	'jean.dupont@email.com',	'+33123456789',	'1990-01-15',	NULL,	NULL,	NULL,	'b1hnGcWZeNYd+SKHsErsxcV9BgmKAhaidtJOGcfCaAc=',	'2029-01-15',	's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_51e4e08d-23ed-43b2-aa6d-50596e0e0a22.bin',	1,	5,	4,	1),
+(7,	'Matteo',	'BE',	'jean.dupont@email.com',	'+33123456789',	'1990-01-15',	NULL,	NULL,	NULL,	'JU2Y1tU6DrRVybCqnrq3SSzD064TK5bwciQoXFVUFlk=',	'2029-01-15',	's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_ae32d887-5af0-4406-b1e8-e5f53d0f5b8c.bin',	1,	5,	4,	1);
+
+DROP TABLE IF EXISTS "customer_group";
+CREATE TABLE "public"."customer_group" (
+    "group_id" integer NOT NULL,
+    "customer_id" integer NOT NULL
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "destination";
+DROP SEQUENCE IF EXISTS destination_id_seq;
+CREATE SEQUENCE destination_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."destination" (
+    "id" integer DEFAULT nextval('destination_id_seq') NOT NULL,
+    "description" character varying(255) NOT NULL,
+    "city_id" integer NOT NULL,
+    CONSTRAINT "destination_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "flight";
+DROP SEQUENCE IF EXISTS aircraft_id_seq;
+CREATE SEQUENCE aircraft_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."flight" (
+    "id" integer DEFAULT nextval('aircraft_id_seq') NOT NULL,
+    "flight_number" character varying NOT NULL UNIQUE,
+    "start_date" timestamp NOT NULL,
+    "end_date" timestamp NOT NULL,
+    "airline_company_id" integer NOT NULL,
+    "aircraft_type_id" integer NOT NULL,
+    "departure_airport_id" integer NOT NULL,
+    "arrival_airport_id" integer NOT NULL,
+    CONSTRAINT "aircraft_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "flight_booking";
+CREATE TABLE "public"."flight_booking" (
+    "travel_information_id" integer NOT NULL,
+    "flight_id" integer NOT NULL
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "flight_booking_customer";
+DROP SEQUENCE IF EXISTS flight_booking_customer_id_seq;
+CREATE SEQUENCE flight_booking_customer_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."flight_booking_customer" (
+    "id" integer DEFAULT nextval('flight_booking_customer_id_seq') NOT NULL,
+    "customer_id" integer NOT NULL,
+    "place_number" character varying(5) NOT NULL,
+    "luggage" boolean NOT NULL,
+    "price_id" integer NOT NULL,
+    CONSTRAINT "flight_booking_customer_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "group";
+DROP SEQUENCE IF EXISTS group_id_seq;
+CREATE SEQUENCE group_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."group" (
+    "id" integer DEFAULT nextval('group_id_seq') NOT NULL,
+    "name" character varying(255) NOT NULL,
+    CONSTRAINT "group_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "hotel";
+DROP SEQUENCE IF EXISTS hotel_id_seq;
+CREATE SEQUENCE hotel_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."hotel" (
+    "id" integer DEFAULT nextval('hotel_id_seq') NOT NULL,
+    "name" integer NOT NULL,
+    "address_id" integer NOT NULL,
+    CONSTRAINT "hotel_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "insurance";
+DROP SEQUENCE IF EXISTS insurance_id_seq;
+CREATE SEQUENCE insurance_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."insurance" (
+    "id" integer DEFAULT nextval('insurance_id_seq') NOT NULL,
+    "name" character varying(255) NOT NULL,
+    "phone_number" character varying(20) NOT NULL,
+    "mail" character varying(255) NOT NULL,
+    CONSTRAINT "insurance_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "invoice";
+DROP SEQUENCE IF EXISTS invoice_id_seq;
+CREATE SEQUENCE invoice_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."invoice" (
+    "id" integer DEFAULT nextval('invoice_id_seq') NOT NULL,
+    "invoice_number" character varying(255) NOT NULL UNIQUE,
+    "order_form_id" integer NOT NULL,
+    "travel_information_id" integer NOT NULL,
+    "issue_date" timestamp NOT NULL,
+    "payment_date" timestamp,
+    "price_id" integer NOT NULL,
+    "status" character varying(255) NOT NULL,
+    "url" character varying(255) NOT NULL,
+    CONSTRAINT "invoice_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "order_form";
+DROP SEQUENCE IF EXISTS order_form_id_seq;
+CREATE SEQUENCE order_form_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."order_form" (
+    "id" integer DEFAULT nextval('order_form_id_seq') NOT NULL,
+    "quote_id" integer NOT NULL,
+    "travel_information_id" integer NOT NULL,
+    "confirmation_date" timestamp NOT NULL,
+    "status" character varying(255) NOT NULL,
+    "url_signed_quote" character varying(255) NOT NULL,
+    CONSTRAINT "order_form_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "price";
+DROP SEQUENCE IF EXISTS price_id_seq;
+CREATE SEQUENCE price_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."price" (
+    "id" integer DEFAULT nextval('price_id_seq') NOT NULL,
+    "net_price" numeric(10,2) NOT NULL,
+    "vat_rate" numeric(5,2) NOT NULL,
+    "vat_amount" numeric(10,2) GENERATED ALWAYS AS (((net_price * vat_rate) / (100))) STORED,
+    "gross_price" numeric(10,2) GENERATED ALWAYS AS ((net_price + ((net_price * vat_rate) / (100)))) STORED,
+    CONSTRAINT "price_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "quote";
+DROP SEQUENCE IF EXISTS quote_id_seq;
+CREATE SEQUENCE quote_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."quote" (
+    "id" integer DEFAULT nextval('quote_id_seq') NOT NULL,
+    "quotation_number" character varying(255) NOT NULL UNIQUE,
+    "travel_information_id" integer NOT NULL,
+    "issue_date" timestamp NOT NULL,
+    "price_id" integer NOT NULL,
+    "status" character varying(255) NOT NULL,
+    "url" character varying(255) NOT NULL,
+    CONSTRAINT "quote_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "travel_activity";
+CREATE TABLE "public"."travel_activity" (
+    "activity_id" integer NOT NULL,
+    "travel_information_id" integer NOT NULL
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "travel_hotel";
+CREATE TABLE "public"."travel_hotel" (
+    "hotel_id" integer NOT NULL,
+    "travel_information_id" integer NOT NULL
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "travel_information";
+DROP SEQUENCE IF EXISTS travel_information_id_seq;
+CREATE SEQUENCE travel_information_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+
+CREATE TABLE "public"."travel_information" (
+    "id" integer DEFAULT nextval('travel_information_id_seq') NOT NULL,
+    "group_id" integer NOT NULL,
+    "start_date" timestamp NOT NULL,
+    "end_date" timestamp NOT NULL,
+    "destination_id" integer NOT NULL,
+    CONSTRAINT "travel_information_pkey" PRIMARY KEY ("id")
+)
+WITH (oids = false);
+
+
+DROP TABLE IF EXISTS "travel_insurance";
+CREATE TABLE "public"."travel_insurance" (
+    "booking_insurance_id" integer NOT NULL,
+    "travel_information_id" integer NOT NULL
+)
+WITH (oids = false);
+
+
+ALTER TABLE ONLY "public"."activity" ADD CONSTRAINT "activity_address_id_fkey" FOREIGN KEY (address_id) REFERENCES addresses(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."activity_customer" ADD CONSTRAINT "activity_customer_activity_id_fkey" FOREIGN KEY (activity_id) REFERENCES activity(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."activity_customer" ADD CONSTRAINT "activity_customer_customer_id_fkey" FOREIGN KEY (customer_id) REFERENCES customer(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."activity_customer" ADD CONSTRAINT "activity_customer_price_id_fkey" FOREIGN KEY (price_id) REFERENCES price(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."addresses" ADD CONSTRAINT "addresses_city_id_fkey" FOREIGN KEY (city_id) REFERENCES cities(id) NOT DEFERRABLE;
+
 ALTER TABLE ONLY "public"."advisor" ADD CONSTRAINT "advisor_compagny_id_fkey" FOREIGN KEY (compagny_id) REFERENCES company(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."airport" ADD CONSTRAINT "airport_address_id_fkey" FOREIGN KEY (address_id) REFERENCES addresses(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."booking_hotel_customer" ADD CONSTRAINT "booking_hotel_customer_customer_id_fkey" FOREIGN KEY (customer_id) REFERENCES customer(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."booking_hotel_customer" ADD CONSTRAINT "booking_hotel_customer_hotel_id_fkey" FOREIGN KEY (hotel_id) REFERENCES hotel(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."booking_hotel_customer" ADD CONSTRAINT "booking_hotel_customer_price_id_fkey" FOREIGN KEY (price_id) REFERENCES price(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."booking_insurance" ADD CONSTRAINT "booking_insurance_assurance_id_fkey" FOREIGN KEY (insurance_id) REFERENCES insurance(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."booking_insurance" ADD CONSTRAINT "booking_insurance_price_id_fkey" FOREIGN KEY (price_id) REFERENCES price(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."cities" ADD CONSTRAINT "cities_country_id_fkey" FOREIGN KEY (country_id) REFERENCES countries(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."customer" ADD CONSTRAINT "customer_address_id_fkey" FOREIGN KEY (address_id) REFERENCES addresses(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."customer" ADD CONSTRAINT "customer_billing_address_id_fkey" FOREIGN KEY (billing_address_id) REFERENCES addresses(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."customer" ADD CONSTRAINT "customer_company_id_fkey" FOREIGN KEY (company_id) REFERENCES company(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."customer" ADD CONSTRAINT "customer_id_country_fkey" FOREIGN KEY (country_id) REFERENCES countries(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."customer_group" ADD CONSTRAINT "customer_group_customer_id_fkey" FOREIGN KEY (customer_id) REFERENCES customer(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."customer_group" ADD CONSTRAINT "customer_group_group_id_fkey" FOREIGN KEY (group_id) REFERENCES "group"(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."destination" ADD CONSTRAINT "destination_city_id_fkey" FOREIGN KEY (city_id) REFERENCES cities(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."flight" ADD CONSTRAINT "aircraft_aircraft_type_id_fkey" FOREIGN KEY (aircraft_type_id) REFERENCES aircraft_type(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."flight" ADD CONSTRAINT "aircraft_airline_company_id_fkey" FOREIGN KEY (airline_company_id) REFERENCES airline_company(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."flight" ADD CONSTRAINT "aircraft_arrival_airport_id_fkey" FOREIGN KEY (arrival_airport_id) REFERENCES airport(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."flight" ADD CONSTRAINT "aircraft_departure_airport_id_fkey" FOREIGN KEY (departure_airport_id) REFERENCES airport(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."flight_booking" ADD CONSTRAINT "flight_booking_flight_id_fkey" FOREIGN KEY (flight_id) REFERENCES flight(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."flight_booking" ADD CONSTRAINT "flight_booking_travel_information_id_fkey" FOREIGN KEY (travel_information_id) REFERENCES travel_information(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."flight_booking_customer" ADD CONSTRAINT "flight_booking_customer_customer_id_fkey" FOREIGN KEY (customer_id) REFERENCES customer(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."flight_booking_customer" ADD CONSTRAINT "flight_booking_customer_price_id_fkey" FOREIGN KEY (price_id) REFERENCES price(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."hotel" ADD CONSTRAINT "hotel_address_id_fkey" FOREIGN KEY (address_id) REFERENCES addresses(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."invoice" ADD CONSTRAINT "invoice_order_form_id_fkey" FOREIGN KEY (order_form_id) REFERENCES order_form(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."invoice" ADD CONSTRAINT "invoice_price_id_fkey" FOREIGN KEY (price_id) REFERENCES price(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."invoice" ADD CONSTRAINT "invoice_travel_information_id_fkey" FOREIGN KEY (travel_information_id) REFERENCES travel_information(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."quote" ADD CONSTRAINT "quote_price_id_fkey" FOREIGN KEY (price_id) REFERENCES price(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."travel_activity" ADD CONSTRAINT "travel_activity_activity_id_fkey" FOREIGN KEY (activity_id) REFERENCES activity(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."travel_activity" ADD CONSTRAINT "travel_activity_travel_information_id_fkey" FOREIGN KEY (travel_information_id) REFERENCES travel_information(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."travel_hotel" ADD CONSTRAINT "travel_hotel_hotel_id_fkey" FOREIGN KEY (hotel_id) REFERENCES hotel(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."travel_hotel" ADD CONSTRAINT "travel_hotel_travel_information_id_fkey" FOREIGN KEY (travel_information_id) REFERENCES travel_information(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."travel_information" ADD CONSTRAINT "travel_information_destination_id_fkey" FOREIGN KEY (destination_id) REFERENCES destination(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."travel_information" ADD CONSTRAINT "travel_information_group_id_fkey" FOREIGN KEY (group_id) REFERENCES "group"(id) NOT DEFERRABLE;
+
+ALTER TABLE ONLY "public"."travel_insurance" ADD CONSTRAINT "travel_insurance_booking_insurance_id_fkey" FOREIGN KEY (booking_insurance_id) REFERENCES booking_insurance(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."travel_insurance" ADD CONSTRAINT "travel_insurance_travel_information_id_fkey" FOREIGN KEY (travel_information_id) REFERENCES travel_information(id) NOT DEFERRABLE;
+
+-- 2025-06-18 18:30:17 UTC

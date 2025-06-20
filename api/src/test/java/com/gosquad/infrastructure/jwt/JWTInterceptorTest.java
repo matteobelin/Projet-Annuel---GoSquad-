@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.security.Key;
 import java.util.Date;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
         import static org.mockito.Mockito.*;
@@ -107,5 +108,58 @@ class JWTInterceptorTest {
         verify(request).setAttribute("advisorId", "42");
         verify(request).setAttribute("role", "ROLE_ADVISOR");
         verify(request).setAttribute("companyCode", "COMP123");
+    }
+
+    @Test
+    void extractTokenInfo_shouldReturnCorrectClaims_whenTokenIsValid() throws Exception {
+        // Given: a valid token with expected claims
+        String expectedId = "42";
+        String expectedRole = "ROLE_USER";
+        String expectedCompanyCode = "COMP123";
+
+        String token = Jwts.builder()
+                .setSubject(expectedId)
+                .claim("role", expectedRole)
+                .claim("companyCode", expectedCompanyCode)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 10)) // 10 mins validity
+                .signWith(key)
+                .compact();
+
+        // When
+        Map<String, Object> tokenInfo = jwtInterceptor.extractTokenInfo(token);
+
+        // Then
+        assertEquals(expectedId, tokenInfo.get("id"));
+        assertEquals(expectedRole, tokenInfo.get("role"));
+        assertEquals(expectedCompanyCode, tokenInfo.get("companyCode"));
+    }
+
+    @Test
+    void extractTokenInfo_shouldThrowException_whenTokenIsInvalid() {
+        // Given: an invalid token (bad signature)
+        String invalidToken = Jwts.builder()
+                .setSubject("42")
+                .signWith(Keys.hmacShaKeyFor("anothersecretanothersecret1234567890".getBytes()))
+                .compact();
+
+        // When & Then
+        assertThrows(Exception.class, () -> jwtInterceptor.extractTokenInfo(invalidToken));
+    }
+
+    @Test
+    void extractTokenInfo_shouldThrowException_whenTokenIsExpired() throws Exception {
+        // Given: an expired token
+        String expiredToken = Jwts.builder()
+                .setSubject("42")
+                .claim("role", "ROLE_USER")
+                .claim("companyCode", "COMP123")
+                .setIssuedAt(new Date(System.currentTimeMillis() - 1000 * 60 * 10)) // issued 10 mins ago
+                .setExpiration(new Date(System.currentTimeMillis() - 1000 * 60 * 5)) // expired 5 mins ago
+                .signWith(key)
+                .compact();
+
+        // When & Then
+        assertThrows(Exception.class, () -> jwtInterceptor.extractTokenInfo(expiredToken));
     }
 }
