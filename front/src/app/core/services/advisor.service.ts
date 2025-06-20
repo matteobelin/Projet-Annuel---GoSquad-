@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ApiService } from '../../../api.service';
 import { Advisor } from '../models';
+import {ApiService} from '../../api.service';
+import {AdvisorModel} from '../models/advisor.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,8 @@ export class AdvisorService {
    * Get all advisors
    * @returns Observable of Advisor array
    */
-  getAllAdvisors(): Observable<Advisor[]> {
-    return this.apiService.get<Advisor[]>('/getAllAdvisor');
+  getAllAdvisors(): Observable<AdvisorModel[]> {
+    return this.apiService.get<AdvisorModel[]>('/getAllAdvisor');
   }
 
   /**
@@ -22,7 +23,7 @@ export class AdvisorService {
    * @param id Advisor ID
    * @returns Observable of Advisor
    */
-  getAdvisorById(id: number): Observable<Advisor> {
-    return this.apiService.get<Advisor>(`/getAdvisor/${id}`);
+  getAdvisorById(id: number): Observable<AdvisorModel> {
+    return this.apiService.get<AdvisorModel>(`/getAdvisor/${id}`);
   }
 }

@@ -1,13 +1,8 @@
 // Data models for the application
 
-export interface Advisor {
-  id: number;
-  firstname: string;
-  lastname: string;
-  email: string;
-  phone: string;
-}
-
+/**
+ * Client interface.
+ */
 export interface Client {
   id: number;
   nom: string;
@@ -17,6 +12,9 @@ export interface Client {
   adresse: string;
 }
 
+/**
+ * Voyage interface.
+ */
 export interface Voyage {
   id: number;
   titre: string;
@@ -29,6 +27,9 @@ export interface Voyage {
   statut: 'PLANIFIE' | 'EN_COURS' | 'TERMINE';
 }
 
+/**
+ * Payment interface.
+ */
 export interface Payment {
   id: number;
   montant: number;

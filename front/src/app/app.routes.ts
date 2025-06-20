@@ -12,20 +12,32 @@ import { HistoryComponent } from './features/history/history.component';
 import { StatisticsComponent } from './features/statistics/statistics.component';
 import { AdministrationComponent } from './features/administration/administration.component';
 import { SupportComponent } from './features/support/support.component';
+import { LoginComponent } from './shared/auth/login/login.component';
+import { authGuard } from './shared/auth/guards/auth.guard';
+import { AdvisorComponent } from './module/advisor/advisor.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'clients', component: ClientsComponent },
-  { path: 'voyages', component: VoyagesComponent },
-  { path: 'activities', component: ActivitiesComponent },
-  { path: 'accommodations', component: AccommodationsComponent },
-  { path: 'transports', component: TransportsComponent },
-  { path: 'payments', component: PaymentsComponent },
-  { path: 'documents', component: DocumentsComponent },
-  { path: 'notifications', component: NotificationsComponent },
-  { path: 'history', component: HistoryComponent },
-  { path: 'statistics', component: StatisticsComponent },
-  { path: 'administration', component: AdministrationComponent },
-  { path: 'support', component: SupportComponent }
+  { path: 'login', component: LoginComponent },
+  {
+    path: '',
+    component: AdvisorComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'clients', component: ClientsComponent },
+      { path: 'voyages', component: VoyagesComponent },
+      { path: 'activities', component: ActivitiesComponent },
+      { path: 'accommodations', component: AccommodationsComponent },
+      { path: 'transports', component: TransportsComponent },
+      { path: 'payments', component: PaymentsComponent },
+      { path: 'documents', component: DocumentsComponent },
+      { path: 'notifications', component: NotificationsComponent },
+      { path: 'history', component: HistoryComponent },
+      { path: 'statistics', component: StatisticsComponent },
+      { path: 'administration', component: AdministrationComponent },
+      { path: 'support', component: SupportComponent },
+    ]
+  },
+  { path: '**', redirectTo: '' }
 ];

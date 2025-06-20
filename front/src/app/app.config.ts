@@ -1,12 +1,41 @@
-import {provideRouter} from '@angular/router';
-import {provideAnimations} from '@angular/platform-browser/animations';
-import {provideHttpClient} from '@angular/common/http';
-import {routes} from './app.routes';
+import { ApplicationConfig, APP_INITIALIZER } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import {provideHttpClient, withInterceptors} from '@angular/common/http';
+import { routes } from './app.routes';
+import { provideStore } from '@ngrx/store';
+import { provideEffects } from '@ngrx/effects';
+import { appReducer } from './store/reducers/app.reducer';
+import { AppEffects } from './store/effects/app.effects';
+import { advisorReducer } from './store/advisor/advisor.reducer';
+import { AdvisorEffects } from './store/advisor/advisor.effects';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { isDevMode } from '@angular/core';
+import {AuthInterceptor} from './core/interceptors/auth.interceptor';
+import { AppInitService } from './core/services/app-init.service';
 
-export const appConfig = {
+export const appConfig: ApplicationConfig = {
   providers: [
-    provideHttpClient(),
+    provideHttpClient(
+      withInterceptors([AuthInterceptor])
+    ),
     provideRouter(routes),
-    provideAnimations()
+    provideAnimations(),
+    provideStore({
+      Gosquad: appReducer,
+      advisor: advisorReducer
+    }),
+    provideEffects([AppEffects, AdvisorEffects]),
+    provideStoreDevtools({
+      maxAge: 25,
+      logOnly: !isDevMode(),
+      autoPause: true,
+    }),
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (appInitService: AppInitService) => () => appInitService.initializeApp(),
+      deps: [AppInitService],
+      multi: true
+    }
   ],
 };
