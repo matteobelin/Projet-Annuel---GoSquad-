@@ -1,9 +1,3 @@
 <div class="app" [ngClass]="{ collapsed: isCollapsed }">
-  <!-- Nav part. -->
-  <app-feature-nav/>
-  <!-- Content part. -->
-  <main class="content">
-    <app-header/>
-    <router-outlet></router-outlet>
-  </main>
+  <router-outlet></router-outlet>
 </div>

@@ -1,1 +1,11 @@
-<p>advisor works!</p>
+<div class="app" [ngClass]="{ collapsed: isCollapsed }">
+  <!-- Nav part. -->
+  <app-feature-nav/>
+  <!-- Content part. -->
+  <main class="content">
+    <app-header [currentAdvisor]="currentAdvisor()">
+    </app-header>
+
+    <router-outlet></router-outlet>
+  </main>
+</div>

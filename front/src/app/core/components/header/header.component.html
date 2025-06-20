@@ -19,12 +19,28 @@
       <!-- notification icon -->
       <i class="far fa-bell"></i>
     </div>
-    <div class="user">
+    <div class="user" (click)="toggleUserMenu()">
       <img src="https://th.bing.com/th/id/OIP.I_E7PbtIn9nS-p6YhkGqhwHaE8?rs=1&pid=ImgDetMain" alt="user">
       <div class="user-info">
-        <span class="user-name">Pauline Seitz</span>
-        <span class="user-role">Conseillère Phdsn</span>
+        <span class="user-name">{{currentAdvisor?.firstname}} {{currentAdvisor?.lastname}}</span>
+        <span class="user-role">{{currentAdvisor?.role}}</span>
       </div>
+      @if ( isUserMenuOpen){
+        <div class="user-dropdown">
+          <div class="dropdown-content">
+            <div class="user-details">
+              <img src="https://th.bing.com/th/id/OIP.I_E7PbtIn9nS-p6YhkGqhwHaE8?rs=1&pid=ImgDetMain" alt="user">
+              <div class="user-full-info">
+                <h3>{{currentAdvisor?.firstname}} {{currentAdvisor?.lastname}}</h3>
+                <p>{{currentAdvisor?.email}}</p>
+                <p>Telephone : {{currentAdvisor?.phone}}</p>
+                <span>{{currentAdvisor?.role}}</span>
+              </div>
+            </div>
+            <button (click)="logout()"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+          </div>
+        </div>
+      }
     </div>
   </div>
 </div>
