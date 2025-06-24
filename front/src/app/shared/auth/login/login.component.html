@@ -1,0 +1,37 @@
+<img src="assets/img/gogolog3.png" alt="logo" class="logo" />
+
+<div class="login-container">
+  <div class="illustration-section">
+    <!-- Remplacez ceci par votre illustration -->
+    <img src="assets/img/illustration-login.png" alt="Login Illustration" class="login-illustration">
+  </div>
+  <div class="form-section">
+    <h2 class="login-title">Connectez-vous</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" formControlName="email" class="form-control">
+        <div *ngIf="loginForm.controls['email'].invalid && loginForm.controls['email'].touched" class="error-message">
+          <div *ngIf="loginForm.controls['email'].errors?.['required']">L'email est requis.</div>
+          <div *ngIf="loginForm.controls['email'].errors?.['email']">Veuillez entrer un email valide.</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password">Mot de passe:</label>
+        <input type="password" id="password" formControlName="password" class="form-control">
+        <div *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched" class="error-message">
+          <div *ngIf="loginForm.controls['password'].errors?.['required']">Le mot de passe est requis.</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="companyCode">Code Société:</label>
+        <input type="text" id="companyCode" formControlName="companyCode" class="form-control">
+        <div *ngIf="loginForm.controls['companyCode'].invalid && loginForm.controls['companyCode'].touched" class="error-message">
+          <div *ngIf="loginForm.controls['companyCode'].errors?.['required']">Le code société est requis.</div>
+        </div>
+      </div>
+      <button type="submit" [disabled]="!loginForm.valid" class="btn-login">Se connecter</button>
+      <div *ngIf="errorMessage" class="alert-message">{{ errorMessage }}</div>
+    </form>
+  </div>
+</div>
