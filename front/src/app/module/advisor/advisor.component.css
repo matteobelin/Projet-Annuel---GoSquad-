@@ -8,3 +8,23 @@
   flex-grow: 1;
   overflow-y: auto;
 }
+.app {
+  display: flex;
+  height: 100vh;
+  background-color: #F4EBFF;
+}
+
+.content {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+.app {
+  display: flex;
+  height: 100vh;
+  background-color: #F4EBFF;
+}
+
+.content {
+  flex-grow: 1;
+  overflow-y: auto;
+}
