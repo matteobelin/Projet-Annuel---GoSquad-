@@ -2,4 +2,39 @@
   [icon]="'fas fa-car'"
   [title]="'Transports'"
 ></app-main-header>
-<p>transports works!</p>
+<div>
+  <form (ngSubmit)="onSearch()">
+    <input [(ngModel)]="from" name="from" placeholder="Code IATA départ (ex: CDG)" required>
+    <input [(ngModel)]="to" name="to" placeholder="Code IATA arrivée (ex: JFK)" required>
+    <button type="submit">Rechercher</button>
+  </form>
+</div>
+
+<div *ngIf="loading">Recherche en cours...</div>
+<div *ngIf="error">{{ error }}</div>
+
+<table *ngIf="results.length">
+  <thead>
+    <tr>
+      <th>Départ</th>
+      <th>Arrivée</th>
+      <th>Date/Heure Départ</th>
+      <th>Date/Heure Arrivée</th>
+      <th>Compagnie</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let flight of results">
+      <td>{{ flight.departureCity }} ({{ flight.departureAirport }})</td>
+      <td>{{ flight.arrivalCity }} ({{ flight.arrivalAirport }})</td>
+      <td>{{ flight.departureDateTime | date:'short' }}</td>
+      <td>{{ flight.arrivalDateTime | date:'short' }}</td>
+      <td>{{ flight.airline }}</td>
+      <td>
+        <button (click)="selectFlight(flight)">Sélectionner</button>
+        <a *ngIf="flight.bookingLink" [href]="flight.bookingLink" target="_blank">Réserver</a>
+      </td>
+    </tr>
+  </tbody>
+</table>

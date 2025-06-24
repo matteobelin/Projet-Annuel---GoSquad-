@@ -13,6 +13,8 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { isDevMode } from '@angular/core';
 import {AuthInterceptor} from './core/interceptors/auth.interceptor';
 import { AppInitService } from './core/services/app-init.service';
+import {flightReducer} from './store/transport/flight.reducer';
+import { FlightEffects } from './store/transport/flight.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,9 +25,10 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     provideStore({
       Gosquad: appReducer,
-      advisor: advisorReducer
+      advisor: advisorReducer,
+      flight: flightReducer
     }),
-    provideEffects([AppEffects, AdvisorEffects]),
+    provideEffects([AppEffects, AdvisorEffects, FlightEffects]),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: !isDevMode(),
