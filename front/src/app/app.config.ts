@@ -13,6 +13,8 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { isDevMode } from '@angular/core';
 import {AuthInterceptor} from './core/interceptors/auth.interceptor';
 import { AppInitService } from './core/services/app-init.service';
+import { customerReducer } from './store/customer/customer.reducer';
+import { CustomerEffects } from './store/customer/customer.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,9 +25,10 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     provideStore({
       Gosquad: appReducer,
-      advisor: advisorReducer
+      advisor: advisorReducer,
+      customer: customerReducer
     }),
-    provideEffects([AppEffects, AdvisorEffects]),
+    provideEffects([AppEffects, AdvisorEffects,CustomerEffects ]),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: !isDevMode(),

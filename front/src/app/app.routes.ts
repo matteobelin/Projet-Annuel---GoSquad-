@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
-import { ClientsComponent } from './features/clients/clients.component';
+import { CustomerListComponent } from './features/clients/customer-list/customer-list.component';
 import { VoyagesComponent } from './features/voyages/voyages.component';
 import { ActivitiesComponent } from './features/activities/activities.component';
 import { AccommodationsComponent } from './features/accommodations/accommodations.component';
@@ -25,7 +25,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
-      { path: 'clients', component: ClientsComponent },
+      { path: 'clients', component: CustomerListComponent },
       { path: 'voyages', component: VoyagesComponent },
       { path: 'activities', component: ActivitiesComponent },
       { path: 'accommodations', component: AccommodationsComponent },

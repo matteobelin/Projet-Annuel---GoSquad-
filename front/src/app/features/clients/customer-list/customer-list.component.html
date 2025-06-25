@@ -1,0 +1,46 @@
+<div class="client-list-container">
+  <!-- Champ de filtre -->
+  <div class="filter-container">
+    <div class="filter-input-wrapper">
+      <span class="filter-icon">🔍</span>
+      <input type="text"
+             placeholder="Filtrer par nom, prénom, email ou ID client"
+
+             class="filter-input"
+             [value]="filterText()"
+             (input)="filterText.set($any($event.target).value)" />
+    </div>
+  </div>
+
+  <div *ngIf="filteredCustomers().length === 0" class="no-clients">
+    <p>Aucun client trouvé.</p>
+  </div>
+
+  <!-- Sinon on affiche la table -->
+  <table *ngIf="filteredCustomers().length > 0" class="client-table">
+    <thead>
+    <tr>
+      <th>ID Client</th>
+      <th>Nom</th>
+      <th>Prénom</th>
+      <th>Email</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let customer of filteredCustomers(); trackBy: trackByCustomerId"
+        tabindex="0"
+        (keydown.enter)="onViewCustomer(customer.uniqueCustomerId)"
+        (click)="onViewCustomer(customer.uniqueCustomerId)">
+      <td>{{ customer.uniqueCustomerId }}</td>
+      <td>{{ customer.lastName }}</td>
+      <td>{{ customer.firstName }}</td>
+      <td>{{ customer.email }}</td>
+      <td class="actions">
+        <button (click)="$event.stopPropagation(); onDeleteCustomer(customer.uniqueCustomerId)"
+                class="btn-delete">Supprimer</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
