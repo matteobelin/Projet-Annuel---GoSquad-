@@ -1,0 +1,71 @@
+<div class="customer-detail-container">
+  <div class="content" *ngIf="selectedCustomer() as customer; else loadingTemplate">
+    <div class="customer-card">
+      <div class="customer-header">
+        <h2>{{ customer.firstName }} {{ customer.lastName }}</h2>
+        <span class="customer-id">ID: {{ customer.uniqueCustomerId }}</span>
+      </div>
+
+      <div class="customer-info">
+        <!-- Identité -->
+        <div class="info-group"><label>Prénom :</label><span>{{ customer.firstName }}</span></div>
+        <div class="info-group"><label>Nom :</label><span>{{ customer.lastName }}</span></div>
+        <div class="info-group"><label>Date de naissance :</label><span>{{ customer.birthDate }}</span></div>
+        <div class="info-group"><label>Nationalité :</label><span>{{ customer.isoNationality }}</span></div>
+
+        <!-- Contact -->
+        <div class="info-group"><label>Email :</label><span>{{ customer.email }}</span></div>
+        <div class="info-group"><label>Téléphone :</label><span>{{ customer.phoneNumber }}</span></div>
+
+        <!-- Adresse principale -->
+        <div class="info-group"><label>Adresse :</label><span>{{ customer.addressLine }}</span></div>
+        <div class="info-group"><label>Ville :</label><span>{{ customer.cityName }}</span></div>
+        <div class="info-group"><label>Code postal :</label><span>{{ customer.postalCode }}</span></div>
+        <div class="info-group"><label>Pays :</label><span>{{ customer.isoCode }}</span></div>
+
+        <!-- Adresse de facturation -->
+        <div class="info-group"><label>Adresse de facturation :</label><span>{{ customer.addressLineBilling }}</span></div>
+        <div class="info-group"><label>Ville de facturation :</label><span>{{ customer.cityNameBilling }}</span></div>
+        <div class="info-group"><label>Code postal facturation :</label><span>{{ customer.postalCodeBilling }}</span></div>
+        <div class="info-group"><label>Pays facturation :</label><span>{{ customer.isoCodeBilling }}</span></div>
+
+        <!-- Documents -->
+        <div class="info-group"><label>Numéro de carte d'identité :</label><span>{{ customer.idCardNumber || '—' }}</span></div>
+        <div class="info-group"><label>Expiration carte d'identité :</label><span>{{ customer.idCardExpirationDate || '—' }}</span></div>
+        <div class="info-group"><label>Numéro de passeport :</label><span>{{ customer.passportNumber || '—' }}</span></div>
+        <div class="info-group"><label>Expiration passeport :</label><span>{{ customer.passportExpirationDate || '—' }}</span></div>
+
+        <!-- Boutons documents -->
+        <div class="info-group" *ngIf="customer.idCard">
+          <button (click)="viewIdCard()" class="btn-doc">Voir carte d'identité</button>
+        </div>
+        <div class="info-group" *ngIf="customer.passport">
+          <button (click)="viewPassport()" class="btn-doc">Voir passeport</button>
+        </div>
+      </div>
+
+      <div class="actions">
+        <div class="actions-left">
+          <button (click)="goBack()" class="btn-back">Retour à la liste</button>
+        </div>
+        <div class="actions-right">
+          <button (click)="onEdit()" class="btn-edit">Modifier</button>
+          <button (click)="onDelete()" class="btn-delete">Supprimer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #loadingTemplate>
+    <div class="loading">
+      <p>Chargement des informations du client...</p>
+    </div>
+  </ng-template>
+</div>
+
+<app-customer-document-modal
+  *ngIf="showModal"
+  [imageUrl]="modalImageUrl"
+  [title]="modalTitle"
+  (close)="closeModal()">
+</app-customer-document-modal>

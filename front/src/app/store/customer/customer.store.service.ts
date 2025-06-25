@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
-import {loadCustomers} from './customer.actions';
-import {selectCustomers} from './customer.selectors';
-import {Customer} from '../../core/models/customer.model';
+import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { loadCustomers, loadCustomer } from './customer.actions';
+import { selectCustomers, selectSelectedCustomer } from './customer.selectors';
+import { Customer } from '../../core/models/customer.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,5 +17,13 @@ export class CustomerStoreService {
 
   getCustomers(): Observable<Customer[]> {
     return this.store.select(selectCustomers);
+  }
+
+  loadCustomer(id: string): void {
+    this.store.dispatch(loadCustomer({ id }));
+  }
+
+  getSelectedCustomer(): Observable<Customer | null> {
+    return this.store.select(selectSelectedCustomer);
   }
 }

@@ -4,18 +4,22 @@ import { Customer } from '../../core/models/customer.model';
 
 export interface CustomerState {
   customers: Customer[];
+  selectedCustomer: Customer | null;
   loading: boolean;
   error: any;
 }
 
 export const initialState: CustomerState = {
   customers: [],
+  selectedCustomer: null,
   loading: false,
   error: null
 };
 
 export const customerReducer = createReducer(
   initialState,
+
+  // Chargement liste
   on(CustomerActions.loadCustomers, (state) => ({
     ...state,
     loading: true,
@@ -27,6 +31,23 @@ export const customerReducer = createReducer(
     loading: false
   })),
   on(CustomerActions.loadCustomersFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error
+  })),
+
+  on(CustomerActions.loadCustomer, (state) => ({
+    ...state,
+    loading: true,
+    selectedCustomer: null,
+    error: null
+  })),
+  on(CustomerActions.loadCustomerSuccess, (state, { customer }) => ({
+    ...state,
+    selectedCustomer: customer,
+    loading: false
+  })),
+  on(CustomerActions.loadCustomerFailure, (state, { error }) => ({
     ...state,
     loading: false,
     error

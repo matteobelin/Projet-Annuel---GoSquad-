@@ -14,3 +14,18 @@ export const loadCustomersFailure = createAction(
   '[Customer] Load Customers Failure',
   props<{ error: any }>()
 );
+
+export const loadCustomer = createAction(
+  '[Customer] Load Customer',
+  props<{ id: string }>()
+);
+
+export const loadCustomerSuccess = createAction(
+  '[Customer] Load Customer Success',
+  props<{ customer: Customer }>()
+);
+
+export const loadCustomerFailure = createAction(
+  '[Customer] Load Customer Failure',
+  props<{ error: any }>()
+);

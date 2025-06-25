@@ -1,10 +1,11 @@
-import { Component, Signal, computed } from '@angular/core';
+import {Component, Signal, computed, inject} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Customer } from '../../../core/models/customer.model';
 import { CustomerStoreService } from '../../../store/customer/customer.store.service';
 import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { signal } from '@angular/core';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-client-list',
@@ -16,6 +17,7 @@ import { signal } from '@angular/core';
 export class CustomerListComponent {
   private customers: Signal<Customer[]>;
   filterText = signal('');
+  private router = inject(Router);
 
   constructor(private customerStore: CustomerStoreService) {
     this.customerStore.loadCustomers();
@@ -37,7 +39,8 @@ export class CustomerListComponent {
   }
 
   onViewCustomer(id: string) {
-    console.log('Voir client', id);
+    this.customerStore.loadCustomer(id);
+    this.router.navigate(['/clients', id]);
   }
 
   onDeleteCustomer(id: string) {
