@@ -3,13 +3,14 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Customer } from '../../../core/models/customer.model';
 import { CustomerStoreService } from '../../../store/customer/customer.store.service';
-import { NgIf, NgFor } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { CustomerDocumentModalComponent } from '../customer-document-modal/customer-document-modal.component';
+import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-customer-detail',
   standalone: true,
-  imports: [NgIf, NgFor, CustomerDocumentModalComponent],
+  imports: [NgIf, CustomerDocumentModalComponent,ConfirmDialogComponent],
   templateUrl: './customer-detail.component.html',
   styleUrls: ['./customer-detail.component.css'],
 })
@@ -24,6 +25,9 @@ export class CustomerDetailComponent implements OnInit {
   showModal = false;
   modalImageUrl: string | null = null;
   modalTitle = '';
+  showConfirmDialog = false;
+  confirmMessage = `Êtes-vous sûr de vouloir supprimer ce client ? Tapez "confirmer" pour valider.`;
+  confirmText = 'confirmer';
 
 
   constructor(private customerStore: CustomerStoreService) {
@@ -46,6 +50,7 @@ export class CustomerDetailComponent implements OnInit {
   }
 
   goBack() {
+    this.customerStore.loadCustomers();
     this.router.navigate(['/clients']);
   }
 
@@ -58,12 +63,21 @@ export class CustomerDetailComponent implements OnInit {
   }
 
   onDelete() {
+    this.showConfirmDialog = true;
+  }
+
+  onConfirmDelete() {
+    this.showConfirmDialog = false;
     const customer = this.selectedCustomer();
-    if (customer && confirm(`Êtes-vous sûr de vouloir supprimer ${customer.firstName} ${customer.lastName} ?`)) {
-      console.log('Supprimer client:', customer.uniqueCustomerId);
-      // Implémenter la logique de suppression
-      // this.goBack();
+    if (customer) {
+      this.customerStore.anonymizeCustomer(customer.uniqueCustomerId);
+      this.customerStore.loadCustomers();
+      this.goBack();
     }
+  }
+
+  onCancelDelete() {
+    this.showConfirmDialog = false;
   }
 
   viewIdCard() {

@@ -1,0 +1,15 @@
+<div class="confirm-dialog-backdrop">
+  <div class="confirm-dialog">
+    <p>{{ message }}</p>
+    <input
+      type="text"
+      [(ngModel)]="inputText"
+      placeholder="{{ confirmText }}"
+      (input)="checkInput()"
+      autofocus
+    />
+    <div class="buttons">
+      <button (click)="onCancel()">Annuler</button>
+    </div>
+  </div>
+</div>

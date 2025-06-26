@@ -44,3 +44,12 @@
     </tbody>
   </table>
 </div>
+
+<app-confirm-dialog
+  *ngIf="showConfirmDialog"
+  [message]=confirmMessage
+
+  [confirmText]=confirmText
+  (confirmed)="onConfirmDelete()"
+  (cancelled)="onCancelDelete()">
+</app-confirm-dialog>

@@ -69,3 +69,12 @@
   [title]="modalTitle"
   (close)="closeModal()">
 </app-customer-document-modal>
+
+<app-confirm-dialog
+  *ngIf="showConfirmDialog"
+  [message]=confirmMessage
+
+[confirmText]=confirmText
+(confirmed)="onConfirmDelete()"
+(cancelled)="onCancelDelete()">
+</app-confirm-dialog>

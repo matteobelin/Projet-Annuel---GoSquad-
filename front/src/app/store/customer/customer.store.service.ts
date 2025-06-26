@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { loadCustomers, loadCustomer } from './customer.actions';
+import { loadCustomers, loadCustomer,anonymizeCustomer  } from './customer.actions';
 import { selectCustomers, selectSelectedCustomer } from './customer.selectors';
 import { Customer } from '../../core/models/customer.model';
 
@@ -25,5 +25,9 @@ export class CustomerStoreService {
 
   getSelectedCustomer(): Observable<Customer | null> {
     return this.store.select(selectSelectedCustomer);
+  }
+
+  anonymizeCustomer(uniqueCustomerId: string): void {
+    this.store.dispatch(anonymizeCustomer({ uniqueCustomerId }));
   }
 }

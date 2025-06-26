@@ -51,5 +51,16 @@ export const customerReducer = createReducer(
     ...state,
     loading: false,
     error
+  })),
+
+on(CustomerActions.anonymizeCustomerSuccess, (state, { uniqueCustomerId }) => ({
+  ...state,
+  customers: state.customers.filter(c => c.uniqueCustomerId !== uniqueCustomerId),
+  error: null
+})),
+
+  on(CustomerActions.anonymizeCustomerFailure, (state, { error }) => ({
+    ...state,
+    error
   }))
 );

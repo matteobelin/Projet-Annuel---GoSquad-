@@ -12,6 +12,7 @@ export class CustomerEffects {
   private readonly actions$ = inject(Actions);
   private getAllCustomersUrl = `${environment.apiUrl}/getAllCustomers`;
   private getCustomerUrl = `${environment.apiUrl}/getCustomer`;
+  private anonymizeCustomerUrl = `${environment.apiUrl}/updateCustomerToAnonymous`;
 
 
   loadCustomers$ = createEffect(() =>
@@ -33,6 +34,18 @@ export class CustomerEffects {
         this.http.get<Customer>(`${this.getCustomerUrl}?customerNumber=${action.id}`).pipe(
           map(customer => CustomerActions.loadCustomerSuccess({ customer })),
           catchError(error => of(CustomerActions.loadCustomerFailure({ error })))
+        )
+      )
+    )
+  );
+
+  anonymizeCustomer$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CustomerActions.anonymizeCustomer),
+      mergeMap(({ uniqueCustomerId }) =>
+        this.http.put<void>(this.anonymizeCustomerUrl, { uniqueCustomerId }).pipe(
+          map(() => CustomerActions.anonymizeCustomerSuccess({ uniqueCustomerId })),
+          catchError(error => of(CustomerActions.anonymizeCustomerFailure({ error })))
         )
       )
     )

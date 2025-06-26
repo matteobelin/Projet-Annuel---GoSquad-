@@ -172,7 +172,7 @@ public class CustomerUpdateServiceImpl implements CustomerUpdateService {
         CustomerEntity existingCustomer = customerService.getCustomerByIdAndCompanyId(customerId, company.getId());
 
         CustomerEntity anonymousCustomer = new CustomerEntity(
-                null,
+                customerId,
                 "anonymous",
                 "anonymous",
                 "anonymous@example.com",

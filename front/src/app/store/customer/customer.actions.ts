@@ -29,3 +29,21 @@ export const loadCustomerFailure = createAction(
   '[Customer] Load Customer Failure',
   props<{ error: any }>()
 );
+
+export const anonymizeCustomer = createAction(
+  '[Customer] Anonymize Customer',
+  props<{ uniqueCustomerId: string }>()
+);
+
+export const anonymizeCustomerSuccess = createAction(
+  '[Customer] Anonymize Customer Success',
+  props<{ uniqueCustomerId: string }>()
+);
+
+export const anonymizeCustomerFailure = createAction(
+  '[Customer] Anonymize Customer Failure',
+  props<{ error: any }>()
+);
+
+
+

@@ -6,18 +6,26 @@ import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { signal } from '@angular/core';
 import {Router} from '@angular/router';
+import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-client-list',
   standalone: true,
-  imports: [NgIf, NgFor, FormsModule],
+  imports: [NgIf, NgFor, FormsModule, ConfirmDialogComponent],
   templateUrl: './customer-list.component.html',
   styleUrls: ['./customer-list.component.css']
 })
 export class CustomerListComponent {
+
+  selectedCustomerId: string | null = null;
+  showConfirmDialog = false;
+  confirmMessage = `Êtes-vous sûr de vouloir supprimer ce client ? Tapez "confirmer" pour valider.`;
+  confirmText = 'confirmer';
+
   private customers: Signal<Customer[]>;
   filterText = signal('');
   private router = inject(Router);
+  private removedCustomerIds = signal<Set<string>>(new Set());
 
   constructor(private customerStore: CustomerStoreService) {
     this.customerStore.loadCustomers();
@@ -26,11 +34,13 @@ export class CustomerListComponent {
 
   filteredCustomers = computed(() => {
     const filter = this.filterText().toLowerCase();
+    const removedIds = this.removedCustomerIds();
     return this.customers().filter(customer =>
-      (customer.uniqueCustomerId ?? '').toLowerCase().includes(filter) ||
-      (customer.lastName ?? '').toLowerCase().includes(filter) ||
-      (customer.firstName ?? '').toLowerCase().includes(filter) ||
-      (customer.email ?? '').toLowerCase().includes(filter)
+      !removedIds.has(customer.uniqueCustomerId) &&
+      ((customer.uniqueCustomerId ?? '').toLowerCase().includes(filter) ||
+        (customer.lastName ?? '').toLowerCase().includes(filter) ||
+        (customer.firstName ?? '').toLowerCase().includes(filter) ||
+        (customer.email ?? '').toLowerCase().includes(filter))
     );
   });
 
@@ -44,6 +54,24 @@ export class CustomerListComponent {
   }
 
   onDeleteCustomer(id: string) {
-    console.log('Supprimer client', id);
+    this.selectedCustomerId = id;
+    this.showConfirmDialog = true;
+  }
+
+  onConfirmDelete() {
+    this.showConfirmDialog = false;
+    if (this.selectedCustomerId) {
+      this.customerStore.anonymizeCustomer(this.selectedCustomerId);
+      this.removedCustomerIds.update(set => {
+        set.add(this.selectedCustomerId!);
+        return set;
+      });
+      this.selectedCustomerId = null;
+    }
+    this.customerStore.loadCustomers();
+  }
+
+  onCancelDelete() {
+    this.showConfirmDialog = false;
   }
 }
