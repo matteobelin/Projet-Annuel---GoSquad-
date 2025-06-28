@@ -47,12 +47,12 @@ export const anonymizeCustomerFailure = createAction(
 
 export const createCustomer = createAction(
   '[Customer] Create Customer',
-  props<{ customer: Customer }>()
+  props<{ formData: FormData  }>()
 )
 
 export const createCustomerSuccess = createAction(
   '[Customer] Create Customer Success',
-  props<{ customer: Customer }>()
+  props<{ uniqueCustomerId: string }>()
 );
 
 export const createCustomerFailure = createAction(

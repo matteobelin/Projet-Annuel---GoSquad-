@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import {CustomerDocumentFormModalComponent} from '../customer-document-add/customer-document-add.component';
 import { CommonModule } from '@angular/common';
 import {Router} from '@angular/router';
+import { CustomerStoreService } from '../../../store/customer/customer.store.service';
 
 @Component({
   selector: 'app-add-customer',
@@ -23,6 +24,8 @@ export class AddCustomerComponent implements OnInit {
   showPassportFields = false;
 
   customerForm!: FormGroup;
+  private customerStore = inject(CustomerStoreService);
+
 
   constructor(private fb: FormBuilder) {}
 
@@ -30,8 +33,15 @@ export class AddCustomerComponent implements OnInit {
     this.customerForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      birthDate: ['', Validators.required],
-      isoNationality: ['', [Validators.required, Validators.maxLength(2)]],
+      birthDate: ['', [
+        Validators.required,
+        Validators.pattern(/^\d{4}-\d{2}-\d{2}$/) // Format YYYY-MM-DD
+      ]],
+      isoNationality: ['', [
+        Validators.required,
+        Validators.pattern(/^[A-Z]{2}$/), // Exactement 2 lettres majuscules
+        Validators.maxLength(2)
+      ]],
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', [
         Validators.required,
@@ -40,15 +50,27 @@ export class AddCustomerComponent implements OnInit {
       addressLine: ['', Validators.required],
       cityName: ['', Validators.required],
       postalCode: ['', Validators.required],
-      isoCode: ['', Validators.required],
+      isoCode: ['', [
+        Validators.required,
+        Validators.pattern(/^[A-Z]{2}$/), // Exactement 2 lettres majuscules
+        Validators.maxLength(2)
+      ]],
       addressLineBilling: ['', Validators.required],
       cityNameBilling: ['', Validators.required],
       postalCodeBilling: ['', Validators.required],
-      isoCodeBilling: ['', Validators.required],
+      isoCodeBilling: ['', [
+        Validators.required,
+        Validators.pattern(/^[A-Z]{2}$/), // Exactement 2 lettres majuscules
+        Validators.maxLength(2)
+      ]],
       idCardNumber: [{ value: null, disabled: true }],
-      idCardExpirationDate: [{ value: null, disabled: true }],
+      idCardExpirationDate: [{ value: null, disabled: true }, [
+        Validators.pattern(/^\d{4}-\d{2}-\d{2}$/) // Format YYYY-MM-DD
+      ]],
       passportNumber: [{ value: null, disabled: true }],
-      passportExpirationDate: [{ value: null, disabled: true }],
+      passportExpirationDate: [{ value: null, disabled: true }, [
+        Validators.pattern(/^\d{4}-\d{2}-\d{2}$/) // Format YYYY-MM-DD
+      ]],
     });
 
     // Ajout du + obligatoire au début du numéro de téléphone
@@ -57,13 +79,23 @@ export class AddCustomerComponent implements OnInit {
         this.customerForm.get('phoneNumber')?.setValue('+' + value.replace(/^\+*/, ''), { emitEvent: false });
       }
     });
+
   }
 
 
   onSubmit(): void {
     if (this.customerForm.valid) {
-      console.log('Formulaire envoyé :', this.customerForm.value);
-      // Appel API ou service ici
+      const customer = this.customerForm.getRawValue();
+      const formData = new FormData();
+      formData.append('customer', new Blob([JSON.stringify(customer)], { type: 'application/json' }));
+      if (this.idCardImage) {
+        formData.append('idCard', this.idCardImage);
+      }
+      if (this.passportImage) {
+        formData.append('passport', this.passportImage);
+      }
+      this.customerStore.createCustomer(formData);
+
     }
   }
 

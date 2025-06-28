@@ -1,11 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { of } from 'rxjs';
+import { of, tap } from 'rxjs';
 import { map, mergeMap, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import * as CustomerActions from './customer.actions';
 import { environment } from '../../../environments/environment';
 import { Customer } from '../../core/models/customer.model';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class CustomerEffects {
@@ -14,6 +15,8 @@ export class CustomerEffects {
   private getCustomerUrl = `${environment.apiUrl}/getCustomer`;
   private anonymizeCustomerUrl = `${environment.apiUrl}/updateCustomerToAnonymous`;
   private createCustomerUrl = `${environment.apiUrl}/customer`;
+
+  private readonly router = inject(Router);
 
 
   loadCustomers$ = createEffect(() =>
@@ -55,26 +58,30 @@ export class CustomerEffects {
   createCustomer$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CustomerActions.createCustomer),
-      mergeMap(({ customer }) => {
-        const formData = new FormData();
-        formData.append('customer', new Blob([JSON.stringify(customer)], { type: 'application/json' }));
-        if (customer.idCard) {
-          formData.append('idCard', customer.idCard);
-        }
-        if (customer.passport) {
-          formData.append('passport', customer.passport);
-        }
-
-        return this.http.post<{ customerId: string }>(this.createCustomerUrl, formData).pipe(
-          map(({ customerId }) => {
-            const customerWithId = { ...customer, uniqueCustomerId: customerId };
-            return CustomerActions.createCustomerSuccess({ customer: customerWithId });
-          }),
-          catchError(error => of(CustomerActions.createCustomerFailure({ error })))
-        );
-      })
+      mergeMap(({ formData }) =>
+        this.http.post<{
+          uniqueCustomerId: string }>(this.createCustomerUrl, formData).pipe(
+          map(response =>
+            CustomerActions.createCustomerSuccess({ uniqueCustomerId: response.uniqueCustomerId })
+          ),
+          catchError(error =>
+            of(CustomerActions.createCustomerFailure({ error }))
+          )
+        )
+      )
     )
   );
+
+  createCustomerSuccess$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(CustomerActions.createCustomerSuccess),
+        tap(({ uniqueCustomerId }) => {
+          this.router.navigate(['/clients', uniqueCustomerId]);
+        })
+      ),
+    { dispatch: false }
+  );
+
 
 
 

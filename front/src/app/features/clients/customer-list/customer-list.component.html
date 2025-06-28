@@ -1,14 +1,20 @@
 <div class="client-list-container">
-  <!-- Champ de filtre -->
-  <div class="filter-container">
-    <div class="filter-input-wrapper">
-      <span class="filter-icon">🔍</span>
-      <input type="text"
-             placeholder="Filtrer par nom, prénom, email ou ID client"
+  <!-- Header avec bouton d'ajout et filtre -->
+  <div class="header-actions">
+    <button class="btn-add-client" (click)="onAddCustomer()">
+      Ajouter un client
+    </button>
 
-             class="filter-input"
-             [value]="filterText()"
-             (input)="filterText.set($any($event.target).value)" />
+    <!-- Champ de filtre -->
+    <div class="filter-container">
+      <div class="filter-input-wrapper">
+        <span class="filter-icon">🔍</span>
+        <input type="text"
+               placeholder="Filtrer par nom, prénom, email ou ID client"
+               class="filter-input"
+               [value]="filterText()"
+               (input)="filterText.set($any($event.target).value)" />
+      </div>
     </div>
   </div>
 
@@ -38,7 +44,7 @@
       <td>{{ customer.email }}</td>
       <td class="actions">
         <button (click)="$event.stopPropagation(); onDeleteCustomer(customer.uniqueCustomerId!)"
-          class="btn-delete">Supprimer</button>
+                class="btn-delete">Supprimer</button>
       </td>
     </tr>
     </tbody>
@@ -48,7 +54,6 @@
 <app-confirm-dialog
   *ngIf="showConfirmDialog"
   [message]=confirmMessage
-
   [confirmText]=confirmText
   (confirmed)="onConfirmDelete()"
   (cancelled)="onCancelDelete()">

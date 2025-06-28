@@ -4,7 +4,8 @@ import { Customer } from '../../core/models/customer.model';
 
 export interface CustomerState {
   customers: Customer[];
-  selectedCustomer: Customer | null;
+  selectedCustomer?: Customer | null;
+  uniqueCustomerId?: string | null;
   loading: boolean;
   error: any;
 }
@@ -12,6 +13,7 @@ export interface CustomerState {
 export const initialState: CustomerState = {
   customers: [],
   selectedCustomer: null,
+  uniqueCustomerId: null,
   loading: false,
   error: null
 };
@@ -71,9 +73,9 @@ on(CustomerActions.createCustomer, (state) => ({
   error: null
 })),
 
-  on(CustomerActions.createCustomerSuccess, (state, { customer }) => ({
+  on(CustomerActions.createCustomerSuccess, (state, { uniqueCustomerId }) => ({
     ...state,
-    customers: [...state.customers, customer], // ajoute le nouveau client
+    uniqueCustomerId,
     loading: false,
     error: null
   })),

@@ -1,5 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { CustomerState } from './customer.reducer';
+import {Customer} from '../../core/models/customer.model';
 
 export const selectCustomerState = createFeatureSelector<CustomerState>('customer');
 
@@ -15,10 +16,14 @@ export const selectCustomersLoading = createSelector(
 
 export const selectSelectedCustomer = createSelector(
   selectCustomerState,
-  (state) => state.selectedCustomer
+  (state): Customer | null => state.selectedCustomer ?? null
 );
 
 export const selectCustomerError = createSelector(
   selectCustomerState,
   (state) => state.error
 );
+
+
+
+

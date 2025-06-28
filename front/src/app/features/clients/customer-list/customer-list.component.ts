@@ -77,4 +77,8 @@ export class CustomerListComponent {
   onCancelDelete() {
     this.showConfirmDialog = false;
   }
+
+  onAddCustomer() {
+    this.router.navigate(['/clients', 'add']);
+  }
 }
