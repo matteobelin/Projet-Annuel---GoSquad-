@@ -83,7 +83,7 @@ export class CustomerDetailComponent implements OnInit {
   viewIdCard() {
     const customer = this.selectedCustomer();
     if (customer?.idCard) {
-      this.modalImageUrl ='data:image/png;base64,' + customer.idCard;
+      this.modalImageUrl = 'data:image/png;base64,' + customer.idCard;
       this.modalTitle = 'Carte d\'identité';
       this.showModal = true;
     }
@@ -93,14 +93,35 @@ export class CustomerDetailComponent implements OnInit {
   viewPassport() {
     const customer = this.selectedCustomer();
     if (customer?.passport) {
-      this.modalImageUrl ='data:image/png;base64,' + customer.passport;
+      this.modalImageUrl = 'data:image/png;base64,' + customer.passport;
       this.modalTitle = 'Passeport';
       this.showModal = true;
     }
   }
-  closeModal(){
+
+  closeModal() {
     this.showModal = false;
     this.modalImageUrl = null;
     this.modalTitle = '';
+  }
+
+  onAddCustomer() {
+    const customer = this.selectedCustomer();
+    if (!customer) return;
+    this.router.navigate(['/clients', 'add'], {
+      state: {
+        isoNationality: customer.isoNationality,
+        email: customer.email,
+        phoneNumber: customer.phoneNumber,
+        addressLine: customer.addressLine,
+        cityName: customer.cityName,
+        postalCode: customer.postalCode,
+        isoCode: customer.isoCode,
+        addressLineBilling: customer.addressLineBilling,
+        cityNameBilling: customer.cityNameBilling,
+        postalCodeBilling: customer.postalCodeBilling,
+        isoCodeBilling: customer.isoCodeBilling
+      }
+    });
   }
 }

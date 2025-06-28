@@ -54,7 +54,7 @@ public class CustomerUpdateServiceImpl implements CustomerUpdateService {
         CustomerEntity existingCustomer = customerService.getCustomerByIdAndCompanyId(customerId, company.getId());
 
         CustomerValidationHelper.ValidatedCustomerData validatedData =
-                validationHelper.validateAndPrepareCustomerData(customerRequestDTO);
+                validationHelper.validateAndPrepareCustomerData(customerRequestDTO, companyCode);
 
 
         CustomerEntity customerToUpdate = new CustomerEntity(

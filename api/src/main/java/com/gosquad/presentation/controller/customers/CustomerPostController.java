@@ -5,6 +5,7 @@ import com.gosquad.core.exceptions.NotFoundException;
 import com.gosquad.presentation.DTO.customers.CustomerIdResponse;
 import com.gosquad.presentation.DTO.customers.CustomerRequestDTO;
 import com.gosquad.usecase.customers.CustomerPostService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -24,11 +25,11 @@ public class CustomerPostController {
 
 
     @PostMapping("/customer")
-    public ResponseEntity<Object> addCustomer(@RequestPart("customer") CustomerRequestDTO customerRequestDTO,
+    public ResponseEntity<Object> addCustomer(HttpServletRequest request, @RequestPart("customer") CustomerRequestDTO customerRequestDTO,
                                               @RequestPart(value = "idCard", required = false) MultipartFile idCard,
                                               @RequestPart(value = "passport", required = false) MultipartFile passport) {
         try {
-            String uniqueCustomerId = customerRequestDTO.companyCode()+customerUseCase.createCustomer(customerRequestDTO, idCard, passport).getId().toString();
+            String uniqueCustomerId = customerUseCase.createCustomer(request,customerRequestDTO, idCard, passport);
             return ResponseEntity.ok(new CustomerIdResponse(uniqueCustomerId));
         } catch (NotFoundException e) {
             return ResponseEntity.status(404).body("Ressource non trouvée : " + e.getMessage());

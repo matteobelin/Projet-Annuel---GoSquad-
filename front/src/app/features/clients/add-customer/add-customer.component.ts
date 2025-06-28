@@ -30,6 +30,7 @@ export class AddCustomerComponent implements OnInit {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
+    const state = window.history.state;
     this.customerForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -37,28 +38,28 @@ export class AddCustomerComponent implements OnInit {
         Validators.required,
         Validators.pattern(/^\d{4}-\d{2}-\d{2}$/) // Format YYYY-MM-DD
       ]],
-      isoNationality: ['', [
+      isoNationality: [state.isoNationality ||'', [
         Validators.required,
         Validators.pattern(/^[A-Z]{2}$/), // Exactement 2 lettres majuscules
         Validators.maxLength(2)
       ]],
-      email: ['', [Validators.required, Validators.email]],
-      phoneNumber: ['', [
+      email: [ state.email ||'', [Validators.required, Validators.email]],
+      phoneNumber: [ state.phoneNumber || '', [
         Validators.required,
         Validators.pattern(/^\+?[1-9]\d{1,14}$/)
       ]],
-      addressLine: ['', Validators.required],
-      cityName: ['', Validators.required],
-      postalCode: ['', Validators.required],
-      isoCode: ['', [
+      addressLine: [ state.addressLine ||'', Validators.required],
+      cityName: [ state.cityName || '', Validators.required],
+      postalCode: [ state.postalCode || '', Validators.required],
+      isoCode: [ state.postalCode || '', [
         Validators.required,
         Validators.pattern(/^[A-Z]{2}$/), // Exactement 2 lettres majuscules
         Validators.maxLength(2)
       ]],
-      addressLineBilling: ['', Validators.required],
-      cityNameBilling: ['', Validators.required],
-      postalCodeBilling: ['', Validators.required],
-      isoCodeBilling: ['', [
+      addressLineBilling: [ state.addressLineBilling || '', Validators.required],
+      cityNameBilling: [ state.cityNameBilling || '', Validators.required],
+      postalCodeBilling: [ state.postalCodeBilling || '', Validators.required],
+      isoCodeBilling: [ state.isoCodeBilling || '', [
         Validators.required,
         Validators.pattern(/^[A-Z]{2}$/), // Exactement 2 lettres majuscules
         Validators.maxLength(2)
