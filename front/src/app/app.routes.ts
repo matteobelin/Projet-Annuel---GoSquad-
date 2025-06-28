@@ -16,6 +16,7 @@ import { LoginComponent } from './shared/auth/login/login.component';
 import { authGuard } from './shared/auth/guards/auth.guard';
 import { AdvisorComponent } from './module/advisor/advisor.component';
 import { CustomerDetailComponent } from './features/clients/customer-detail/customer-detail.component';
+import {AddCustomerComponent} from './features/clients/add-customer/add-customer.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -27,6 +28,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'clients', component: CustomerListComponent },
+      { path: 'clients/add', component: AddCustomerComponent},
       { path: 'clients/:id', component: CustomerDetailComponent },
       { path: 'voyages', component: VoyagesComponent },
       { path: 'activities', component: ActivitiesComponent },

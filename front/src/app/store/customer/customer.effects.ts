@@ -13,6 +13,7 @@ export class CustomerEffects {
   private getAllCustomersUrl = `${environment.apiUrl}/getAllCustomers`;
   private getCustomerUrl = `${environment.apiUrl}/getCustomer`;
   private anonymizeCustomerUrl = `${environment.apiUrl}/updateCustomerToAnonymous`;
+  private createCustomerUrl = `${environment.apiUrl}/customer`;
 
 
   loadCustomers$ = createEffect(() =>
@@ -50,6 +51,31 @@ export class CustomerEffects {
       )
     )
   );
+
+  createCustomer$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CustomerActions.createCustomer),
+      mergeMap(({ customer }) => {
+        const formData = new FormData();
+        formData.append('customer', new Blob([JSON.stringify(customer)], { type: 'application/json' }));
+        if (customer.idCard) {
+          formData.append('idCard', customer.idCard);
+        }
+        if (customer.passport) {
+          formData.append('passport', customer.passport);
+        }
+
+        return this.http.post<{ customerId: string }>(this.createCustomerUrl, formData).pipe(
+          map(({ customerId }) => {
+            const customerWithId = { ...customer, uniqueCustomerId: customerId };
+            return CustomerActions.createCustomerSuccess({ customer: customerWithId });
+          }),
+          catchError(error => of(CustomerActions.createCustomerFailure({ error })))
+        );
+      })
+    )
+  );
+
 
 
   constructor(private http: HttpClient) {}

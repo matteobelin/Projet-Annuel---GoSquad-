@@ -69,7 +69,7 @@ export class CustomerDetailComponent implements OnInit {
   onConfirmDelete() {
     this.showConfirmDialog = false;
     const customer = this.selectedCustomer();
-    if (customer) {
+    if (customer && customer.uniqueCustomerId) {
       this.customerStore.anonymizeCustomer(customer.uniqueCustomerId);
       this.customerStore.loadCustomers();
       this.goBack();

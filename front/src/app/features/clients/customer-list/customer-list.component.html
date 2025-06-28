@@ -30,15 +30,15 @@
     <tbody>
     <tr *ngFor="let customer of filteredCustomers(); trackBy: trackByCustomerId"
         tabindex="0"
-        (keydown.enter)="onViewCustomer(customer.uniqueCustomerId)"
-        (click)="onViewCustomer(customer.uniqueCustomerId)">
+        (keydown.enter)="customer.uniqueCustomerId && onViewCustomer(customer.uniqueCustomerId)"
+        (click)="customer.uniqueCustomerId && onViewCustomer(customer.uniqueCustomerId)">
       <td>{{ customer.uniqueCustomerId }}</td>
       <td>{{ customer.lastName }}</td>
       <td>{{ customer.firstName }}</td>
       <td>{{ customer.email }}</td>
       <td class="actions">
-        <button (click)="$event.stopPropagation(); onDeleteCustomer(customer.uniqueCustomerId)"
-                class="btn-delete">Supprimer</button>
+        <button (click)="$event.stopPropagation(); onDeleteCustomer(customer.uniqueCustomerId!)"
+          class="btn-delete">Supprimer</button>
       </td>
     </tr>
     </tbody>

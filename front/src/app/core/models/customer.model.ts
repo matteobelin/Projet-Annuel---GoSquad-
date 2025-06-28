@@ -1,6 +1,6 @@
 
 export interface Customer {
-  uniqueCustomerId: string,
+  uniqueCustomerId?: string,
   firstName?: string,
   lastName?: string,
   email?: string,

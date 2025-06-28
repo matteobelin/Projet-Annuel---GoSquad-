@@ -1,5 +1,6 @@
 package com.gosquad.usecase.customers;
 
+import com.gosquad.domain.customers.CustomerEntity;
 import com.gosquad.presentation.DTO.customers.CustomerRequestDTO;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -7,6 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 public interface CustomerPostService {
-    void createCustomer(CustomerRequestDTO dto, MultipartFile idCard, MultipartFile passport) throws Exception;
+    CustomerEntity createCustomer(CustomerRequestDTO dto, MultipartFile idCard, MultipartFile passport) throws Exception;
 }
 

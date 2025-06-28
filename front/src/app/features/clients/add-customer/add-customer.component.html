@@ -1,0 +1,64 @@
+<div class="customer-detail-container">
+  <form [formGroup]="customerForm" (ngSubmit)="onSubmit()" class="customer-card">
+    <div class="customer-header">
+      <h2>Ajouter un client</h2>
+    </div>
+
+    <div class="customer-info">
+      <!-- Identité -->
+      <div class="info-group"><label>Prénom : *</label><input formControlName="firstName" /></div>
+      <div class="info-group"><label>Nom : *</label><input formControlName="lastName" /></div>
+      <div class="info-group"><label>Date de naissance : *</label><input type="date" formControlName="birthDate" /></div>
+      <div class="info-group"><label>Nationalité isoCode : *</label><input formControlName="isoNationality" maxlength="2" /></div>
+
+      <!-- Contact -->
+      <div class="info-group"><label>Email : *</label><input formControlName="email" /></div>
+      <div class="info-group"><label>Téléphone : *</label><input formControlName="phoneNumber" placeholder="+33 612345678" /></div>
+
+      <!-- Adresse principale -->
+      <div class="info-group"><label>Adresse : *</label><input formControlName="addressLine" /></div>
+      <div class="info-group"><label>Ville : *</label><input formControlName="cityName" /></div>
+      <div class="info-group"><label>Code postal : *</label><input formControlName="postalCode" /></div>
+      <div class="info-group"><label>Pays isoCode : *</label><input formControlName="isoCode" maxlength="2"/></div>
+
+      <!-- Adresse de facturation -->
+      <div class="info-group"><label>Adresse facturation : *</label><input formControlName="addressLineBilling" /></div>
+      <div class="info-group"><label>Ville facturation : *</label><input formControlName="cityNameBilling" /></div>
+      <div class="info-group"><label>Code postal facturation : *</label><input formControlName="postalCodeBilling" /></div>
+      <div class="info-group"><label>Pays facturation isoCode : *</label><input formControlName="isoCodeBilling" maxlength="2" /></div>
+
+      <!-- Documents -->
+
+      <div class="info-group" *ngIf="showIdCardFields"><label>Numéro de carte d'identité : *</label><input formControlName="idCardNumber" readonly  /></div>
+      <div class="info-group" *ngIf="showIdCardFields"><label>Date d'expiration de la carte d'identité : *</label><input type="date" formControlName="idCardExpirationDate" readonly  /></div>
+      <div class="info-group" *ngIf="showPassportFields"><label>Numéro de passeport : *</label><input formControlName="passportNumber" readonly /></div>
+      <div class="info-group" *ngIf="showPassportFields" ><label>Date d'expiration du passeport : *</label><input type="date" formControlName="passportExpirationDate" readonly /></div>
+
+      <div class="info-group" >
+        <button (click)="onAddIdCard()" class="btn-doc" *ngIf="!showIdCardFields">Ajouter une carte d'identité</button>
+        <button (click)="onAddIdCard()" class="btn-doc update" *ngIf="showIdCardFields">Modifier la carte d'identité</button>
+      </div>
+      <div class="info-group">
+        <button (click)="onAddPassport()" class="btn-doc" *ngIf="!showPassportFields">Ajouter un passeport</button>
+        <button (click)="onAddPassport()" class="btn-doc update" *ngIf="showPassportFields">Modifier le passeport</button>
+      </div>
+    </div>
+
+    <div class="actions">
+      <div class="actions-left">
+        <button type="button" class="btn-back" (click)="onCancel()">Annuler</button>
+      </div>
+      <div class="actions-right">
+        <button type="submit" class="btn-edit" [disabled]="customerForm.invalid">Ajouter</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<app-customer-document-add
+  [visible]="showDocumentForm"
+  [title]="documentType === 'passport' ? 'Ajouter un passeport' : 'Ajouter une carte d’identité'"
+  (submit)="onDocumentSubmit($event)"
+  (close)="showDocumentForm = false">
+</app-customer-document-add>
+

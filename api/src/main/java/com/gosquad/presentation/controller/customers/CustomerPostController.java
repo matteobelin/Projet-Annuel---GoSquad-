@@ -2,6 +2,7 @@ package com.gosquad.presentation.controller.customers;
 
 import com.gosquad.core.exceptions.ConstraintViolationException;
 import com.gosquad.core.exceptions.NotFoundException;
+import com.gosquad.presentation.DTO.customers.CustomerIdResponse;
 import com.gosquad.presentation.DTO.customers.CustomerRequestDTO;
 import com.gosquad.usecase.customers.CustomerPostService;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +24,12 @@ public class CustomerPostController {
 
 
     @PostMapping("/customer")
-    public ResponseEntity<String> addCustomer(@RequestPart("customer") CustomerRequestDTO customerRequestDTO,
+    public ResponseEntity<Object> addCustomer(@RequestPart("customer") CustomerRequestDTO customerRequestDTO,
                                               @RequestPart(value = "idCard", required = false) MultipartFile idCard,
                                               @RequestPart(value = "passport", required = false) MultipartFile passport) {
         try {
-            customerUseCase.createCustomer(customerRequestDTO, idCard, passport);
-            return ResponseEntity.ok("Client ajouté avec succès");
+            String uniqueCustomerId = customerRequestDTO.companyCode()+customerUseCase.createCustomer(customerRequestDTO, idCard, passport).getId().toString();
+            return ResponseEntity.ok(new CustomerIdResponse(uniqueCustomerId));
         } catch (NotFoundException e) {
             return ResponseEntity.status(404).body("Ressource non trouvée : " + e.getMessage());
         } catch (ConstraintViolationException | IllegalArgumentException e) {

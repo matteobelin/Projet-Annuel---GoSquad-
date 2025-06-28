@@ -53,7 +53,7 @@ export const customerReducer = createReducer(
     error
   })),
 
-on(CustomerActions.anonymizeCustomerSuccess, (state, { uniqueCustomerId }) => ({
+  on(CustomerActions.anonymizeCustomerSuccess, (state, { uniqueCustomerId }) => ({
   ...state,
   customers: state.customers.filter(c => c.uniqueCustomerId !== uniqueCustomerId),
   error: null
@@ -62,5 +62,26 @@ on(CustomerActions.anonymizeCustomerSuccess, (state, { uniqueCustomerId }) => ({
   on(CustomerActions.anonymizeCustomerFailure, (state, { error }) => ({
     ...state,
     error
+  })),
+
+
+on(CustomerActions.createCustomer, (state) => ({
+  ...state,
+  loading: true,
+  error: null
+})),
+
+  on(CustomerActions.createCustomerSuccess, (state, { customer }) => ({
+    ...state,
+    customers: [...state.customers, customer], // ajoute le nouveau client
+    loading: false,
+    error: null
+  })),
+
+  on(CustomerActions.createCustomerFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error
   }))
 );
+

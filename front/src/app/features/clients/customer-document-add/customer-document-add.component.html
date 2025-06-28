@@ -1,0 +1,35 @@
+<div class="modal-overlay" *ngIf="visible">
+  <div class="modal-content">
+    <button class="modal-close" (click)="onClose()">×</button>
+    <h3>{{ title }}</h3>
+
+    <form [formGroup]="documentForm" (ngSubmit)="onSubmit()">
+      <div>
+        <label>Numéro :</label>
+        <input type="text" formControlName="number" />
+      </div>
+
+      <div>
+        <label>Date de fin de validité :</label>
+        <input type="date" formControlName="expiryDate" />
+      </div>
+
+      <div>
+        <label>Image :</label>
+        <!-- input file caché -->
+        <input type="file" #fileInput (change)="onFileChange($event)" accept=".jpg, .jpeg, .png" hidden />
+        <button type="button" class="btn-file-select" (click)="fileInput.click()">Choisir une image</button>
+        <span *ngIf="selectedImage">{{ selectedImage.name }}</span>
+      </div>
+
+      <div *ngIf="selectedImage">
+        <img [src]="imagePreviewUrl" alt="aperçu document" />
+      </div>
+
+      <div class="actions">
+        <button type="button" (click)="onClose()">Annuler</button>
+        <button type="submit" class="btn-edit" [disabled]="documentForm.invalid">Valider</button>
+      </div>
+    </form>
+  </div>
+</div>

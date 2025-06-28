@@ -36,16 +36,19 @@ export class CustomerListComponent {
     const filter = this.filterText().toLowerCase();
     const removedIds = this.removedCustomerIds();
     return this.customers().filter(customer =>
+      customer.uniqueCustomerId && // on s’assure que l’id existe
       !removedIds.has(customer.uniqueCustomerId) &&
-      ((customer.uniqueCustomerId ?? '').toLowerCase().includes(filter) ||
+      (
+        customer.uniqueCustomerId.toLowerCase().includes(filter) ||
         (customer.lastName ?? '').toLowerCase().includes(filter) ||
         (customer.firstName ?? '').toLowerCase().includes(filter) ||
-        (customer.email ?? '').toLowerCase().includes(filter))
+        (customer.email ?? '').toLowerCase().includes(filter)
+      )
     );
   });
 
   trackByCustomerId(index: number, customer: Customer): string {
-    return customer.uniqueCustomerId;
+    return customer.uniqueCustomerId ?? "";
   }
 
   onViewCustomer(id: string) {

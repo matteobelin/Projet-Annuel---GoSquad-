@@ -45,5 +45,20 @@ export const anonymizeCustomerFailure = createAction(
   props<{ error: any }>()
 );
 
+export const createCustomer = createAction(
+  '[Customer] Create Customer',
+  props<{ customer: Customer }>()
+)
+
+export const createCustomerSuccess = createAction(
+  '[Customer] Create Customer Success',
+  props<{ customer: Customer }>()
+);
+
+export const createCustomerFailure = createAction(
+  '[Customer] Create Customer Failure',
+  props<{ error: any }>()
+);
+
 
 

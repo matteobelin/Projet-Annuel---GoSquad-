@@ -33,7 +33,7 @@ public class CustomerPostServiceImpl implements CustomerPostService {
     }
 
     @Override
-    public void createCustomer(CustomerRequestDTO customerRequestDTO, MultipartFile idCard, MultipartFile passport)
+    public CustomerEntity createCustomer(CustomerRequestDTO customerRequestDTO, MultipartFile idCard, MultipartFile passport)
             throws IOException, SQLException, ConstraintViolationException, NotFoundException {
 
         CustomerValidationHelper.ValidatedCustomerData validatedData =
@@ -79,6 +79,7 @@ public class CustomerPostServiceImpl implements CustomerPostService {
         }
 
         customerService.addCustomer(customerEntity);
+        return customerEntity;
     }
 
 
