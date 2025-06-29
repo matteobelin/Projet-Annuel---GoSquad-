@@ -58,7 +58,7 @@ public class CustomerUpdateServiceImpl implements CustomerUpdateService {
 
 
         CustomerEntity customerToUpdate = new CustomerEntity(
-                null,
+                customerId,
                 customerRequestDTO.firstName(),
                 customerRequestDTO.lastName(),
                 customerRequestDTO.email(),

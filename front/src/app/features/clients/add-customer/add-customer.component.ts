@@ -121,8 +121,8 @@ export class AddCustomerComponent implements OnInit {
 
       else{
         customer = {
-          customer,
-          uniqueCustomerId: this.customerId,}
+          ...customer,
+          uniqueCustomerId: this.customerId}
         this.customerStore.updateCustomer(customer);
       }
 

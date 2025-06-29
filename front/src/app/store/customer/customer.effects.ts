@@ -7,7 +7,7 @@ import * as CustomerActions from './customer.actions';
 import { environment } from '../../../environments/environment';
 import { Customer } from '../../core/models/customer.model';
 import {Router} from '@angular/router';
-import {updateCustomer} from './customer.actions';
+import { CustomerStoreService } from './customer.store.service';
 
 @Injectable()
 export class CustomerEffects {
@@ -19,7 +19,6 @@ export class CustomerEffects {
   private updateCustomerUrl = `${environment.apiUrl}/updateCustomer`;
   private updateCustomerPassportUrl = `${environment.apiUrl}/updateCustomerPassport`;
   private updateCustomerIdCardUrl = `${environment.apiUrl}/updateCustomerIdCard`;
-
 
 
   private readonly router = inject(Router);
@@ -91,24 +90,34 @@ export class CustomerEffects {
   updateCustomer$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CustomerActions.updateCustomer),
-      mergeMap(action =>
-        this.http.put<Customer>(`${this.getCustomerUrl}/updateCustomerUrl`, action.customer).pipe(
-          map(() => CustomerActions.updateCustomerSuccess({ uniqueCustomerId: action.customer.uniqueCustomerId! })),
-          catchError(error => of(CustomerActions.updateCustomerFailure({ error })))
-        )
-      )
+      mergeMap(action => {
+        return this.http.put(this.updateCustomerUrl, action.customer, { responseType: 'text' }).pipe(
+          map(() =>
+            CustomerActions.updateCustomerSuccess({ uniqueCustomerId: action.customer.uniqueCustomerId! })
+          ),
+          catchError(error => {
+            return of(CustomerActions.updateCustomerFailure({ error }));
+          })
+        );
+      })
     )
   );
 
+
+
+
+
   updateCustomerSuccess$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(CustomerActions.updateCustomerSuccess),
-      tap(({ uniqueCustomerId }) => {
-        this.router.navigate(['/clients', uniqueCustomerId]);
-      })
-    ),
+      this.actions$.pipe(
+        ofType(CustomerActions.updateCustomerSuccess),
+        tap(action => {
+          this.customerStore.loadCustomer(action.uniqueCustomerId!);
+          this.router.navigate(['/clients', action.uniqueCustomerId]);
+        })
+      ),
     { dispatch: false }
   );
+
 
 
   updateCustomerPassport$ = createEffect(() =>
@@ -140,5 +149,5 @@ export class CustomerEffects {
   );
 
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,private customerStore: CustomerStoreService) {}
 }
