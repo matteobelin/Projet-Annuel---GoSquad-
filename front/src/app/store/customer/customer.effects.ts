@@ -7,6 +7,7 @@ import * as CustomerActions from './customer.actions';
 import { environment } from '../../../environments/environment';
 import { Customer } from '../../core/models/customer.model';
 import {Router} from '@angular/router';
+import {updateCustomer} from './customer.actions';
 
 @Injectable()
 export class CustomerEffects {
@@ -15,6 +16,11 @@ export class CustomerEffects {
   private getCustomerUrl = `${environment.apiUrl}/getCustomer`;
   private anonymizeCustomerUrl = `${environment.apiUrl}/updateCustomerToAnonymous`;
   private createCustomerUrl = `${environment.apiUrl}/customer`;
+  private updateCustomerUrl = `${environment.apiUrl}/updateCustomer`;
+  private updateCustomerPassportUrl = `${environment.apiUrl}/updateCustomerPassport`;
+  private updateCustomerIdCardUrl = `${environment.apiUrl}/updateCustomerIdCard`;
+
+
 
   private readonly router = inject(Router);
 
@@ -82,7 +88,56 @@ export class CustomerEffects {
     { dispatch: false }
   );
 
+  updateCustomer$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CustomerActions.updateCustomer),
+      mergeMap(action =>
+        this.http.put<Customer>(`${this.getCustomerUrl}/updateCustomerUrl`, action.customer).pipe(
+          map(() => CustomerActions.updateCustomerSuccess({ uniqueCustomerId: action.customer.uniqueCustomerId! })),
+          catchError(error => of(CustomerActions.updateCustomerFailure({ error })))
+        )
+      )
+    )
+  );
 
+  updateCustomerSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CustomerActions.updateCustomerSuccess),
+      tap(({ uniqueCustomerId }) => {
+        this.router.navigate(['/clients', uniqueCustomerId]);
+      })
+    ),
+    { dispatch: false }
+  );
+
+
+  updateCustomerPassport$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CustomerActions.updateCustomerPassport),
+      mergeMap(({ formData }) =>
+        this.http.put<void>(this.updateCustomerPassportUrl, formData).pipe(
+          map(() => CustomerActions.updateCustomerPassportSuccess()),
+          catchError(error =>
+            of(CustomerActions.updateCustomerPassportFailure({ error }))
+          )
+        )
+      )
+    )
+  );
+
+  updateCustomerIdCard$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CustomerActions.updateCustomerIdCard),
+      mergeMap(({ formData }) =>
+        this.http.put<void>(this.updateCustomerIdCardUrl, formData).pipe(
+          map(() => CustomerActions.updateCustomerIdCardSuccess()),
+          catchError(error =>
+            of(CustomerActions.updateCustomerIdCardFailure({ error }))
+          )
+        )
+      )
+    )
+  );
 
 
   constructor(private http: HttpClient) {}

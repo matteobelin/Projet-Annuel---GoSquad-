@@ -1,7 +1,8 @@
 <div class="customer-detail-container">
   <form [formGroup]="customerForm" (ngSubmit)="onSubmit()" class="customer-card">
     <div class="customer-header">
-      <h2>Ajouter un client</h2>
+      <h2>{{ mode === 'edit' ? 'Modifier un client' : 'Ajouter un client' }}</h2>
+      <span class="customer-id" *ngIf="mode === 'edit'">ID: {{ customerId }}</span>
     </div>
 
     <div class="customer-info">
@@ -13,7 +14,7 @@
 
       <!-- Contact -->
       <div class="info-group"><label>Email : *</label><input formControlName="email" /></div>
-      <div class="info-group"><label>Téléphone : *</label><input formControlName="phoneNumber" placeholder="+33 612345678" /></div>
+      <div class="info-group"><label>Téléphone : *</label><input formControlName="phoneNumber" placeholder="+33 612345678" pattern="^\+?[1-9]\d{1,14}$"  maxlength="16" (input)="onPhoneInput($event)" /></div>
 
       <!-- Adresse principale -->
       <div class="info-group"><label>Adresse : *</label><input formControlName="addressLine" /></div>
@@ -49,7 +50,9 @@
         <button type="button" class="btn-back" (click)="onCancel()">Annuler</button>
       </div>
       <div class="actions-right">
-        <button type="submit" class="btn-edit" [disabled]="customerForm.invalid">Ajouter</button>
+        <button type="submit" class="btn-edit" [disabled]="customerForm.pristine || customerForm.invalid">
+          {{ mode === 'edit' ? 'Modifier' : 'Ajouter' }}
+        </button>
       </div>
     </div>
   </form>

@@ -60,5 +60,48 @@ export const createCustomerFailure = createAction(
   props<{ error: any }>()
 );
 
+export const updateCustomer = createAction(
+  '[Customer] Update Customer',
+  props<{ customer: Customer }>()
+);
+
+export const updateCustomerSuccess = createAction(
+  '[Customer] Update Customer Success',
+  props<{ uniqueCustomerId: string }>()
+);
+
+export const updateCustomerFailure = createAction(
+  '[Customer] Update Customer Failure',
+  props<{ error: any }>()
+);
+
+export const updateCustomerPassport = createAction(
+  '[Customer] Update Customer Passport',
+  props<{formData: FormData}>()
+);
+
+export const updateCustomerPassportSuccess = createAction(
+  '[Customer] Update Customer Passport Success',
+  );
+
+export const updateCustomerPassportFailure = createAction(
+  '[Customer] Update Customer Passport Failure',
+  props<{ error: any }>()
+);
+
+export const updateCustomerIdCard = createAction(
+  '[Customer] Update Customer ID Card',
+  props<{ formData: FormData }>()
+);
+
+export const updateCustomerIdCardSuccess = createAction(
+  '[Customer] Update Customer ID Card Success',
+);
+
+export const updateCustomerIdCardFailure = createAction(
+  '[Customer] Update Customer ID Card Failure',
+  props<{ error: any }>()
+);
+
 
 

@@ -57,8 +57,30 @@ export class CustomerDetailComponent implements OnInit {
   onEdit() {
     const customer = this.selectedCustomer();
     if (customer) {
-      console.log('Modifier client:', customer.uniqueCustomerId);
-      // this.router.navigate(['/clients', customer.uniqueCustomerId, 'edit']);
+      this.router.navigate(['/clients', 'edit'], {
+        state: {
+          mode : 'edit',
+          uniqueCustomerId: customer.uniqueCustomerId,
+          firstName: customer.firstName,
+          lastName: customer.lastName,
+          birthDate: customer.birthDate,
+          isoNationality: customer.isoNationality,
+          email: customer.email,
+          phoneNumber: customer.phoneNumber,
+          addressLine: customer.addressLine,
+          cityName: customer.cityName,
+          postalCode: customer.postalCode,
+          isoCode: customer.isoCode,
+          addressLineBilling: customer.addressLineBilling,
+          cityNameBilling: customer.cityNameBilling,
+          postalCodeBilling: customer.postalCodeBilling,
+          isoCodeBilling: customer.isoCodeBilling,
+          idCardNumber: customer.idCardNumber || { value: null, disabled: true },
+          idCardExpirationDate: customer.idCardExpirationDate || null,
+          passportExpirationDate: customer.passportExpirationDate || null,
+          passportNumber: customer.passportNumber || { value: null, disabled: true }
+        }
+      });
     }
   }
 

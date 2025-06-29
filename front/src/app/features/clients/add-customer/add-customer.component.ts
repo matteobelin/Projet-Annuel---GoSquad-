@@ -22,6 +22,9 @@ export class AddCustomerComponent implements OnInit {
   idCardImage: File | null = null;
   showIdCardFields = false;
   showPassportFields = false;
+  mode : 'add' | 'edit' = 'add';
+  customerId: string | null = null;
+
 
   customerForm!: FormGroup;
   private customerStore = inject(CustomerStoreService);
@@ -31,10 +34,27 @@ export class AddCustomerComponent implements OnInit {
 
   ngOnInit(): void {
     const state = window.history.state;
+
+    if (!state || !state.uniqueCustomerId) {
+      this.router.navigate(['/clients']);
+      return;
+    }
+
+    this.mode = state.mode || 'add';
+
+    this.customerId = state.uniqueCustomerId || null;
+
+    if(state.idCardNumber.value !== null){
+      this.showIdCardFields = true;
+    }
+    if(state.passportNumber.value !== null){
+      this.showPassportFields = true;
+    }
+
     this.customerForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      birthDate: ['', [
+      firstName: [state.firstName || '', Validators.required],
+      lastName: [ state.lastName || '', Validators.required],
+      birthDate: [ state.birthDate || '', [
         Validators.required,
         Validators.pattern(/^\d{4}-\d{2}-\d{2}$/) // Format YYYY-MM-DD
       ]],
@@ -51,7 +71,7 @@ export class AddCustomerComponent implements OnInit {
       addressLine: [ state.addressLine ||'', Validators.required],
       cityName: [ state.cityName || '', Validators.required],
       postalCode: [ state.postalCode || '', Validators.required],
-      isoCode: [ state.postalCode || '', [
+      isoCode: [ state.isoCode || '', [
         Validators.required,
         Validators.pattern(/^[A-Z]{2}$/), // Exactement 2 lettres majuscules
         Validators.maxLength(2)
@@ -64,12 +84,12 @@ export class AddCustomerComponent implements OnInit {
         Validators.pattern(/^[A-Z]{2}$/), // Exactement 2 lettres majuscules
         Validators.maxLength(2)
       ]],
-      idCardNumber: [{ value: null, disabled: true }],
-      idCardExpirationDate: [{ value: null, disabled: true }, [
+      idCardNumber: [ state.idCardNumber || { value: null, disabled: true }],
+      idCardExpirationDate: [ state.idCardExpirationDate || { value: null, disabled: true }, [
         Validators.pattern(/^\d{4}-\d{2}-\d{2}$/) // Format YYYY-MM-DD
       ]],
-      passportNumber: [{ value: null, disabled: true }],
-      passportExpirationDate: [{ value: null, disabled: true }, [
+      passportNumber: [ state.passportNumber || { value: null, disabled: true }],
+      passportExpirationDate: [ state.passportExpirationDate || { value: null, disabled: true }, [
         Validators.pattern(/^\d{4}-\d{2}-\d{2}$/) // Format YYYY-MM-DD
       ]],
     });
@@ -83,19 +103,28 @@ export class AddCustomerComponent implements OnInit {
 
   }
 
-
   onSubmit(): void {
     if (this.customerForm.valid) {
-      const customer = this.customerForm.getRawValue();
+      let customer = this.customerForm.getRawValue();
       const formData = new FormData();
-      formData.append('customer', new Blob([JSON.stringify(customer)], { type: 'application/json' }));
-      if (this.idCardImage) {
-        formData.append('idCard', this.idCardImage);
+
+      if (this.mode === 'add') {
+        formData.append('customer', new Blob([JSON.stringify(customer)], { type: 'application/json' }));
+        if (this.idCardImage) {
+          formData.append('idCard', this.idCardImage);
+        }
+        if (this.passportImage) {
+          formData.append('passport', this.passportImage);
+        }
+        this.customerStore.createCustomer(formData);
       }
-      if (this.passportImage) {
-        formData.append('passport', this.passportImage);
+
+      else{
+        customer = {
+          customer,
+          uniqueCustomerId: this.customerId,}
+        this.customerStore.updateCustomer(customer);
       }
-      this.customerStore.createCustomer(formData);
 
     }
   }
@@ -124,13 +153,49 @@ export class AddCustomerComponent implements OnInit {
         this.customerForm.patchValue({idCardNumber: event.number , idCardExpirationDate: event.expiryDate});
         this.showIdCardFields = true;
         this.idCardImage = event.image;
+
+        if (this.mode === 'edit') {
+          const customer = {
+            uniqueCustomerId: this.customerId,
+            idCardNumber: event.number,
+            idCardExpirationDate: event.expiryDate
+          };
+          const formData = new FormData();
+          formData.append('customer', new Blob([JSON.stringify(customer)], { type: 'application/json' }));
+          if (this.idCardImage) {
+            formData.append('idCard', this.idCardImage);
+          }
+          this.customerStore.updateCustomerIdCard(formData);
+        }
+
       }
       else if (this.documentType === 'passport') {
         this.customerForm.patchValue({passportNumber: event.number,passportExpirationDate: event.expiryDate});
         this.showPassportFields = true;
         this.passportImage = event.image;
+
+        if (this.mode=== 'edit') {
+          const customer = {
+            uniqueCustomerId: this.customerId,
+            passportNumber: event.number,
+            passportExpirationDate: event.expiryDate
+          };
+          const formData = new FormData();
+          formData.append('customer', new Blob([JSON.stringify(customer)], { type: 'application/json' }));
+          if (this.passportImage) {
+            formData.append('passport', this.passportImage);
+          }
+          this.customerStore.updateCustomerPassport(formData);
+        }
       }
     }
+  }
+
+  onPhoneInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value
+      .replace(/(?!^\+)[^\d]/g, '')  // Supprimer tout sauf chiffres (autorise + au début uniquement)
+      .replace(/^(\+{2,})/, '+');    // Corrige plusieurs +
   }
 
 }

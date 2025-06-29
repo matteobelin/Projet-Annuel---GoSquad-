@@ -84,6 +84,63 @@ on(CustomerActions.createCustomer, (state) => ({
     ...state,
     loading: false,
     error
+  })),
+
+  on(CustomerActions.updateCustomer, (state) => ({
+    ...state,
+    loading: true,
+    error: null
+    })),
+
+  on(CustomerActions.updateCustomerSuccess, (state, { uniqueCustomerId }) => ({
+    ...state,
+    uniqueCustomerId,
+    loading: false,
+    error: null
+    })),
+
+  on(CustomerActions.updateCustomerFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error
+    })),
+
+  on(CustomerActions.updateCustomerPassport, (state) => ({
+    ...state,
+    loading: true,
+    error: null
+    })),
+
+  on(CustomerActions.updateCustomerPassportSuccess, (state) => ({
+    ...state,
+    loading: false,
+    error: null
+    })),
+
+  on(CustomerActions.updateCustomerPassportFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error
+    })),
+
+  on(CustomerActions.updateCustomerIdCard, (state) => ({
+    ...state,
+    loading: true,
+    error: null
+  })),
+
+  on(CustomerActions.updateCustomerIdCardSuccess, (state) => ({
+    ...state,
+    loading: false,
+    error: null
+  })),
+
+  on(CustomerActions.updateCustomerIdCardFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error
   }))
+
+
 );
 
