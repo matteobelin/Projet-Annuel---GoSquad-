@@ -4,6 +4,7 @@ import {CustomerDocumentFormModalComponent} from '../customer-document-add/custo
 import { CommonModule } from '@angular/common';
 import {Router} from '@angular/router';
 import { CustomerStoreService } from '../../../store/customer/customer.store.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-add-customer',
@@ -30,24 +31,27 @@ export class AddCustomerComponent implements OnInit {
   private customerStore = inject(CustomerStoreService);
 
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder,private location: Location) {}
 
   ngOnInit(): void {
     const state = window.history.state;
 
-    if (!state || !state.uniqueCustomerId) {
+    this.mode = state.mode || 'add';
+
+    if ((!state || !state.uniqueCustomerId) && this.mode !== 'add') {
       this.router.navigate(['/clients']);
       return;
     }
 
-    this.mode = state.mode || 'add';
+
+
 
     this.customerId = state.uniqueCustomerId || null;
 
-    if(state.idCardNumber.value !== null){
+    if (state.idCardNumber && state.idCardNumber.value !== null) {
       this.showIdCardFields = true;
     }
-    if(state.passportNumber.value !== null){
+    if (state.passportNumber && state.passportNumber.value !== null) {
       this.showPassportFields = true;
     }
 
@@ -130,7 +134,7 @@ export class AddCustomerComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/clients']);
+    this.location.back();
     this.customerForm.reset();
   }
 
