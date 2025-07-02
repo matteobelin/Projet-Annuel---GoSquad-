@@ -11,12 +11,21 @@
   gap: 20px;
 }
 
+.btn-back,.btn-add-client,.btn-delete,
+.btn-edit {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
 .btn-back {
   padding: 10px 16px;
   background-color: #6c757d;
   color: white;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
   text-decoration: none;
   display: flex;
@@ -136,7 +145,7 @@ h1 {
   background-color: #f8f9fa; /* gris très clair */
   color: #343a40; /* gris foncé pour le contraste */
   border: 1px solid #ced4da;
-  border-radius: 6px;
+  border-radius: 8px;
   padding: 10px 18px;
   cursor: pointer;
   font-weight: 600;
@@ -149,6 +158,10 @@ h1 {
 .btn-doc:hover {
   background-color: #e2e6ea;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-add-client:hover {
+  background-color: #e2e6ea;
 }
 
 

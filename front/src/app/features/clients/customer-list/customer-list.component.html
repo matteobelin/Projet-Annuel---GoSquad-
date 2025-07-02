@@ -1,7 +1,7 @@
 <div class="client-list-container">
   <!-- Header avec bouton d'ajout et filtre -->
   <div class="header-actions">
-    <button class="btn-add-client" (click)="onAddCustomer()">
+    <button class="btn btn-add-client" (click)="onAddCustomer()">
       Ajouter un client
     </button>
 
@@ -44,7 +44,7 @@
       <td>{{ customer.email }}</td>
       <td class="actions">
         <button (click)="$event.stopPropagation(); onDeleteCustomer(customer.uniqueCustomerId!)"
-                class="btn-delete">Supprimer</button>
+                class="btn btn-delete">Supprimer</button>
       </td>
     </tr>
     </tbody>
@@ -53,8 +53,8 @@
 
 <app-confirm-dialog
   *ngIf="showConfirmDialog"
-  [message]=confirmMessage
-  [confirmText]=confirmText
+  [message]="confirmMessage"
+  [confirmText]="confirmText"
   (confirmed)="onConfirmDelete()"
   (cancelled)="onCancelDelete()">
 </app-confirm-dialog>

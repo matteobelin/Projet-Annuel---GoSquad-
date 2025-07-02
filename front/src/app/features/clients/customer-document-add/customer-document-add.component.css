@@ -56,7 +56,7 @@ h3{
 
 /* Bouton personnalisé pour le file input */
 .btn-file-select {
-  background-color: #3f51b5;
+  background-color: #007bff;
   color: #fff;
   padding: 8px 16px;
   border: none;
@@ -67,7 +67,7 @@ h3{
 }
 
 .btn-file-select:hover {
-  background-color: #303f9f;
+  background-color: #0056b3;
 }
 
 img {
@@ -84,26 +84,21 @@ img {
   align-items: center;
 }
 
-.actions button {
-  padding: 10px 16px;
-  border-radius: 4px;
+
+
+
+.btn-back,
+.btn-edit {
+  padding: 0.6rem 1.2rem;
   border: none;
+  border-radius: 8px;
+  font-size: 1rem;
   cursor: pointer;
-  font-weight: 600;
+  transition: background-color 0.2s ease;
 }
-
-.actions button[type="button"] {
-  background-color: #ccc;
-  color: #333;
-}
-
-.actions button[type="button"]:hover {
-  background-color: #bbb;
-}
-
 /* Bouton Valider avec classe .btn-edit */
 .btn-edit {
-  background-color: #3f51b5;
+  background-color: #007bff;
   color: #fff;
 }
 
@@ -113,5 +108,22 @@ img {
 }
 
 .btn-edit:hover:not(:disabled) {
-  background-color: #303f9f;
+  background-color: #0056b3;
 }
+
+.btn-back {
+  padding: 10px 16px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-back:hover {
+  background-color: #5a6268;
+}
+

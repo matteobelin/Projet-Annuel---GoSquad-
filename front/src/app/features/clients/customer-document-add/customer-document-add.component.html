@@ -18,7 +18,7 @@
         <label>Image :</label>
         <!-- input file caché -->
         <input type="file" #fileInput (change)="onFileChange($event)" accept=".jpg, .jpeg, .png" hidden />
-        <button type="button" class="btn-file-select" (click)="fileInput.click()">Choisir une image</button>
+        <button type="button" class="btn-file-select btn-edit" (click)="fileInput.click()">Choisir une image</button>
         <span *ngIf="selectedImage">{{ selectedImage.name }}</span>
       </div>
 
@@ -27,7 +27,7 @@
       </div>
 
       <div class="actions">
-        <button type="button" (click)="onClose()">Annuler</button>
+        <button type="button" class="btn-back" (click)="onClose()">Annuler</button>
         <button type="submit" class="btn-edit" [disabled]="documentForm.invalid">Valider</button>
       </div>
     </form>
