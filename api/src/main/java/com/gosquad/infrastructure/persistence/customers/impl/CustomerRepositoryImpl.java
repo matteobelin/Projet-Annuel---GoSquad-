@@ -123,12 +123,6 @@ public class CustomerRepositoryImpl extends Repository<CustomerModel> implements
             updates.put("address_id", customer.getAddressId());
             updates.put("billing_address_id", customer.getBillingAddressId());
             updates.put("birth_date", customer.getBirthDate());
-            updates.put("id_card_number", customer.getIdCardNumber());
-            updates.put("id_card_expiration_date", customer.getIdCardExpirationDate());
-            updates.put("id_card_copy_url", customer.getIdCardCopyUrl());
-            updates.put("passport_number", customer.getPassportNumber());
-            updates.put("passport_expiration_date", customer.getPassportExpirationDate());
-            updates.put("passport_copy_url", customer.getPassportCopyUrl());
 
 
             updateBy("id",customer.getId(),updates);

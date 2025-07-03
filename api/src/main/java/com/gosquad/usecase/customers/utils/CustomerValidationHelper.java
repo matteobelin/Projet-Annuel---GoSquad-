@@ -47,7 +47,7 @@ public class CustomerValidationHelper {
         private final AddressEntity billingAddress;
     }
 
-    public ValidatedCustomerData validateAndPrepareCustomerData(CustomerRequestDTO customerData)
+    public ValidatedCustomerData validateAndPrepareCustomerData(CustomerRequestDTO customerData,String companyCode)
             throws SQLException, NotFoundException, ConstraintViolationException {
 
         // Validation des codes ISO
@@ -56,7 +56,7 @@ public class CustomerValidationHelper {
         validateIsoCode(customerData.isoCodeBilling(), "code ISO de facturation");
 
         // Récupération des entités
-        CompanyEntity company = companyService.getCompanyByCode(customerData.companyCode());
+        CompanyEntity company = companyService.getCompanyByCode(companyCode);
 
         CountryEntity nationalityCountry = countryService.getCountryByIsoCode(customerData.isoNationality());
         CountryEntity addressCountry = countryService.getCountryByIsoCode(customerData.isoCode());

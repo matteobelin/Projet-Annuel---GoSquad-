@@ -44,9 +44,9 @@ public class CustomerUpdateServiceImplTest {
 
     @Test
     void testUpdateCustomer_success() throws Exception {
-        String companyCode = "COMP";
-        String uniqueCustomerId = "COMP123";
-        int customerId = 123;
+        String companyCode = "GOSQUAD";
+        String uniqueCustomerId = "GOSQUAD2";
+        int customerId = 2;
 
         CustomerRequestDTO dto = mock(CustomerRequestDTO.class);
         when(dto.uniqueCustomerId()).thenReturn(uniqueCustomerId);
@@ -57,7 +57,7 @@ public class CustomerUpdateServiceImplTest {
         when(dto.birthDate()).thenReturn(Date.valueOf("1980-01-01"));
 
         CompanyEntity company = mock(CompanyEntity.class);
-        when(company.getId()).thenReturn(10);
+        when(company.getId()).thenReturn(1);
         when(companyService.getCompanyByCode(companyCode)).thenReturn(company);
 
         CustomerEntity existingCustomer = new CustomerEntity(
@@ -68,32 +68,51 @@ public class CustomerUpdateServiceImplTest {
                 "+33612345678",
                 Date.valueOf("1970-01-01"),
                 null, null, null, null, null, null,
-                1, 2, 3, 10);
+                1, 2, 1, 1);
 
         when(customerService.getCustomerByIdAndCompanyId(customerId, company.getId())).thenReturn(existingCustomer);
 
+        // Mock des entités séparément pour éviter les problèmes de null
+        var nationalityCountry = mock(com.gosquad.domain.countries.CountryEntity.class);
+        when(nationalityCountry.getId()).thenReturn(1);
+
+        var address = mock(com.gosquad.domain.addresses.AddressEntity.class);
+        when(address.getId()).thenReturn(2);
+
+        var billingAddress = mock(com.gosquad.domain.addresses.AddressEntity.class);
+        when(billingAddress.getId()).thenReturn(1);
+
         var validatedData = mock(CustomerValidationHelper.ValidatedCustomerData.class);
-        when(validationHelper.validateAndPrepareCustomerData(dto)).thenReturn(validatedData);
-        when(validatedData.getNationalityCountry()).thenReturn(mock(com.gosquad.domain.countries.CountryEntity.class));
-        when(validatedData.getNationalityCountry().getId()).thenReturn(100);
-        when(validatedData.getAddress()).thenReturn(mock(com.gosquad.domain.addresses.AddressEntity.class));
-        when(validatedData.getAddress().getId()).thenReturn(200);
-        when(validatedData.getBillingAddress()).thenReturn(mock(com.gosquad.domain.addresses.AddressEntity.class));
-        when(validatedData.getBillingAddress().getId()).thenReturn(300);
+        when(validatedData.getNationalityCountry()).thenReturn(nationalityCountry);
+        when(validatedData.getAddress()).thenReturn(address);
+        when(validatedData.getBillingAddress()).thenReturn(billingAddress);
         when(validatedData.getCompany()).thenReturn(company);
 
+        // CORRECTION: Utiliser le bon companyCode pour le mock
+        when(validationHelper.validateAndPrepareCustomerData(dto, companyCode)).thenReturn(validatedData);
+
+        // Exécution du test
         updateService.updateCustomer(dto, companyCode);
 
+        // Vérifications
         ArgumentCaptor<CustomerEntity> captor = ArgumentCaptor.forClass(CustomerEntity.class);
         verify(customerService).updateCustomer(captor.capture());
 
         CustomerEntity updated = captor.getValue();
         assertEquals("John", updated.getFirstname());
         assertEquals("Doe", updated.getLastname());
-        assertEquals(100, updated.getCountryId());
-        assertEquals(200, updated.getAddressId());
-        assertEquals(300, updated.getBillingAddressId());
-        assertEquals(10, updated.getCompanyId());
+        assertEquals("john@example.com", updated.getEmail());
+        assertEquals("+123456789", updated.getPhoneNumber());
+        assertEquals(Date.valueOf("1980-01-01"), updated.getBirthDate());
+        assertEquals(1, updated.getCountryId());
+        assertEquals(2, updated.getAddressId());
+        assertEquals(1, updated.getBillingAddressId());
+        assertEquals(1, updated.getCompanyId());
+
+        // Vérifier que les bonnes méthodes ont été appelées
+        verify(companyService).getCompanyByCode(companyCode);
+        verify(customerService).getCustomerByIdAndCompanyId(customerId, company.getId());
+        verify(validationHelper).validateAndPrepareCustomerData(dto, companyCode);
     }
 
     @Test

@@ -1,0 +1,7 @@
+<div class="modal-overlay" *ngIf="imageUrl">
+  <div class="modal-content">
+    <button class="modal-close" (click)="onClose()">×</button>
+    <h3>{{ title }}</h3>
+    <img [src]="imageUrl" alt="{{ title }}" />
+  </div>
+</div>

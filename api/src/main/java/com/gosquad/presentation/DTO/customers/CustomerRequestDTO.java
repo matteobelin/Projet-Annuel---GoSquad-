@@ -23,7 +23,6 @@ public record CustomerRequestDTO(
         String cityNameBilling,
         String postalCodeBilling,
         String isoCodeBilling,
-        String companyCode,
         byte[] idCard,
         byte[] passport
 ) {}
