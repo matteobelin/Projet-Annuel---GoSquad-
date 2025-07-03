@@ -108,6 +108,7 @@ export class AddCustomerComponent implements OnInit {
   }
 
   onSubmit(): void {
+    console.log("here")
     if (this.customerForm.valid) {
       let customer = this.customerForm.getRawValue();
       const formData = new FormData();
@@ -124,12 +125,13 @@ export class AddCustomerComponent implements OnInit {
       }
 
       else{
-        customer = {
-          ...customer,
-          uniqueCustomerId: this.customerId}
-        this.customerStore.updateCustomer(customer);
+        if(!this.showDocumentForm){
+          customer = {
+            ...customer,
+            uniqueCustomerId: this.customerId}
+          this.customerStore.updateCustomer(customer);
+        }
       }
-
     }
   }
 
@@ -167,7 +169,7 @@ export class AddCustomerComponent implements OnInit {
           const formData = new FormData();
           formData.append('customer', new Blob([JSON.stringify(customer)], { type: 'application/json' }));
           if (this.idCardImage) {
-            formData.append('idCard', this.idCardImage);
+            formData.append('file', this.idCardImage);
           }
           this.customerStore.updateCustomerIdCard(formData);
         }
@@ -187,7 +189,7 @@ export class AddCustomerComponent implements OnInit {
           const formData = new FormData();
           formData.append('customer', new Blob([JSON.stringify(customer)], { type: 'application/json' }));
           if (this.passportImage) {
-            formData.append('passport', this.passportImage);
+            formData.append('file', this.passportImage);
           }
           this.customerStore.updateCustomerPassport(formData);
         }

@@ -50,8 +50,8 @@
         <button type="button" class="btn-back" (click)="onCancel()">Annuler</button>
       </div>
       <div class="actions-right">
-        <button type="submit" class="btn-edit" [disabled]="customerForm.pristine || customerForm.invalid">
-          {{ mode === 'edit' ? 'Modifier' : 'Ajouter' }}
+        <button type="submit" class="btn-edit" [disabled]="customerForm.invalid">
+          {{ mode === 'edit' ? 'Valider' : 'Ajouter' }}
         </button>
       </div>
     </div>

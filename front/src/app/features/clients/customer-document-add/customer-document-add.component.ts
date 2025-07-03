@@ -41,6 +41,7 @@ export class CustomerDocumentFormModalComponent {
   }
 
   onSubmit() {
+      console.log("here")
     if (this.documentForm.valid) {
       this.submit.emit({
         number: this.documentForm.value.number,
