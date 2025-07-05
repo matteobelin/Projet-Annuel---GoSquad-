@@ -7,6 +7,7 @@ import com.gosquad.infrastructure.persistence.categories.CategoryRepository;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -24,17 +25,30 @@ public class CategoryRepositoryImpl extends Repository<CategoryModel> implements
     protected CategoryModel mapResultSetToEntity(java.sql.ResultSet rs) throws SQLException {
         return new CategoryModel(
                 rs.getInt("id"),
-                rs.getString("name")
+                rs.getString("name"),
+                rs.getInt("company_id")
         );
     }
 
-    public CategoryModel getCategoryByName(String name) throws SQLException, NotFoundException {
-        return findBy("name",name);
+    public List<CategoryModel> getAllByCompanyId(int companyId) throws Exception{
+        Map<String, Object> conditions = new HashMap<>();
+        conditions.put("company_id", companyId);
+
+        return findAllBy(conditions);
+    }
+
+    public CategoryModel getCategoryByNameAndCompanyId(String name,int companyId) throws SQLException, NotFoundException {
+        Map<String, Object> conditions = new HashMap<>();
+        conditions.put("name", name);
+        conditions.put("company_id", companyId);
+
+        return findByMultiple(conditions);
     }
 
     public void createCategory(CategoryModel category) throws SQLException {
         Map<String, Object> value = new HashMap<>();
         value.put("name", category.getName());
+        value.put("company_id", category.getCompanyId());
         category.setId(insert(value));
     }
 

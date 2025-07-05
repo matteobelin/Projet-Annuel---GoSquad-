@@ -7,9 +7,11 @@ import lombok.EqualsAndHashCode;
 @Data
 public class CategoryModel extends Model {
     String name;
+    Integer companyId;
 
-    public CategoryModel(Integer id, String name) {
+    public CategoryModel(Integer id, String name, Integer companyId) {
         super(id);
         this.name = name;
+        this.companyId = companyId;
     }
 }

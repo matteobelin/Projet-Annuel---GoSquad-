@@ -22,8 +22,8 @@ public class CategoryServiceImpl implements CategoryService {
         this.categoryMapper = categoryMapper;
     }
 
-    public List<CategoryEntity> getAllCategory() throws Exception{
-        List<CategoryModel> categoryModel = categoryRepository.getAll();
+    public List<CategoryEntity> getAllCategoryByCompanyId(int companyId) throws Exception{
+        List<CategoryModel> categoryModel = categoryRepository.getAllByCompanyId(companyId);
         return categoryMapper.modelToEntity(categoryModel);
 
     }
@@ -33,8 +33,8 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.modelToEntity(categoryModel);
     }
 
-    public CategoryEntity getCategoryByName(String name) throws SQLException, NotFoundException{
-        CategoryModel categoryModel = categoryRepository.getCategoryByName(name);
+    public CategoryEntity getCategoryByNameAndCompanyId(String name, int companyId) throws SQLException, NotFoundException{
+        CategoryModel categoryModel = categoryRepository.getCategoryByNameAndCompanyId(name, companyId);
         return categoryMapper.modelToEntity(categoryModel);
     }
 

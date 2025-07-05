@@ -2,15 +2,14 @@ package com.gosquad.usecase.categories;
 
 import com.gosquad.core.exceptions.NotFoundException;
 import com.gosquad.domain.categories.CategoryEntity;
-import com.gosquad.infrastructure.persistence.categories.CategoryModel;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public interface CategoryService {
-    List<CategoryEntity> getAllCategory() throws Exception;
+    List<CategoryEntity> getAllCategoryByCompanyId(int companyId) throws Exception;
     CategoryEntity getCategoryById(int id) throws NotFoundException, SQLException;
-    CategoryEntity getCategoryByName(String name) throws SQLException, NotFoundException;
+    CategoryEntity getCategoryByNameAndCompanyId(String name, int companyId)throws SQLException, NotFoundException;
     void createCategory(CategoryEntity category) throws SQLException;
     void updateCategory(CategoryEntity category) throws SQLException;
     void deleteCategory(int id) throws SQLException;

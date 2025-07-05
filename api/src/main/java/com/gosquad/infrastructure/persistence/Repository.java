@@ -116,6 +116,42 @@ public abstract class Repository<T extends Model> {
         return results;
     }
 
+    public List<T> findAllBy(Map<String, Object> conditions, String... selectedColumns) throws SQLException {
+        List<T> results = new ArrayList<>();
+        String cols = (selectedColumns.length > 0) ? String.join(", ", selectedColumns) : "*";
+
+        // Construire la clause WHERE avec toutes les conditions
+        StringBuilder whereClause = new StringBuilder();
+        List<Object> values = new ArrayList<>();
+
+        for (Map.Entry<String, Object> entry : conditions.entrySet()) {
+            if (whereClause.length() > 0) {
+                whereClause.append(" AND ");
+            }
+            whereClause.append(entry.getKey()).append(" = ?");
+            values.add(entry.getValue());
+        }
+
+        String query = "SELECT " + cols + " FROM " + tableName + " WHERE " + whereClause.toString();
+
+        try (Connection connection = DataConfig.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            // Définir tous les paramètres
+            for (int i = 0; i < values.size(); i++) {
+                stmt.setObject(i + 1, values.get(i));
+            }
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                T item = mapResultSetToEntity(rs);
+                results.add(item);
+            }
+        }
+
+        return results;
+    }
+
     public int insert(Map<String, Object> values) throws SQLException {
         StringBuilder columns = new StringBuilder();
         StringBuilder placeholders = new StringBuilder();

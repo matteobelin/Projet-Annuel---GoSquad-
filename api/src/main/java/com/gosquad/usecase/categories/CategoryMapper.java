@@ -13,14 +13,16 @@ public class CategoryMapper {
     public CategoryEntity modelToEntity(CategoryModel categoryModel) {
         return new CategoryEntity(
                 categoryModel.getId(),
-                categoryModel.getName()
+                categoryModel.getName(),
+                categoryModel.getCompanyId()
         );
     }
 
     public CategoryModel entityToModel(CategoryEntity categoryEntity) {
         return new CategoryModel(
                 categoryEntity.getId(),
-                categoryEntity.getName()
+                categoryEntity.getName(),
+                categoryEntity.getCompanyId()
         );
     }
 

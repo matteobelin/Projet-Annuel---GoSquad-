@@ -8,6 +8,7 @@ import com.gosquad.infrastructure.persistence.activities_customers.ActivityCusto
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @org.springframework.stereotype.Repository
@@ -26,12 +27,17 @@ public class ActivityCustomerImpl extends Repository<ActivityCustomerModel> impl
                 rs.getInt("customer_id"),
                 rs.getBoolean("participation"),
                 rs.getDate("start_date"),
-                rs.getDate("end_date")
+                rs.getDate("end_date"),
+                rs.getInt("group_id")
         );
     }
 
-    public ActivityCustomerModel getActivityByCustomerId(int customerId) throws SQLException, NotFoundException {
-        return findBy("customer_id", customerId);
+    public List<ActivityCustomerModel> getActivityByCustomerId(int customerId) throws SQLException {
+        return findAllBy("customer_id", customerId);
+    }
+
+    public List<ActivityCustomerModel> getActivitiesByGroupId(int groupId) throws SQLException {
+        return findAllBy("group_id", groupId);
     }
 
     public ActivityCustomerModel getActivityByCustomerWhereParticipation(int customerId, boolean participation) throws SQLException, NotFoundException {
@@ -41,11 +47,19 @@ public class ActivityCustomerImpl extends Repository<ActivityCustomerModel> impl
         return findByMultiple(values);
     }
 
-    public ActivityCustomerModel getActivityById(int activityId, int customerId) throws SQLException, NotFoundException {
+    public ActivityCustomerModel getActivityById(int activityId, int customerId,int groupId) throws SQLException, NotFoundException {
         Map<String, Object> values = new HashMap<>();
         values.put("activity_id", activityId);
         values.put("customer_id", customerId);
+        values.put("group_id", groupId);
         return findByMultiple(values);
+    }
+
+    public List<ActivityCustomerModel> getActivityByCustomerIdAndGroupId(int customerId, int groupId) throws SQLException{
+        Map<String, Object> values = new HashMap<>();
+        values.put("customer_id", customerId);
+        values.put("group_id", groupId);
+        return findAllBy(values);
     }
 
     public void createActivityCustomer(ActivityCustomerModel activityCustomer) throws SQLException {

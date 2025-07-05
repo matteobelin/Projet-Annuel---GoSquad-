@@ -23,6 +23,7 @@ CREATE SEQUENCE category_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE
 CREATE TABLE "public"."category" (
     "id" integer DEFAULT nextval('category_id_seq') NOT NULL,
     "name" character varying(255) NOT NULL UNIQUE,
+    "company_id" integer NOT NULL,
     CONSTRAINT "category_pkey" PRIMARY KEY ("id")
 )
 WITH (oids = false);
@@ -34,7 +35,8 @@ CREATE TABLE "public"."activity_customer" (
     "customer_id" integer NOT NULL,
     "participation" boolean NOT NULL,
     "end_date" timestamp NOT NULL,
-    "start_date" timestamp NOT NULL
+    "start_date" timestamp NOT NULL,
+    "group_id" integer NOT NULL
 )
 WITH (oids = false);
 
@@ -457,8 +459,12 @@ ALTER TABLE ONLY "public"."activity" ADD CONSTRAINT "activity_address_id_fkey" F
 ALTER TABLE ONLY "public"."activity" ADD CONSTRAINT "activity_category_id_fkey" FOREIGN KEY (category_id) REFERENCES category(id) NOT DEFERRABLE;
 ALTER TABLE ONLY "public"."activity" ADD CONSTRAINT "activity_price_id_fkey" FOREIGN KEY (price_id) REFERENCES price(id) NOT DEFERRABLE;
 
+
+ALTER TABLE ONLY "public"."category" ADD CONSTRAINT "category_company_id_fkey" FOREIGN KEY (company_id) REFERENCES company(id) NOT DEFERRABLE;
+
 ALTER TABLE ONLY "public"."activity_customer" ADD CONSTRAINT "activity_customer_activity_id_fkey" FOREIGN KEY (activity_id) REFERENCES activity(id) NOT DEFERRABLE;
 ALTER TABLE ONLY "public"."activity_customer" ADD CONSTRAINT "activity_customer_customer_id_fkey" FOREIGN KEY (customer_id) REFERENCES customer(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."activity_customer" ADD CONSTRAINT "activity_customer_group_id_fkey" FOREIGN KEY (group_id) REFERENCES "group"(id) NOT DEFERRABLE;
 
 ALTER TABLE ONLY "public"."addresses" ADD CONSTRAINT "addresses_city_id_fkey" FOREIGN KEY (city_id) REFERENCES cities(id) NOT DEFERRABLE;
 

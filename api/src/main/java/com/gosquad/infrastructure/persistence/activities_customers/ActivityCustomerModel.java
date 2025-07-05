@@ -14,13 +14,15 @@ public class ActivityCustomerModel extends Model {
     private Boolean participation;
     private Date startDate;
     private Date endDate;
+    private Integer groupId;
 
-    public ActivityCustomerModel(Integer activityId, Integer customerId, Boolean participation, Date startDate, Date endDate) {
+    public ActivityCustomerModel(Integer activityId, Integer customerId, Boolean participation, Date startDate, Date endDate,Integer groupId) {
         this.activityId = activityId;
         this.customerId = customerId;
         this.participation = participation;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.groupId = groupId;
     }
 
 }
