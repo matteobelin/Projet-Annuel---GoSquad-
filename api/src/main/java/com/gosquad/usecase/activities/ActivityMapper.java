@@ -15,7 +15,8 @@ public class ActivityMapper {
                 activity.getDescription(),
                 activity.getAddressId(),
                 activity.getPriceId(),
-                activity.getCategoryId()
+                activity.getCategoryId(),
+                activity.getCompanyId()
         );
     }
 
@@ -26,7 +27,8 @@ public class ActivityMapper {
                 activity.getDescription(),
                 activity.getAddressId(),
                 activity.getPriceId(),
-                activity.getCategoryId()
+                activity.getCategoryId(),
+                activity.getCompanyId()
         );
     }
 

@@ -11,6 +11,7 @@ CREATE TABLE "public"."activity" (
     "address_id" integer NOT NULL,
     "price_id" integer NOT NULL,
     "category_id" integer NOT NULL,
+    "company_id" integer NOT NULL,
     CONSTRAINT "activity_pkey" PRIMARY KEY ("id")
 )
 WITH (oids = false);
@@ -22,7 +23,7 @@ CREATE SEQUENCE category_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE
 
 CREATE TABLE "public"."category" (
     "id" integer DEFAULT nextval('category_id_seq') NOT NULL,
-    "name" character varying(255) NOT NULL UNIQUE,
+    "name" character varying(255) NOT NULL,
     "company_id" integer NOT NULL,
     CONSTRAINT "category_pkey" PRIMARY KEY ("id")
 )
@@ -455,7 +456,7 @@ WITH (oids = false);
 
 
 ALTER TABLE ONLY "public"."activity" ADD CONSTRAINT "activity_address_id_fkey" FOREIGN KEY (address_id) REFERENCES addresses(id) NOT DEFERRABLE;
-
+ALTER TABLE ONLY "public"."activity" ADD CONSTRAINT "activity_company_id_fkey" FOREIGN KEY (company_id) REFERENCES company(id) NOT DEFERRABLE;
 ALTER TABLE ONLY "public"."activity" ADD CONSTRAINT "activity_category_id_fkey" FOREIGN KEY (category_id) REFERENCES category(id) NOT DEFERRABLE;
 ALTER TABLE ONLY "public"."activity" ADD CONSTRAINT "activity_price_id_fkey" FOREIGN KEY (price_id) REFERENCES price(id) NOT DEFERRABLE;
 

@@ -1,6 +1,7 @@
 package com.gosquad.usecase.price.impl;
 
 import com.gosquad.domain.price.PriceEntity;
+import com.gosquad.infrastructure.persistence.price.PriceModel;
 import com.gosquad.infrastructure.persistence.price.PriceRepository;
 import com.gosquad.usecase.price.PriceMapper;
 import com.gosquad.usecase.price.PriceService;
@@ -27,7 +28,9 @@ public class PriceServiceImpl implements PriceService {
         if(price.getVatRate().compareTo(MAX_VAT_RATE) > 0){
             throw new Exception("VAT rate cannot be greater than 50%");
         }else{
-            priceRepository.createPrice(priceMapper.entityToModel(price));
+            PriceModel priceModel = priceMapper.entityToModel(price);
+            priceRepository.createPrice(priceModel);
+            price.setId(priceModel.getId());
         }
     }
 

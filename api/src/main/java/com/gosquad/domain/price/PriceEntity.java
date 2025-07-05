@@ -17,5 +17,7 @@ public class PriceEntity extends Entity {
         super(id);
         this.netPrice = netPrice;
         this.vatRate = vatRate;
+        this.vatAmount = vatAmount;
+        this.grossPrice = grossPrice;
     }
 }

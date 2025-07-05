@@ -23,8 +23,8 @@ public class ActivityServiceImpl implements ActivityService {
         this.activityMapper = activityMapper;
     }
 
-    public List<ActivityEntity> getAllActivities() throws Exception{
-        List<ActivityModel> activityModel = activityRepository.getAll();
+    public List<ActivityEntity> getAllByCompanyId(int companyId) throws Exception{
+        List<ActivityModel> activityModel = activityRepository.getAllByCompanyId(companyId);
         return activityMapper.modelToEntity(activityModel);
 
     }
@@ -34,8 +34,8 @@ public class ActivityServiceImpl implements ActivityService {
         return activityMapper.modelToEntity(activityModels);
     }
 
-    public ActivityEntity getById(int id)throws SQLException, NotFoundException{
-        ActivityModel activityModel = activityRepository.getById(id);
+    public ActivityEntity getByIdAndCompanyId(int id,int companyId)throws SQLException, NotFoundException{
+        ActivityModel activityModel = activityRepository.getByIdAndCompanyId(id, companyId);
         return activityMapper.modelToEntity(activityModel);
     }
 
