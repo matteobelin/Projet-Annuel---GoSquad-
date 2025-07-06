@@ -26,8 +26,8 @@ public class ActivityCustomerImpl extends Repository<ActivityCustomerModel> impl
                 rs.getInt("activity_id"),
                 rs.getInt("customer_id"),
                 rs.getBoolean("participation"),
-                rs.getDate("start_date"),
-                rs.getDate("end_date"),
+                rs.getTimestamp("start_date").toLocalDateTime(),
+                rs.getTimestamp("end_date").toLocalDateTime(),
                 rs.getInt("group_id")
         );
     }
@@ -36,15 +36,19 @@ public class ActivityCustomerImpl extends Repository<ActivityCustomerModel> impl
         return findAllBy("customer_id", customerId);
     }
 
-    public List<ActivityCustomerModel> getActivitiesByGroupId(int groupId) throws SQLException {
-        return findAllBy("group_id", groupId);
+    public List<ActivityCustomerModel> getActivitiesByGroupIdWhereParticipation(int groupId,boolean participation) throws SQLException {
+        Map<String, Object> values = new HashMap<>();
+        values.put("group_id", groupId);
+        values.put("participation", participation);
+        return findAllBy(values);
     }
 
-    public ActivityCustomerModel getActivityByCustomerWhereParticipation(int customerId, boolean participation) throws SQLException, NotFoundException {
+    public List<ActivityCustomerModel> getActivityByCustomerWhereParticipation(int customerId, boolean participation,int groupId) throws SQLException, NotFoundException {
         Map<String, Object> values = new HashMap<>();
         values.put("customer_id", customerId);
         values.put("participation", participation);
-        return findByMultiple(values);
+        values.put("group_id", groupId);
+        return findAllBy(values);
     }
 
     public ActivityCustomerModel getActivityById(int activityId, int customerId,int groupId) throws SQLException, NotFoundException {
@@ -55,9 +59,17 @@ public class ActivityCustomerImpl extends Repository<ActivityCustomerModel> impl
         return findByMultiple(values);
     }
 
-    public List<ActivityCustomerModel> getActivityByCustomerIdAndGroupId(int customerId, int groupId) throws SQLException{
+    public List<ActivityCustomerModel> getActivityByCustomerIdAndGroupIdWhereParticipation(int customerId, int groupId,boolean participation) throws SQLException{
         Map<String, Object> values = new HashMap<>();
         values.put("customer_id", customerId);
+        values.put("group_id", groupId);
+        values.put("participation", participation);
+        return findAllBy(values);
+    }
+
+    public List<ActivityCustomerModel> getCustomersByActivityIdAndGroupId(int activityId, int groupId) throws SQLException{
+        Map<String, Object> values = new HashMap<>();
+        values.put("activity_id", activityId);
         values.put("group_id", groupId);
         return findAllBy(values);
     }
@@ -69,6 +81,7 @@ public class ActivityCustomerImpl extends Repository<ActivityCustomerModel> impl
         values.put("participation", activityCustomer.getParticipation());
         values.put("start_date", activityCustomer.getStartDate());
         values.put("end_date", activityCustomer.getEndDate());
+        values.put("group_id", activityCustomer.getGroupId());
         insert(values);
     }
 
@@ -76,6 +89,7 @@ public class ActivityCustomerImpl extends Repository<ActivityCustomerModel> impl
         Map<String, Object> condition = new HashMap<>();
         condition.put("activity_id", activityCustomer.getActivityId());
         condition.put("customer_id", activityCustomer.getCustomerId());
+        condition.put("group_id", activityCustomer.getGroupId());
 
         Map<String, Object> values = new HashMap<>();
         values.put("participation", activityCustomer.getParticipation());

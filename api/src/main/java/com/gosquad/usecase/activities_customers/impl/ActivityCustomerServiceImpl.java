@@ -22,17 +22,18 @@ public class ActivityCustomerServiceImpl implements ActivityCustomerService {
         this.activityCustomerMapper = activityCustomerMapper;
     }
 
-    public List<ActivityCustomerEntity> getActivityByCustomerId(int customerId) throws  SQLException{
-        List<ActivityCustomerModel> activityCustomerModel = activityCustomerRepository.getActivityByCustomerId(customerId);
-        return activityCustomerMapper.modelToEntity(activityCustomerModel);
-    }
-    public List<ActivityCustomerEntity> getActivitiesByGroupId(int groupId) throws SQLException{
-        List<ActivityCustomerModel> activityCustomerModel = activityCustomerRepository.getActivitiesByGroupId(groupId);
+    public List<ActivityCustomerEntity> getActivitiesByGroupIdWhereParticipation(int customerId,boolean participation) throws  SQLException{
+        List<ActivityCustomerModel> activityCustomerModel = activityCustomerRepository.getActivitiesByGroupIdWhereParticipation(customerId,participation);
         return activityCustomerMapper.modelToEntity(activityCustomerModel);
     }
 
-    public ActivityCustomerEntity getActivityByCustomerWhereParticipation(int customerId, boolean participation) throws SQLException, NotFoundException{
-        ActivityCustomerModel activityCustomerModel = activityCustomerRepository.getActivityByCustomerWhereParticipation(customerId, participation);
+    public List<ActivityCustomerEntity> getActivityByCustomerId(int customerId) throws SQLException{
+        List<ActivityCustomerModel> activityCustomerModel = activityCustomerRepository.getActivityByCustomerId(customerId);
+        return activityCustomerMapper.modelToEntity(activityCustomerModel);
+    }
+
+    public List<ActivityCustomerEntity> getActivityByCustomerWhereParticipation(int customerId, boolean participation, int groupeId) throws SQLException, NotFoundException{
+        List<ActivityCustomerModel> activityCustomerModel = activityCustomerRepository.getActivityByCustomerWhereParticipation(customerId, participation,groupeId);
         return activityCustomerMapper.modelToEntity(activityCustomerModel);
     }
 
@@ -41,9 +42,16 @@ public class ActivityCustomerServiceImpl implements ActivityCustomerService {
         return activityCustomerMapper.modelToEntity(activityCustomerModel);
     }
 
-    public List<ActivityCustomerModel> getActivityByCustomerIdAndGroupId(int customerId, int groupId) throws SQLException{
-        return activityCustomerRepository.getActivityByCustomerIdAndGroupId(customerId, groupId);
+    public List<ActivityCustomerEntity> getActivityByCustomerIdAndGroupIdWhereParticipation(int customerId, int groupId,boolean participation) throws SQLException{
+        List<ActivityCustomerModel> activityCustomerModel = activityCustomerRepository.getActivityByCustomerIdAndGroupIdWhereParticipation(customerId, groupId,participation);
+        return activityCustomerMapper.modelToEntity(activityCustomerModel);
     }
+
+    public  List<ActivityCustomerEntity> getCustomersByActivityIdAndGroupId(int activityId, int groupId) throws SQLException{
+        List<ActivityCustomerModel> activityCustomerModel = activityCustomerRepository.getCustomersByActivityIdAndGroupId(activityId, groupId);
+        return activityCustomerMapper.modelToEntity(activityCustomerModel);
+    }
+
     public void createActivityCustomer(ActivityCustomerEntity activityCustomer) throws SQLException{
         ActivityCustomerModel activityCustomerModel = activityCustomerMapper.entityToModel(activityCustomer);
         activityCustomerRepository.createActivityCustomer(activityCustomerModel);

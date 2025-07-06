@@ -4,7 +4,7 @@ import com.gosquad.infrastructure.persistence.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -12,11 +12,11 @@ public class ActivityCustomerModel extends Model {
     private Integer activityId;
     private Integer customerId;
     private Boolean participation;
-    private Date startDate;
-    private Date endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private Integer groupId;
 
-    public ActivityCustomerModel(Integer activityId, Integer customerId, Boolean participation, Date startDate, Date endDate,Integer groupId) {
+    public ActivityCustomerModel(Integer activityId, Integer customerId, Boolean participation, LocalDateTime startDate, LocalDateTime endDate,Integer groupId) {
         this.activityId = activityId;
         this.customerId = customerId;
         this.participation = participation;

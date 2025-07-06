@@ -27,4 +27,8 @@ public class GetCompany {
         String companyCode = tokenInfo.get("companyCode").toString();
         return companyService.getCompanyByCode(companyCode);
     }
+
+    public int GetCustomerIdByCompany(String customerId, CompanyEntity company) {
+        return Integer.parseInt(customerId.replace(company.getCode(), ""));
+    }
 }
