@@ -1,4 +1,30 @@
 -- Drop existing tables and sequences
+
+
+DROP TABLE IF EXISTS advisor;
+DROP SEQUENCE IF EXISTS PERSON_ID_SEQ;
+
+
+DROP TABLE IF EXISTS activity_customer;
+DROP SEQUENCE IF EXISTS ACTIVITY_CUSTOMER_ID_SEQ;
+
+
+DROP TABLE IF EXISTS "group";
+DROP SEQUENCE IF EXISTS GROUP_ID_SEQ;
+
+
+DROP TABLE IF EXISTS activity;
+DROP SEQUENCE IF EXISTS ACTIVITY_ID_SEQ;
+
+DROP TABLE IF EXISTS customer;
+DROP SEQUENCE IF EXISTS CUSTOMER_ID_SEQ;
+
+DROP TABLE IF EXISTS category;
+DROP SEQUENCE IF EXISTS CATEGORY_ID_SEQ;
+
+DROP TABLE IF EXISTS price;
+DROP SEQUENCE IF EXISTS PRICE_ID_SEQ;
+
 DROP TABLE IF EXISTS addresses;
 DROP SEQUENCE IF EXISTS ADDRESSES_ID_SEQ;
 
@@ -8,14 +34,10 @@ DROP SEQUENCE IF EXISTS CITIES_ID_SEQ;
 DROP TABLE IF EXISTS countries;
 DROP SEQUENCE IF EXISTS COUNTRIES_ID_SEQ;
 
-DROP TABLE IF EXISTS customer;
-DROP SEQUENCE IF EXISTS CUSTOMER_ID_SEQ;
-
-DROP TABLE IF EXISTS advisor;
-DROP SEQUENCE IF EXISTS PERSON_ID_SEQ;
-
 DROP TABLE IF EXISTS company;
 DROP SEQUENCE IF EXISTS COMPANY_ID_SEQ;
+
+
 
 -- Create sequences
 CREATE SEQUENCE ADDRESSES_ID_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
@@ -24,6 +46,11 @@ CREATE SEQUENCE COUNTRIES_ID_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 C
 CREATE SEQUENCE CUSTOMER_ID_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
 CREATE SEQUENCE PERSON_ID_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
 CREATE SEQUENCE COMPANY_ID_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+CREATE SEQUENCE ACTIVITY_ID_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+CREATE SEQUENCE ACTIVITY_CUSTOMER_ID_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+CREATE SEQUENCE CATEGORY_ID_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+CREATE SEQUENCE GROUP_ID_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
+CREATE SEQUENCE PRICE_ID_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
 
 -- Create tables
 CREATE TABLE company (
@@ -88,6 +115,57 @@ CREATE TABLE customer (
                           CONSTRAINT fk_customer_company FOREIGN KEY (company_id) REFERENCES company(id)
 );
 
+CREATE TABLE category (
+                          id INTEGER DEFAULT NEXT VALUE FOR CATEGORY_ID_SEQ NOT NULL PRIMARY KEY,
+                          name VARCHAR(255) NOT NULL UNIQUE,
+                          company_id INTEGER NOT NULL,
+                          CONSTRAINT fk_category_company FOREIGN KEY (company_id) REFERENCES company(id)
+);
+
+CREATE TABLE price (
+                       id INTEGER DEFAULT NEXT VALUE FOR PRICE_ID_SEQ NOT NULL PRIMARY KEY,
+                       net_price NUMERIC(10,2) NOT NULL,
+                       vat_rate NUMERIC(5,2) NOT NULL,
+                       vat_amount NUMERIC(10,2) AS ((net_price * vat_rate) / 100),
+                       gross_price NUMERIC(10,2) AS (net_price + ((net_price * vat_rate) / 100))
+);
+CREATE TABLE "group" (
+                         id INTEGER DEFAULT NEXT VALUE FOR GROUP_ID_SEQ NOT NULL PRIMARY KEY,
+                         name VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE activity (
+                          id INTEGER DEFAULT NEXT VALUE FOR ACTIVITY_ID_SEQ NOT NULL PRIMARY KEY,
+                          name VARCHAR(255) NOT NULL,
+                          description TEXT,
+                          address_id INTEGER NOT NULL,
+                          price_id INTEGER NOT NULL,
+                          category_id INTEGER NOT NULL,
+                          company_id INTEGER NOT NULL,
+                          CONSTRAINT fk_activity_category FOREIGN KEY (category_id) REFERENCES category(id),
+                          CONSTRAINT fk_activity_price FOREIGN KEY (price_id) REFERENCES price(id),
+                          CONSTRAINT fk_activity_address FOREIGN KEY (address_id) REFERENCES addresses(id),
+                          CONSTRAINT fk_activity_company FOREIGN KEY (company_id) REFERENCES company(id)
+);
+
+CREATE TABLE activity_customer (
+                                   activity_id INTEGER NOT NULL,
+                                   customer_id INTEGER NOT NULL,
+                                   participation BOOLEAN NOT NULL DEFAULT FALSE,
+                                   end_date timestamp NOT NULL,
+                                   start_date timestamp NOT NULL,
+                                   group_id INTEGER NOT NULL,
+                                   CONSTRAINT fk_activity_customer_activity FOREIGN KEY (activity_id) REFERENCES activity(id),
+                                   CONSTRAINT fk_activity_customer_customer FOREIGN KEY (customer_id) REFERENCES customer(id),
+                                   CONSTRAINT fk_activity_customer_advisor FOREIGN KEY (group_id) REFERENCES "group"(id)
+);
+
+
+
+
+
+
+
 -- Insert data
 INSERT INTO company (id, code, name) VALUES
     (1, 'GOSQUAD', 'Entreprise Gosquad');
@@ -121,6 +199,28 @@ INSERT INTO customer (id, firstname, lastname, email, phone_number, birth_date, 
                                                                                                                                                                                                                                                                      (5, 'Jean', 'DEPUIS', 'jean.dupont@email.com', '+33123456789', '1990-01-15', NULL, NULL, NULL, 'nsjBUxFTHiK3HPhr91jvIUHzRQ9hkQsSRb7450okbqE=', '2029-01-15', 's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_96ba8862-dc3c-49b6-b215-5e72f203a0a5.bin', 1, 3, 4, 1),
                                                                                                                                                                                                                                                                      (6, 'Jean', 'DEPUIS', 'jean.dupont@email.com', '+33123456789', '1990-01-15', NULL, NULL, NULL, 'b1hnGcWZeNYd+SKHsErsxcV9BgmKAhaidtJOGcfCaAc=', '2029-01-15', 's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_51e4e08d-23ed-43b2-aa6d-50596e0e0a22.bin', 1, 5, 4, 1),
                                                                                                                                                                                                                                                                      (7, 'Matteo', 'BE', 'jean.dupont@email.com', '+33123456789', '1990-01-15', NULL, NULL, NULL, 'JU2Y1tU6DrRVybCqnrq3SSzD064TK5bwciQoXFVUFlk=', '2029-01-15', 's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_ae32d887-5af0-4406-b1e8-e5f53d0f5b8c.bin', 1, 5, 4, 1);
+INSERT INTO category (id, name, company_id) VALUES
+                                                        (1, 'Sport', 1),
+                                                        (2, 'Repas', 1);
+
+INSERT INTO "group" (id, name) VALUES
+    (1, 'test');
+
+INSERT INTO price(id, net_price, vat_rate) VALUES
+                                                        (1, 25.00, 20.00),
+                                                        (2, 25.00, 20.00);
+
+INSERT INTO activity (id, name, description, address_id, price_id, category_id, company_id) VALUES
+    (1, 'Sport Class', 'A Sport class', 1, 1, 2, 1);
+
+INSERT INTO activity_customer
+(activity_id, customer_id, participation, end_date, start_date, group_id)
+VALUES
+    (1, 3, '1', '2025-07-06 12:00:00', '2025-07-06 09:30:00', 1),
+    (1, 5, '1', '2025-07-06 12:00:00', '2025-07-06 09:30:00', 1),
+    (1, 6, '1', '2025-07-06 12:00:00', '2025-07-06 08:30:00', 1),
+    (1, 6, '0', '2025-07-06 12:00:00', '2025-07-06 08:30:00', 1);
+
 -- Synchroniser les séquences après les insertions
 ALTER SEQUENCE ADDRESSES_ID_SEQ RESTART WITH 6;  -- Prochain ID libre pour addresses
 ALTER SEQUENCE CITIES_ID_SEQ RESTART WITH 6;     -- Prochain ID libre pour cities
@@ -128,3 +228,9 @@ ALTER SEQUENCE COUNTRIES_ID_SEQ RESTART WITH 2;  -- Prochain ID libre pour count
 ALTER SEQUENCE CUSTOMER_ID_SEQ RESTART WITH 8;   -- Prochain ID libre pour customer
 ALTER SEQUENCE PERSON_ID_SEQ RESTART WITH 4;     -- Prochain ID libre pour advisor
 ALTER SEQUENCE COMPANY_ID_SEQ RESTART WITH 2;    -- Prochain ID libre pour company
+ALTER SEQUENCE CATEGORY_ID_SEQ RESTART WITH 3; -- Prochain ID libre pour category
+ALTER SEQUENCE GROUP_ID_SEQ RESTART WITH 2; -- Prochain ID libre pour group
+ALTER SEQUENCE ACTIVITY_ID_SEQ RESTART WITH 2; -- Prochain ID libre pour activity
+ALTER SEQUENCE PRICE_ID_SEQ RESTART WITH 3; -- Prochain ID libre pour price
+
+
