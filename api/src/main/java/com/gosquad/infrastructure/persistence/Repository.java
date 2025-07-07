@@ -116,6 +116,42 @@ public abstract class Repository<T extends Model> {
         return results;
     }
 
+    public List<T> findAllBy(Map<String, Object> conditions, String... selectedColumns) throws SQLException {
+        List<T> results = new ArrayList<>();
+        String cols = (selectedColumns.length > 0) ? String.join(", ", selectedColumns) : "*";
+
+        // Construire la clause WHERE avec toutes les conditions
+        StringBuilder whereClause = new StringBuilder();
+        List<Object> values = new ArrayList<>();
+
+        for (Map.Entry<String, Object> entry : conditions.entrySet()) {
+            if (whereClause.length() > 0) {
+                whereClause.append(" AND ");
+            }
+            whereClause.append(entry.getKey()).append(" = ?");
+            values.add(entry.getValue());
+        }
+
+        String query = "SELECT " + cols + " FROM " + tableName + " WHERE " + whereClause.toString();
+
+        try (Connection connection = DataConfig.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            // Définir tous les paramètres
+            for (int i = 0; i < values.size(); i++) {
+                stmt.setObject(i + 1, values.get(i));
+            }
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                T item = mapResultSetToEntity(rs);
+                results.add(item);
+            }
+        }
+
+        return results;
+    }
+
     public int insert(Map<String, Object> values) throws SQLException {
         StringBuilder columns = new StringBuilder();
         StringBuilder placeholders = new StringBuilder();
@@ -176,6 +212,96 @@ public abstract class Repository<T extends Model> {
             stmt.executeUpdate();
         }
     }
+
+
+    public void updateByMultiple(Map<String, Object> whereConditions, Map<String, Object> valuesToUpdate) throws SQLException {
+        if (whereConditions == null || whereConditions.isEmpty()) {
+            throw new IllegalArgumentException("WHERE conditions cannot be null or empty.");
+        }
+
+        if (valuesToUpdate == null || valuesToUpdate.isEmpty()) {
+            throw new IllegalArgumentException("Values to update cannot be null or empty.");
+        }
+
+        StringBuilder setClause = new StringBuilder();
+        StringBuilder whereClause = new StringBuilder();
+        List<Object> parameters = new ArrayList<>();
+
+        // Build SET clause
+        for (Map.Entry<String, Object> entry : valuesToUpdate.entrySet()) {
+            if (setClause.length() > 0) {
+                setClause.append(", ");
+            }
+            setClause.append(entry.getKey()).append(" = ?");
+            parameters.add(entry.getValue());
+        }
+
+        // Build WHERE clause
+        for (Map.Entry<String, Object> entry : whereConditions.entrySet()) {
+            if (whereClause.length() > 0) {
+                whereClause.append(" AND ");
+            }
+            whereClause.append(entry.getKey()).append(" = ?");
+            parameters.add(entry.getValue());
+        }
+
+        String query = "UPDATE " + tableName + " SET " + setClause + " WHERE " + whereClause;
+
+        try (Connection connection = DataConfig.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            for (int i = 0; i < parameters.size(); i++) {
+                stmt.setObject(i + 1, parameters.get(i));
+            }
+
+            stmt.executeUpdate();
+        }
+    }
+
+    public void deleteBy(Map<String, Object> conditions) throws SQLException {
+        if (conditions == null || conditions.isEmpty()) {
+            throw new IllegalArgumentException("Conditions map cannot be null or empty.");
+        }
+
+        StringBuilder whereClause = new StringBuilder();
+        List<Object> parameters = new ArrayList<>();
+
+        for (Map.Entry<String, Object> entry : conditions.entrySet()) {
+            String column = entry.getKey();
+            Object value = entry.getValue();
+
+            if (whereClause.length() > 0) {
+                whereClause.append(" AND ");
+            }
+
+            if (value instanceof List) {
+                List<?> listValues = (List<?>) value;
+                if (listValues.isEmpty()) {
+                    throw new IllegalArgumentException("List for column '" + column + "' cannot be empty.");
+                }
+
+                String placeholders = String.join(", ", listValues.stream().map(v -> "?").toArray(String[]::new));
+                whereClause.append(column).append(" IN (").append(placeholders).append(")");
+                parameters.addAll(listValues);
+            } else {
+                whereClause.append(column).append(" = ?");
+                parameters.add(value);
+            }
+        }
+
+        String query = "DELETE FROM " + tableName + " WHERE " + whereClause;
+
+        try (Connection connection = DataConfig.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            for (int i = 0; i < parameters.size(); i++) {
+                stmt.setObject(i + 1, parameters.get(i));
+            }
+
+            stmt.executeUpdate();
+        }
+    }
+
 
 
 
