@@ -38,7 +38,6 @@ export class TokenService {
    */
   decodeToken(): DecodedToken | null {
     const token = this.getToken();
-    console.log('Tototo:', token);
     if (!token) return null;
     try {
       return jwtDecode<DecodedToken>(token);

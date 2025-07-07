@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
-import { ClientsComponent } from './features/clients/clients.component';
+import { CustomerListComponent } from './features/clients/customer-list/customer-list.component';
 import { VoyagesComponent } from './features/voyages/voyages.component';
 import { ActivitiesComponent } from './features/activities/activities.component';
 import { AccommodationsComponent } from './features/accommodations/accommodations.component';
@@ -15,6 +15,8 @@ import { SupportComponent } from './features/support/support.component';
 import { LoginComponent } from './shared/auth/login/login.component';
 import { authGuard } from './shared/auth/guards/auth.guard';
 import { AdvisorComponent } from './module/advisor/advisor.component';
+import { CustomerDetailComponent } from './features/clients/customer-detail/customer-detail.component';
+import {AddCustomerComponent} from './features/clients/add-customer/add-customer.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -25,7 +27,10 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
-      { path: 'clients', component: ClientsComponent },
+      { path: 'clients', component: CustomerListComponent },
+      { path: 'clients/add', component: AddCustomerComponent},
+      { path: 'clients/edit', component: AddCustomerComponent },
+      { path: 'clients/:id', component: CustomerDetailComponent },
       { path: 'voyages', component: VoyagesComponent },
       { path: 'activities', component: ActivitiesComponent },
       { path: 'accommodations', component: AccommodationsComponent },

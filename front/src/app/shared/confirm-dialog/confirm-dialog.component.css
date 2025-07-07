@@ -1,0 +1,75 @@
+.confirm-dialog-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.confirm-dialog {
+  background: #fff;
+  padding: 3rem 3rem;
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+  width: 500px;
+  max-width: 95%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+}
+
+.confirm-dialog p {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+::placeholder {
+  font-style: italic;
+  color: #999; /* Optionnel : couleur plus douce */
+}
+
+.confirm-dialog input[type="text"] {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1.1rem;
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 2rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.confirm-dialog input[type="text"]:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.5);
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.buttons button {
+  padding: 0.6rem 1.2rem;
+  margin: 0 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+.buttons button:first-child {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.buttons button:first-child:hover {
+  background-color: #5a6268;
+}

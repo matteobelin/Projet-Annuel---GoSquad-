@@ -61,7 +61,7 @@ public class CustomerGetServiceImpl implements CustomerGetService {
         List<CustomerEntity> customers = customerService.getAllCustomers(company.getId());
 
         return customers.stream()
-                .filter(customer -> !"anonym".equalsIgnoreCase(customer.getFirstname()))
+                .filter(customer -> !"anonymous".equalsIgnoreCase(customer.getFirstname()))
                 .map(customer -> {
                     String uniqueId = companyCode + customer.getId();
                     return new GetAllCustomersResponseDTO(

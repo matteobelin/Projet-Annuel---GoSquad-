@@ -71,7 +71,7 @@ class CustomerGetServiceImplTest {
 
         List<GetAllCustomersResponseDTO> result = customerGetService.getAllCustomers(request);
 
-        assertEquals(1, result.size());
+        assertEquals(2, result.size());
         GetAllCustomersResponseDTO dto = result.get(0);
         assertEquals("COMP1", dto.uniqueCustomerId());
         assertEquals("John", dto.firstName());

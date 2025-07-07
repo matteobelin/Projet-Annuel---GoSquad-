@@ -54,11 +54,11 @@ public class CustomerUpdateServiceImpl implements CustomerUpdateService {
         CustomerEntity existingCustomer = customerService.getCustomerByIdAndCompanyId(customerId, company.getId());
 
         CustomerValidationHelper.ValidatedCustomerData validatedData =
-                validationHelper.validateAndPrepareCustomerData(customerRequestDTO);
+                validationHelper.validateAndPrepareCustomerData(customerRequestDTO, companyCode);
 
 
         CustomerEntity customerToUpdate = new CustomerEntity(
-                null,
+                customerId,
                 customerRequestDTO.firstName(),
                 customerRequestDTO.lastName(),
                 customerRequestDTO.email(),
@@ -172,7 +172,7 @@ public class CustomerUpdateServiceImpl implements CustomerUpdateService {
         CustomerEntity existingCustomer = customerService.getCustomerByIdAndCompanyId(customerId, company.getId());
 
         CustomerEntity anonymousCustomer = new CustomerEntity(
-                null,
+                customerId,
                 "anonymous",
                 "anonymous",
                 "anonymous@example.com",
