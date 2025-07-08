@@ -18,6 +18,7 @@ import { AdvisorComponent } from './module/advisor/advisor.component';
 import { CustomerDetailComponent } from './features/clients/customer-detail/customer-detail.component';
 import { AddCustomerComponent } from './features/clients/add-update-customer/add-customer.component';
 import { AddUpdateCategoryComponent } from './features/categories/add-update-category/add-update-category.component';
+import { ActivityListComponent } from './features/activities/activity-list/activity-list.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -36,7 +37,7 @@ export const routes: Routes = [
       { path: 'categories/add', component: AddUpdateCategoryComponent },
       { path: 'categories/edit', component: AddUpdateCategoryComponent },
       { path: 'voyages', component: VoyagesComponent },
-      { path: 'activities', component: ActivitiesComponent },
+      { path: 'activities', component: ActivityListComponent },
       { path: 'accommodations', component: AccommodationsComponent },
       { path: 'transports', component: TransportsComponent },
       { path: 'payments', component: PaymentsComponent },

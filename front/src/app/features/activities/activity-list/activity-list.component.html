@@ -1,0 +1,54 @@
+<div class="container">
+  <div class="header">
+    <h1>🌟 Explorez nos Activités</h1>
+    <p>Découvrez des expériences uniques aux quatre coins du monde</p>
+  </div>
+  <input type="text"
+         placeholder="Rechercher une activité..."
+         [(ngModel)]="filterText"
+         class="search-input" />
+
+  <div class="activities-grid"
+       [class.single-item]="filteredActivities().length === 1"
+       *ngIf="filteredActivities().length > 0">
+    <div class="activity-card"
+         *ngFor="let activity of filteredActivities()"
+         tabindex="0"
+         >
+
+      <div class="activity-header">
+        <div class="activity-name">{{ activity.name }}</div>
+        <div class="activity-category">{{ activity.categoryName }}</div>
+      </div>
+
+      <p class="activity-description">
+        {{ activity.description || 'Pas de description disponible.' }}
+      </p>
+
+      <div class="activity-details">
+        <div class="detail-item">
+          <div class="detail-icon">📍</div>
+          <div class="detail-text">{{ activity.address }}, {{ activity.city }}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-icon">🌍</div>
+          <div class="detail-text">{{ activity.country }}</div>
+        </div>
+      </div>
+
+      <div class="activity-footer">
+        <div class="activity-price">{{ activity.gross_price }}€</div>
+        <div class="activity-actions">
+          <button class="btn btn-primary" >
+            ✨ Réserver
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="filteredActivities().length === 0">
+    <h2>🔍 Aucune activité trouvée</h2>
+    <p>Essayez d’élargir vos critères de recherche.</p>
+  </div>
+</div>

@@ -17,6 +17,8 @@ import { customerReducer } from './store/customer/customer.reducer';
 import { CustomerEffects } from './store/customer/customer.effects';
 import { categoryReducer } from './store/categories/category.reducer';
 import { CategoryEffects} from './store/categories/category.effects';
+import { activityReducer} from './store/activities/activity.reducer';
+import { ActivityEffects } from './store/activities/activity.effect';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -29,9 +31,10 @@ export const appConfig: ApplicationConfig = {
       Gosquad: appReducer,
       advisor: advisorReducer,
       customer: customerReducer,
-      category: categoryReducer
+      category: categoryReducer,
+      activity: activityReducer
     }),
-    provideEffects([AppEffects, AdvisorEffects,CustomerEffects,CategoryEffects ]),
+    provideEffects([AppEffects, AdvisorEffects,CustomerEffects,CategoryEffects, ActivityEffects]),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: !isDevMode(),
