@@ -10,6 +10,7 @@ import com.gosquad.usecase.cities.CityService;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.List;
 
 @Service
 public class CityServiceImpl implements CityService {
@@ -30,6 +31,11 @@ public class CityServiceImpl implements CityService {
     public CityEntity getCityByNameByPostalCodeByCountry(String name,String postalCode,int countryId) throws SQLException, NotFoundException, ConstraintViolationException{
         CityModel cityModel = cityRepository.getByNameByPostalCodeByCountry(name, postalCode, countryId);
         return cityMapper.modelToEntity(cityModel);
+    };
+
+    public List<CityEntity> findByIds(List<Integer> ids) throws SQLException {
+        List<CityModel> cityModels = cityRepository.findByIds(ids);
+        return cityMapper.modelsToEntities(cityModels);
     };
 
     public void addCity(CityEntity city) throws SQLException{

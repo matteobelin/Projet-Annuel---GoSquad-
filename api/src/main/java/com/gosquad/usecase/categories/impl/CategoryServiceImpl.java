@@ -38,6 +38,11 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.modelToEntity(categoryModel);
     }
 
+    public List<CategoryEntity> findByIds(List<Integer> ids) throws SQLException {
+        List<CategoryModel> categoryModels = categoryRepository.findByIds(ids);
+        return categoryMapper.modelToEntity(categoryModels);
+    }
+
     public void createCategory(CategoryEntity category) throws SQLException{
         CategoryModel categoryModel = categoryMapper.entityToModel(category);
         categoryRepository.createCategory(categoryModel);
