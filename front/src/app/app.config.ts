@@ -15,6 +15,8 @@ import {AuthInterceptor} from './core/interceptors/auth.interceptor';
 import { AppInitService } from './core/services/app-init.service';
 import { customerReducer } from './store/customer/customer.reducer';
 import { CustomerEffects } from './store/customer/customer.effects';
+import { categoryReducer } from './store/categories/category.reducer';
+import { CategoryEffects} from './store/categories/category.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -26,9 +28,10 @@ export const appConfig: ApplicationConfig = {
     provideStore({
       Gosquad: appReducer,
       advisor: advisorReducer,
-      customer: customerReducer
+      customer: customerReducer,
+      category: categoryReducer
     }),
-    provideEffects([AppEffects, AdvisorEffects,CustomerEffects ]),
+    provideEffects([AppEffects, AdvisorEffects,CustomerEffects,CategoryEffects ]),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: !isDevMode(),

@@ -16,11 +16,13 @@ import { LoginComponent } from './shared/auth/login/login.component';
 import { authGuard } from './shared/auth/guards/auth.guard';
 import { AdvisorComponent } from './module/advisor/advisor.component';
 import { CustomerDetailComponent } from './features/clients/customer-detail/customer-detail.component';
-import {AddCustomerComponent} from './features/clients/add-customer/add-customer.component';
+import { AddCustomerComponent } from './features/clients/add-update-customer/add-customer.component';
+import { AddUpdateCategoryComponent } from './features/categories/add-update-category/add-update-category.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   {
+
     path: '',
     component: AdvisorComponent,
     canActivate: [authGuard],
@@ -31,6 +33,8 @@ export const routes: Routes = [
       { path: 'clients/add', component: AddCustomerComponent},
       { path: 'clients/edit', component: AddCustomerComponent },
       { path: 'clients/:id', component: CustomerDetailComponent },
+      { path: 'categories/add', component: AddUpdateCategoryComponent },
+      { path: 'categories/edit', component: AddUpdateCategoryComponent },
       { path: 'voyages', component: VoyagesComponent },
       { path: 'activities', component: ActivitiesComponent },
       { path: 'accommodations', component: AccommodationsComponent },
