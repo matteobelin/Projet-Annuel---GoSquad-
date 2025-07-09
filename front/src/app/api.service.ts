@@ -49,4 +49,16 @@ export class ApiService {
   delete<T>(endpoint: string): Observable<T> {
     return this.http.delete<T>(`${this.baseUrl}${endpoint}`);
   }
+
+  /**
+   * POST method that expects text response
+   * @param endpoint API endpoint
+   * @param body Request body
+   * @returns Observable of text response
+   */
+  postText(endpoint: string, body: any): Observable<string> {
+    return this.http.post(`${this.baseUrl}${endpoint}`, body, { 
+      responseType: 'text' 
+    });
+  }
 }

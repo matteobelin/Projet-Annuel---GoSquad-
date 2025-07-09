@@ -296,6 +296,9 @@ CREATE SEQUENCE group_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
 CREATE TABLE "public"."group" (
     "id" integer DEFAULT nextval('group_id_seq') NOT NULL,
     "name" character varying(255) NOT NULL,
+    "visible" boolean DEFAULT true NOT NULL,
+    "created_at" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updated_at" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CONSTRAINT "group_pkey" PRIMARY KEY ("id")
 )
 WITH (oids = false);
@@ -417,10 +420,15 @@ CREATE SEQUENCE travel_information_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 214748
 
 CREATE TABLE "public"."travel_information" (
     "id" integer DEFAULT nextval('travel_information_id_seq') NOT NULL,
+    "title" character varying(255) NOT NULL,
+    "description" text,
     "group_id" integer NOT NULL,
-    "start_date" timestamp NOT NULL,
-    "end_date" timestamp NOT NULL,
-    "destination_id" integer NOT NULL,
+    "start_date" date NOT NULL,
+    "end_date" date NOT NULL,
+    "destination" character varying(255) NOT NULL,
+    "budget" numeric(10,2),
+    "created_at" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updated_at" timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CONSTRAINT "travel_information_pkey" PRIMARY KEY ("id")
 )
 WITH (oids = false);
@@ -490,7 +498,6 @@ ALTER TABLE ONLY "public"."travel_activity" ADD CONSTRAINT "travel_activity_trav
 ALTER TABLE ONLY "public"."travel_hotel" ADD CONSTRAINT "travel_hotel_hotel_id_fkey" FOREIGN KEY (hotel_id) REFERENCES hotel(id) NOT DEFERRABLE;
 ALTER TABLE ONLY "public"."travel_hotel" ADD CONSTRAINT "travel_hotel_travel_information_id_fkey" FOREIGN KEY (travel_information_id) REFERENCES travel_information(id) NOT DEFERRABLE;
 
-ALTER TABLE ONLY "public"."travel_information" ADD CONSTRAINT "travel_information_destination_id_fkey" FOREIGN KEY (destination_id) REFERENCES destination(id) NOT DEFERRABLE;
 ALTER TABLE ONLY "public"."travel_information" ADD CONSTRAINT "travel_information_group_id_fkey" FOREIGN KEY (group_id) REFERENCES "group"(id) NOT DEFERRABLE;
 
 ALTER TABLE ONLY "public"."travel_insurance" ADD CONSTRAINT "travel_insurance_booking_insurance_id_fkey" FOREIGN KEY (booking_insurance_id) REFERENCES booking_insurance(id) NOT DEFERRABLE;

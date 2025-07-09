@@ -2,12 +2,17 @@ package com.gosquad.infrastructure.persistence.customers.impl;
 
 import com.gosquad.core.exceptions.ConstraintViolationException;
 import com.gosquad.core.exceptions.NotFoundException;
+import com.gosquad.infrastructure.config.DataConfig;
 import com.gosquad.infrastructure.persistence.Repository;
 import com.gosquad.infrastructure.persistence.customers.CustomerModel;
 import com.gosquad.infrastructure.persistence.customers.CustomerRepository;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -131,5 +136,35 @@ public class CustomerRepositoryImpl extends Repository<CustomerModel> implements
         }
     }
 
+    @Override
+    public List<CustomerModel> findAllById(List<Long> ids) throws SQLException, ConstraintViolationException {
+        if (ids == null || ids.isEmpty()) {
+            return new ArrayList<>();
+        }
+        
+        try {
+            List<CustomerModel> results = new ArrayList<>();
+            // Create placeholders for the IN clause
+            String placeholders = String.join(",", Collections.nCopies(ids.size(), "?"));
+            String query = "SELECT * FROM " + TABLE_NAME + " WHERE id IN (" + placeholders + ")";
+            
+            try (Connection connection = DataConfig.getConnection();
+                 PreparedStatement stmt = connection.prepareStatement(query)) {
+                
+                for (int i = 0; i < ids.size(); i++) {
+                    stmt.setLong(i + 1, ids.get(i));
+                }
+                
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    results.add(mapResultSetToEntity(rs));
+                }
+            }
+            
+            return results;
+        } catch (SQLException e) {
+            throw new ConstraintViolationException("Error finding customers by IDs: " + e.getMessage());
+        }
+    }
 
 }

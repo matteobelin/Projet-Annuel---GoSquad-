@@ -1,14 +1,89 @@
-import { Component } from '@angular/core';
-import {MainHeaderComponent} from "../presenter/main-header/main-header.component";
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { MainHeaderComponent } from "../presenter/main-header/main-header.component";
+import { VoyageWizardComponent } from './components/voyage-wizard/voyage-wizard.component';
+import { VoyageService } from '../../core/services/voyage.service';
+import { VoyageApiResponse } from '../../core/services/voyage.service';
 
 @Component({
   selector: 'app-voyages',
-    imports: [
-        MainHeaderComponent
-    ],
+  standalone: true,
+  imports: [
+    CommonModule,
+    MainHeaderComponent,
+    VoyageWizardComponent
+  ],
   templateUrl: './voyages.component.html',
   styleUrl: './voyages.component.css'
 })
-export class VoyagesComponent {
+export class VoyagesComponent implements OnInit {
+  showWizard = false;
+  voyages: VoyageApiResponse[] = [];
+  loading = false;
+  error: string | null = null;
 
+  constructor(
+    private voyageService: VoyageService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.loadVoyages();
+  }
+
+  loadVoyages(): void {
+    this.loading = true;
+    this.error = null;
+    
+    this.voyageService.getAllVoyages().subscribe({
+      next: (voyages) => {
+        this.voyages = voyages;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading voyages:', error);
+        this.error = 'Erreur lors du chargement des voyages';
+        this.loading = false;
+      }
+    });
+  }
+
+  openWizard(): void {
+    this.showWizard = true;
+  }
+
+  closeWizard(): void {
+    this.showWizard = false;
+    // Reload voyages when closing wizard to show any newly created voyage
+    this.loadVoyages();
+  }
+
+  onWizardSuccess(): void {
+    this.closeWizard();
+  }
+
+  viewVoyage(voyage: VoyageApiResponse): void {
+    // Navigate to voyage detail view (if implemented later)
+    console.log('Viewing voyage:', voyage);
+  }
+
+  editVoyage(voyage: VoyageApiResponse): void {
+    // Edit voyage functionality (if implemented later)
+    console.log('Editing voyage:', voyage);
+  }
+
+  deleteVoyage(voyage: VoyageApiResponse): void {
+    if (confirm(`Êtes-vous sûr de vouloir supprimer le voyage "${voyage.title}" ?`)) {
+      this.voyageService.deleteVoyage(voyage.uniqueTravelId).subscribe({
+        next: () => {
+          this.loadVoyages(); // Reload the list
+        },
+        error: (error) => {
+          console.error('Error deleting voyage:', error);
+          alert('Erreur lors de la suppression du voyage');
+        }
+      });
+    }
+  }
 }

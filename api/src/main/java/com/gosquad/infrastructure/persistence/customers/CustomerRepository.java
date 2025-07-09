@@ -14,4 +14,5 @@ public interface CustomerRepository {
     void updateCustomerPassport(CustomerModel customer) throws ConstraintViolationException;
     void updateCustomerIdCard(CustomerModel customer) throws ConstraintViolationException;
     void updateCustomer(CustomerModel customer) throws ConstraintViolationException;
+    List<CustomerModel> findAllById(List<Long> ids) throws SQLException, ConstraintViolationException;
 }

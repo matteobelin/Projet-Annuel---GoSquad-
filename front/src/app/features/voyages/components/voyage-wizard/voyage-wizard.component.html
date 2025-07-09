@@ -1,0 +1,327 @@
+<div class="voyage-wizard">
+  <!-- Header du wizard -->
+  <div class="wizard-header">
+    <h2>Créer un nouveau voyage</h2>
+    <div class="progress-bar">
+      <div class="step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
+        <div class="step-number">1</div>
+        <div class="step-label">Informations générales</div>
+      </div>
+      <div class="step" [class.active]="currentStep >= 2" [class.completed]="currentStep > 2">
+        <div class="step-number">2</div>
+        <div class="step-label">Participants</div>
+      </div>
+      <div class="step" [class.active]="currentStep >= 3">
+        <div class="step-number">3</div>
+        <div class="step-label">Résumé</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenu du wizard -->
+  <div class="wizard-content">
+    
+    <!-- Étape 1: Informations générales -->
+    <div *ngIf="isStep1" class="step-content">
+      <h3>Informations générales du voyage</h3>
+      <form [formGroup]="generalInfoForm" class="general-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="title">Titre du voyage *</label>
+            <input 
+              type="text" 
+              id="title" 
+              formControlName="title" 
+              class="form-control"
+              placeholder="Ex: Voyage à Paris">
+            <div *ngIf="generalInfoForm.get('title')?.invalid && generalInfoForm.get('title')?.touched" class="error-message">
+              <div *ngIf="generalInfoForm.get('title')?.errors?.['required']">Le titre est obligatoire</div>
+              <div *ngIf="generalInfoForm.get('title')?.errors?.['minlength']">Le titre doit contenir au moins 3 caractères</div>
+              <div *ngIf="generalInfoForm.get('title')?.errors?.['maxlength']">Le titre ne peut pas dépasser 100 caractères</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="destination">Destination *</label>
+            <input 
+              type="text" 
+              id="destination" 
+              formControlName="destination" 
+              class="form-control"
+              placeholder="Ex: Paris, France">
+            <div *ngIf="generalInfoForm.get('destination')?.invalid && generalInfoForm.get('destination')?.touched" class="error-message">
+              <div *ngIf="generalInfoForm.get('destination')?.errors?.['required']">La destination est obligatoire</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="startDate">Date de début *</label>
+            <input 
+              type="date" 
+              id="startDate" 
+              formControlName="startDate" 
+              class="form-control">
+            <div *ngIf="generalInfoForm.get('startDate')?.invalid && generalInfoForm.get('startDate')?.touched" class="error-message">
+              <div *ngIf="generalInfoForm.get('startDate')?.errors?.['required']">La date de début est obligatoire</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="endDate">Date de fin *</label>
+            <input 
+              type="date" 
+              id="endDate" 
+              formControlName="endDate" 
+              class="form-control">
+            <div *ngIf="generalInfoForm.get('endDate')?.invalid && generalInfoForm.get('endDate')?.touched" class="error-message">
+              <div *ngIf="generalInfoForm.get('endDate')?.errors?.['required']">La date de fin est obligatoire</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="budget">Budget (€)</label>
+            <input 
+              type="number" 
+              id="budget" 
+              formControlName="budget" 
+              class="form-control"
+              placeholder="Ex: 1500"
+              min="0">
+          </div>
+
+          <div class="form-group full-width">
+            <label for="description">Description</label>
+            <textarea 
+              id="description" 
+              formControlName="description" 
+              class="form-control"
+              rows="3"
+              placeholder="Description détaillée du voyage..."></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Étape 2: Sélection des participants -->
+    <div *ngIf="isStep2" class="step-content">
+      <h3>Sélection des participants</h3>
+      
+      <!-- Recherche de participants -->
+      <div class="participant-search" [formGroup]="participantsForm">
+        <label for="searchTerm">Rechercher un participant</label>
+        <div class="search-input-container">
+          <input
+            type="text"
+            id="searchTerm"
+            formControlName="searchTerm"
+            class="form-control search-input"
+            placeholder="Nom, prénom, email ou ID client...">
+          <i class="fas fa-search search-icon"></i>
+        </div>
+
+        <!-- Résultats de recherche -->
+        <div class="search-results" *ngIf="participantsForm.get('searchTerm')?.value?.length >= 2">
+          
+          <!-- Loading state -->
+          <div *ngIf="isSearching" class="loading-results">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Recherche en cours...</span>
+          </div>
+          
+          <!-- No results -->
+          <div *ngIf="!isSearching && searchResults.length === 0" class="no-results">
+            <i class="fas fa-info-circle"></i>
+            Aucun participant trouvé pour "{{ participantsForm.get('searchTerm')?.value }}"
+          </div>
+          
+          <!-- Results list -->
+          <div *ngIf="!isSearching && searchResults.length > 0" class="results-list">
+            <div class="results-header">
+              <span>{{ searchResults.length }} résultat(s) trouvé(s)</span>
+            </div>
+            
+            <div *ngFor="let participant of searchResults; trackBy: trackByParticipant" 
+                 class="search-result-item" 
+                 (click)="addParticipant(participant)">
+              <div class="participant-info">
+                <span class="participant-id">{{ participant.displayId }}</span>
+                <span class="participant-name">{{ participant.prenom }} {{ participant.nom }}</span>
+                <span class="participant-email">{{ participant.email }}</span>
+              </div>
+              <button type="button" class="add-btn" title="Ajouter ce participant">
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Participants sélectionnés -->
+      <div class="selected-participants">
+        <h4>Participants sélectionnés ({{ selectedParticipants.length }})</h4>
+        <div *ngIf="selectedParticipants.length === 0" class="no-participants">
+          Aucun participant sélectionné
+        </div>
+        <div class="participant-list">
+          <div *ngFor="let participant of selectedParticipants" class="participant-card">
+            <div class="participant-details">
+              <span class="participant-id">{{ participant.displayId }}</span>
+              <span class="participant-name">{{ participant.prenom }} {{ participant.nom }}</span>
+              <span class="participant-email">{{ participant.email }}</span>
+            </div>
+            <button type="button" 
+                    class="remove-btn" 
+                    (click)="removeParticipant(participant.id)"
+                    title="Retirer ce participant">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Configuration du groupe (si 2+ participants) -->
+      <div *ngIf="showGroupSelection" class="group-configuration" [formGroup]="participantsForm">
+        <h4>Configuration du groupe</h4>
+        
+        <!-- Sélection groupe existant -->
+        <div class="form-group">
+          <label for="selectedGroupId">Sélectionner un groupe existant</label>
+          <select
+            id="selectedGroupId"
+            formControlName="selectedGroupId"
+            class="form-control"
+            (change)="onGroupSelectionChange()">
+            <option value="">Créer un nouveau groupe</option>
+            <option *ngFor="let group of existingGroups" [value]="group.id">
+              {{ group.name }} ({{ group.memberCount || 0 }} membres)
+            </option>
+          </select>
+        </div>
+
+        <!-- Nom du nouveau groupe -->
+        <div *ngIf="showGroupNameField" class="form-group">
+          <label for="groupName">Nom du nouveau groupe *</label>
+          <input
+            type="text"
+            id="groupName"
+            formControlName="groupName"
+            class="form-control"
+            placeholder="Ex: Équipe Marketing - Paris 2025">
+          <div *ngIf="participantsForm.get('groupName')?.invalid && participantsForm.get('groupName')?.touched" class="error-message">
+            <div *ngIf="participantsForm.get('groupName')?.errors?.['required']">Le nom du groupe est obligatoire pour plusieurs participants</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Information voyage solo -->
+      <div *ngIf="selectedParticipants.length === 1" class="solo-travel-info">
+        <div class="info-card">
+          <i class="fas fa-info-circle"></i>
+          <span>Ce sera un voyage individuel. Aucune configuration de groupe n'est nécessaire.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Étape 3: Résumé -->
+    <div *ngIf="isStep3" class="step-content">
+      <h3>Résumé du voyage</h3>
+      
+      <div class="summary-content">
+        <!-- Informations générales -->
+        <div class="summary-section">
+          <h4><i class="fas fa-info-circle"></i> Informations générales</h4>
+          <div class="summary-details">
+            <div class="detail-row">
+              <span class="label">Titre:</span>
+              <span class="value">{{ summaryData.general.title }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Destination:</span>
+              <span class="value">{{ summaryData.general.destination }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Dates:</span>
+              <span class="value">Du {{ summaryData.general.startDate }} au {{ summaryData.general.endDate }}</span>
+            </div>
+            <div *ngIf="summaryData.general.budget" class="detail-row">
+              <span class="label">Budget:</span>
+              <span class="value">{{ summaryData.general.budget }}€</span>
+            </div>
+            <div *ngIf="summaryData.general.description" class="detail-row">
+              <span class="label">Description:</span>
+              <span class="value">{{ summaryData.general.description }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Participants -->
+        <div class="summary-section">
+          <h4><i class="fas fa-users"></i> Participants ({{ summaryData.participants.length }})</h4>
+          <div class="participants-summary">
+            <div *ngFor="let participant of summaryData.participants" class="participant-summary">
+              <span class="participant-id">{{ participant.displayId }}</span>
+              <span class="participant-name">{{ participant.prenom }} {{ participant.nom }}</span>
+              <span class="participant-email">{{ participant.email }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Information groupe -->
+        <div class="summary-section">
+          <h4><i class="fas fa-users-cog"></i> Organisation</h4>
+          <div class="group-summary">
+            <div *ngIf="summaryData.groupInfo.isSolo" class="solo-indicator">
+              <i class="fas fa-user"></i>
+              <span>Voyage individuel</span>
+            </div>
+            <div *ngIf="!summaryData.groupInfo.isSolo" class="group-indicator">
+              <i class="fas fa-users"></i>
+              <span *ngIf="summaryData.groupInfo.isNewGroup">Nouveau groupe: </span>
+              <span *ngIf="!summaryData.groupInfo.isNewGroup">Groupe existant: </span>
+              <strong>{{ summaryData.groupInfo.groupName }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation du wizard -->
+  <div class="wizard-navigation">
+    <button 
+      type="button" 
+      class="btn btn-secondary" 
+      (click)="previousStep()" 
+      [disabled]="currentStep === 1">
+      <i class="fas fa-arrow-left"></i> Précédent
+    </button>
+
+    <div class="nav-spacer"></div>
+
+    <button 
+      *ngIf="currentStep < maxSteps" 
+      type="button" 
+      class="btn btn-primary" 
+      (click)="nextStep()" 
+      [disabled]="!canProceedToNextStep">
+      Suivant <i class="fas fa-arrow-right"></i>
+    </button>
+
+    <button 
+      *ngIf="currentStep === maxSteps" 
+      type="button" 
+      class="btn btn-success" 
+      (click)="onSubmit()" 
+      [disabled]="!canProceedToNextStep || isLoading">
+      <i *ngIf="isLoading" class="fas fa-spinner fa-spin"></i>
+      <i *ngIf="!isLoading" class="fas fa-check"></i>
+      {{ isLoading ? 'Création...' : 'Créer le voyage' }}
+    </button>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="error" class="error-alert">
+    <i class="fas fa-exclamation-triangle"></i>
+    {{ error }}
+  </div>
+</div>
