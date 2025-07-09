@@ -1,12 +1,15 @@
 <div class="container">
   <div class="header">
-    <h1>🌟 Explorez nos Activités</h1>
-    <p>Découvrez des expériences uniques aux quatre coins du monde</p>
+    <h1>🌟 Explorez les Activités</h1>
   </div>
-  <input type="text"
-         placeholder="Rechercher une activité..."
-         [(ngModel)]="filterText"
-         class="search-input" />
+  <div class="search-bar">
+    <button (click)="onAdd()" class="btn btn-primary">Ajouter une activité</button>
+    <input type="text"
+           placeholder="Rechercher une activité..."
+           [(ngModel)]="filterText"
+           class="search-input" />
+  </div>
+
 
   <div class="activities-grid"
        [class.single-item]="filteredActivities().length === 1"
@@ -38,6 +41,11 @@
 
       <div class="activity-footer">
         <div class="activity-price">{{ activity.gross_price }}€</div>
+        <div class="activity-actions">
+          <button class="btn btn-primary" (click)="onEdit(activity.id)">
+            Modifier
+          </button>
+        </div>
         <div class="activity-actions">
           <button class="btn btn-primary" >
             ✨ Réserver

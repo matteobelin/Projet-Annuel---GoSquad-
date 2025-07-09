@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { CustomerListComponent } from './features/clients/customer-list/customer-list.component';
 import { VoyagesComponent } from './features/voyages/voyages.component';
-import { ActivitiesComponent } from './features/activities/activities.component';
 import { AccommodationsComponent } from './features/accommodations/accommodations.component';
 import { TransportsComponent } from './features/transports/transports.component';
 import { PaymentsComponent } from './features/payments/payments.component';
@@ -19,6 +18,7 @@ import { CustomerDetailComponent } from './features/clients/customer-detail/cust
 import { AddCustomerComponent } from './features/clients/add-update-customer/add-customer.component';
 import { AddUpdateCategoryComponent } from './features/categories/add-update-category/add-update-category.component';
 import { ActivityListComponent } from './features/activities/activity-list/activity-list.component';
+import { AddUpdateActivityComponent } from './features/activities/add-update-activity/add-update-activity.component'
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -38,6 +38,8 @@ export const routes: Routes = [
       { path: 'categories/edit', component: AddUpdateCategoryComponent },
       { path: 'voyages', component: VoyagesComponent },
       { path: 'activities', component: ActivityListComponent },
+      { path: 'activities/add', component: AddUpdateActivityComponent},
+      { path: 'activities/edit/:id', component: AddUpdateActivityComponent},
       { path: 'accommodations', component: AccommodationsComponent },
       { path: 'transports', component: TransportsComponent },
       { path: 'payments', component: PaymentsComponent },

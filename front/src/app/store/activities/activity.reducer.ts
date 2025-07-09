@@ -122,4 +122,5 @@ export const activityReducer = createReducer(
     loading: false,
     error,
   }))
+
 );

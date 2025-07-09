@@ -6,7 +6,8 @@ import { Category } from '../../core/models/category.model'; // Assurez-vous que
 // Importation de toutes les actions et sélecteurs de catégorie
 import * as CategoryActions from './category.actions';
 import * as CategorySelectors from './category.selectors';
-import { CategoryReducer } from './category.reducer'; // Importez l'interface de l'état de la catégorie
+import { CategoryReducer } from './category.reducer';
+import {selectCategoryByName} from './category.selectors'; // Importez l'interface de l'état de la catégorie
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,14 @@ export class CategoryStore {
 
   loadCategory(id: string): void {
     this.store.dispatch(CategoryActions.loadCategory({ id }));
+  }
+
+  loadCategoryByName(name: string): void {
+    this.store.dispatch(CategoryActions.loadCategoryByName({ name }));
+  }
+
+  getCategoryByName(): Observable<Category | null> {
+    return this.store.select(selectCategoryByName);
   }
 
   getSelectedCategory(): Observable<Category | null> {

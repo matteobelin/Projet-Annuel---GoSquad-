@@ -1,5 +1,5 @@
 export interface Activity {
-  id: number;
+  id?: number;
   name: string;
   description: string;
   address: string;
@@ -11,4 +11,5 @@ export interface Activity {
   netPrice: number;
   vatRate: number;
   gross_price?: number;
+  categoryId?:number
 }

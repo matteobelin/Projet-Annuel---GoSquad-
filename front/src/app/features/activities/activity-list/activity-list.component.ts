@@ -53,4 +53,17 @@ export class ActivityListComponent {
     return this.filteredActivities();
   }
 
+  onEdit(id: number | undefined): void {
+    if (id === undefined) {
+      console.error('ID est undefined');
+      return;
+    }
+    this.router.navigate(['/activities/edit', id]);
+  }
+
+  onAdd(){
+    this.router.navigate(["/activities/add"])
+  }
+
+
 }

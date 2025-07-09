@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+  import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, mergeMap, catchError, tap } from 'rxjs/operators';
@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import * as CategoryActions from './category.actions';
 import { environment } from '../../../environments/environment';
 import { Category } from '../../core/models/category.model';
+  import {loadCategoryByName} from './category.actions';
 
 @Injectable()
 export class CategoryEffects {
@@ -16,7 +17,8 @@ export class CategoryEffects {
   // API Endpoints based on your CategoryController
   private readonly apiUrl = environment.apiUrl;
   private readonly getAllCategoriesUrl = `${this.apiUrl}/category/all`;
-  private readonly getCategoryByIdUrl = `${this.apiUrl}/category/by-id`;  // Assuming param is ?name=
+  private readonly getCategoryByIdUrl = `${this.apiUrl}/category/by-id`;
+  private readonly getCategoryByName = `${this.apiUrl}/category/by-name`// Assuming param is ?name=
   private readonly createCategoryUrl = `${this.apiUrl}/category`;
   private readonly updateCategoryUrl = `${this.apiUrl}/category`;
   private readonly deleteCategoryUrl = `${this.apiUrl}/category`;
@@ -49,6 +51,18 @@ export class CategoryEffects {
       )
     )
   );
+
+  loadCategoryByName$=createEffect(()=>
+    this.actions$.pipe(
+      ofType(CategoryActions.loadCategoryByName),
+      mergeMap(action =>
+        this.http.get<Category>(`${this.getCategoryByName}?name=${action.name}`).pipe(
+          map(category => CategoryActions.loadCategoryByNameSuccess({ category })),
+          catchError(error => of(CategoryActions.loadCategoryByNameFailure({ error })))
+        )
+      )
+    )
+  )
 
 
   createCategory$ = createEffect(() =>

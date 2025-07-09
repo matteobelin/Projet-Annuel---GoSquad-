@@ -149,4 +149,7 @@ export class AddUpdateCategoryComponent implements OnInit {
     const name = this.categoryForm.get('categoryName')?.value?.trim();
     return !name;
   }
+
+
+
 }

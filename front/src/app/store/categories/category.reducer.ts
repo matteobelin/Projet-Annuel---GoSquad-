@@ -69,6 +69,26 @@ export const categoryReducer = createReducer(
     error
   })),
 
+
+  on(CategoryActions.loadCategoryByName, (state) => ({
+    ...state,
+    loading: true,
+    selectedCategory: null,
+    error: null
+  })),
+
+  on(CategoryActions.loadCategoryByNameSuccess, (state, { category }) => ({
+    ...state,
+    selectedCategory: category,
+    loading: false
+  })),
+
+  on(CategoryActions.loadCategoryByNameFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error
+  })),
+
   // --- Créer une catégorie ---
   on(CategoryActions.createCategory, (state) => ({
     ...state,

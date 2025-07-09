@@ -1,0 +1,77 @@
+<div class="activity-detail-container">
+  <form *ngIf="activityForm" [formGroup]="activityForm" (ngSubmit)="onSubmit()" class="activity-card">
+
+    <div class="activity-header">
+      <h2>{{ mode === 'edit' ? 'Modifier une activité' : 'Ajouter une activité' }}</h2>
+    </div>
+
+    <div class="activity-info">
+      <div class="info-group">
+        <label>Nom de l'activité : *</label>
+        <input formControlName="activityName" type="text" placeholder="Ex: Cours de yoga" />
+      </div>
+
+      <div class="info-group">
+        <label>Description de l'activité : *</label>
+        <textarea formControlName="description" placeholder="Décrivez votre activité..."></textarea>
+      </div>
+
+      <div class="info-group">
+        <label for="activitySelect">Sélectionner une catégorie : *</label>
+        <select id="activitySelect" formControlName="categoryId">
+          <option [ngValue]="null" disabled>Choisir une catégorie</option>
+          @for (category of categories$ | async; track category.id) {
+            <option [ngValue]="category.id">{{ category.name }}</option>
+          }
+        </select>
+
+      </div>
+
+      <div class="info-group">
+        <label>Adresse de l'activité : *</label>
+        <input formControlName="address" type="text" placeholder="123 Rue de la Paix" />
+      </div>
+
+      <div class="info-group">
+        <label>Ville de l'activité : *</label>
+        <input formControlName="city" type="text" placeholder="Paris" />
+      </div>
+
+      <div class="info-group">
+        <label>Code postal : *</label>
+        <input formControlName="postalCode" type="text" placeholder="75001" />
+      </div>
+
+      <div class="info-group">
+        <label>Pays de l'activité : *</label>
+        <input formControlName="country" type="text" placeholder="France" />
+      </div>
+
+      <div class="info-group">
+        <label>Iso code du pays : *</label>
+        <input formControlName="isoCode" type="text" placeholder="FR" maxlength="2" (input)="onIsoCodeInput()"/>
+      </div>
+
+      <div class="info-group">
+        <label>Prix net : *</label>
+        <input formControlName="netPrice" type="text" inputmode="decimal" placeholder="29.99" min="0" (keydown)="validateNumberInput($event)" />
+      </div>
+
+      <div class="info-group">
+        <label>Taux de TVA : *</label>
+        <input formControlName="vatRate" type="text" inputmode="decimal" placeholder="20" min="0" (keydown)="validateNumberInput($event)" />
+      </div>
+    </div>
+
+    <div class="actions">
+      <div class="actions-left">
+        <button type="button" class="btn-back" (click)="onCancel()">Annuler</button>
+      </div>
+      <div class="actions-right">
+        <button type="submit" class="btn-edit" [disabled]="isSubmitDisabled()">
+          {{ mode === 'edit' ? 'Valider' : 'Ajouter' }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

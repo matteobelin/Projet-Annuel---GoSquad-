@@ -29,8 +29,9 @@ export class ActivityStore {
   }
 
   // Dispatcher : charger une activité par ID
-  loadActivityById(id: number): void {
-    this.store.dispatch(ActivityActions.loadActivityById({id: id}));
+  loadActivityById(id: number): Observable<Activity|null> {
+    this.store.dispatch(ActivityActions.loadActivityById({ id }));
+    return this.getSelectedActivity();
   }
 
   // Selector : activité actuellement sélectionnée
@@ -61,4 +62,6 @@ export class ActivityStore {
   getError(): Observable<any> {
     return this.store.select(ActivitySelectors.selectActivityError);
   }
+
+
 }

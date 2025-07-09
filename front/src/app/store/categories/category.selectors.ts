@@ -36,3 +36,8 @@ export const selectCategoryError = createSelector(
   selectCategoryState,
   (state: CategoryReducer) => state.error
 );
+
+export const selectCategoryByName = createSelector(
+  selectCategoryState,
+  (state: CategoryReducer) => state.selectedCategory // ou ce que tu veux
+);

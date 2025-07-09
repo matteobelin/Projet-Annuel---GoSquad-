@@ -9,6 +9,8 @@ public record ActivityResponseDTO(
         String address,
         String city,
         String country,
+        String postalCode,
+        String isoCode,
         String categoryName,
         BigDecimal netPrice,
         BigDecimal vatRate,
