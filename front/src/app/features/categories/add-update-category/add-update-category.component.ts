@@ -1,34 +1,31 @@
-import { Component, inject, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule} from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import {Observable, tap, switchMap, of, take} from 'rxjs';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Observable, of, switchMap, tap, take } from 'rxjs';
 
 import { Category } from '../../../core/models/category.model';
 import { CategoryStore } from '../../../store/categories/category.store.service';
-import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-category-detail',
-  templateUrl: './add-update-category.component.html',
-  styleUrls: ['./add-update-category.component.css'],
+  selector: 'app-add-update-category-modal',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    CommonModule,
-    FormsModule
-  ]
+  imports: [ReactiveFormsModule, CommonModule, FormsModule],
+  templateUrl: './add-update-category.component.html',
+  styleUrls: ['./add-update-category.component.css']
 })
-export class AddUpdateCategoryComponent implements OnInit {
-  cachedCategories: Category[] = [];
+export class AddUpdateCategoryModalComponent implements OnInit {
+  @Input() visible = false;
+  @Input() mode: 'add' | 'edit' = 'add';
+  @Output() close = new EventEmitter<void>();
+  @Output() submit = new EventEmitter<Category>();
+
   categoryForm!: FormGroup;
-  mode: 'add' | 'edit' = 'add';
   categories$!: Observable<Category[]>;
-  private categoryStore = inject(CategoryStore);
+  cachedCategories: Category[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router
+    private categoryStore: CategoryStore
   ) {}
 
   ngOnInit(): void {
@@ -37,15 +34,11 @@ export class AddUpdateCategoryComponent implements OnInit {
       tap(cats => this.cachedCategories = cats)
     );
 
-    // Détermine le mode (add / edit)
-    this.route.url.subscribe(segments => {
-      this.mode = segments.some(seg => seg.path === 'edit') ? 'edit' : 'add';
-      this.initForm();
+    this.initForm();
 
-      if (this.mode === 'edit') {
-        this.setupEditModeLogic();
-      }
-    });
+    if (this.mode === 'edit') {
+      this.setupEditModeLogic();
+    }
   }
 
   initForm(): void {
@@ -61,9 +54,6 @@ export class AddUpdateCategoryComponent implements OnInit {
     }
   }
 
-  /**
-   * Gère la logique de remplissage du champ lors de la sélection d'une catégorie en mode édition.
-   */
   setupEditModeLogic(): void {
     this.categoryForm.get('categoryId')?.valueChanges.pipe(
       switchMap((selectedId: number) => {
@@ -82,50 +72,43 @@ export class AddUpdateCategoryComponent implements OnInit {
     ).subscribe();
   }
 
-  /**
-   * Gère la soumission du formulaire.
-   */
   onSubmit(): void {
     if (this.categoryForm.valid) {
       if (this.mode === 'edit') {
         const selectedId = this.categoryForm.get('categoryId')?.value;
         const newName = this.categoryForm.get('newCategoryName')?.value;
 
-        if (selectedId !== null && newName) {
-          this.categories$.pipe(take(1)).subscribe(categories => {
-            const selectedCategory = categories.find(cat => cat.id === selectedId);
-            if (!selectedCategory) {
-              console.error('Catégorie non trouvée');
-              return;
-            }
-
-            const updatedCategory: Category = {
-              id: selectedId,
-              name: selectedCategory.name,
-              newName: newName,
-            };
-
-            this.categoryStore.updateCategory(updatedCategory);
-
-            this.router.navigate(['/categories']); // Naviguer après la mise à jour
-          });
+        const selectedCategory = this.cachedCategories.find(cat => cat.id === selectedId);
+        if (!selectedCategory) {
+          console.error('Catégorie non trouvée');
+          return;
         }
+
+        const updatedCategory: Category = {
+          id: selectedId,
+          name: selectedCategory.name,
+          newName: newName,
+        };
+
+        this.categoryStore.updateCategory(updatedCategory);
+        this.submit.emit(updatedCategory);
+        this.onClose();
       } else {
         const newCategoryName = this.categoryForm.get('categoryName')?.value;
-        if (newCategoryName) {
-          const newCategory: Category = { name: newCategoryName };
-          this.categoryStore.createCategory(newCategory);
+        const newCategory: Category = { name: newCategoryName };
 
-          this.router.navigate(['/categories']); // Naviguer après la création
-        }
+        this.categoryStore.createCategory(newCategory);
+        this.submit.emit(newCategory);
+        this.onClose();
       }
     } else {
       this.categoryForm.markAllAsTouched();
     }
   }
 
-  onCancel(): void {
-    this.router.navigate(['/categories']);
+  onClose(): void {
+    this.close.emit();
+    this.categoryForm.reset();
   }
 
   isSubmitDisabled(): boolean {
@@ -135,21 +118,13 @@ export class AddUpdateCategoryComponent implements OnInit {
       const selectedId = this.categoryForm.get('categoryId')?.value;
       const newName = this.categoryForm.get('newCategoryName')?.value?.trim();
 
-      let currentName = '';
-      if (selectedId && this.categoryForm && this.categories$) {
-        // Accès synchrone impossible → on garde l’état préenregistré
-        const selectedCategory = this.cachedCategories?.find(cat => cat.id === selectedId);
-        currentName = selectedCategory?.name?.trim() || '';
-      }
+      const selectedCategory = this.cachedCategories.find(cat => cat.id === selectedId);
+      const currentName = selectedCategory?.name?.trim() || '';
 
       return !newName || newName === currentName;
     }
 
-    // Mode "add"
     const name = this.categoryForm.get('categoryName')?.value?.trim();
     return !name;
   }
-
-
-
 }

@@ -24,7 +24,10 @@
             <option [ngValue]="category.id">{{ category.name }}</option>
           }
         </select>
-
+        <div class="category">
+          <button class="btn btn-category" (click)="openCategoryModalAdd()">Ajouter une catégorie</button>
+          <button class="btn btn-category" (click)="openCategoryModalEdit()">Modifier une catégorie</button>
+        </div>
       </div>
 
       <div class="info-group">
@@ -75,3 +78,10 @@
     </div>
   </form>
 </div>
+<app-add-update-category-modal
+  *ngIf="showCategoryModal"
+  [visible]="showCategoryModal"
+  [mode]="this.categoryModalMode"
+  (close)="onCategoryModalClose()"
+  (submit)="onCategoryModalSubmit($event)">
+</app-add-update-category-modal>

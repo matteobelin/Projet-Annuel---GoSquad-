@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import {delay, timer} from 'rxjs';
 import {
   FormBuilder,
   FormGroup,
@@ -18,25 +19,28 @@ import {
   filter
 } from 'rxjs';
 import { CommonModule } from '@angular/common';
-
 import { Category } from '../../../core/models/category.model';
 import { Activity } from '../../../core/models/activity.model';
 import { CategoryStore } from '../../../store/categories/category.store.service';
 import { ActivityStore } from '../../../store/activities/activity.store.service';
+import {AddUpdateCategoryModalComponent} from '../../categories/add-update-category/add-update-category.component';
 
 @Component({
   selector: 'app-activity-update-add',
   templateUrl: './add-update-activity.component.html',
   styleUrls: ['./add-update-activity.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, FormsModule]
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, AddUpdateCategoryModalComponent]
 })
 export class AddUpdateActivityComponent implements OnInit, OnDestroy {
   activityForm!: FormGroup;
   mode: 'add' | 'edit' = 'add';
+  categoryModalMode:'add' | 'edit' = 'add';
   cachedCategories: Category[] = [];
   categories$!: Observable<Category[]>;
   originalActivity?: Activity;
+  showCategoryModal = false;
+
 
   private destroy$ = new Subject<void>();
   private categoryStore = inject(CategoryStore);
@@ -48,7 +52,9 @@ export class AddUpdateActivityComponent implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
+
   ngOnInit(): void {
+
     const segments = this.route.snapshot.url;
     this.mode = segments.some(seg => seg.path === 'edit') ? 'edit' : 'add';
 
@@ -58,6 +64,49 @@ export class AddUpdateActivityComponent implements OnInit, OnDestroy {
       this.handleAddMode();
     }
   }
+
+
+  openCategoryModalAdd(): void {
+    this.categoryModalMode = "add";
+    this.showCategoryModal = true;
+  }
+
+  openCategoryModalEdit():void{
+    this.categoryModalMode = "edit"
+    this.showCategoryModal=true;
+  }
+
+  onCategoryModalClose(): void {
+    this.showCategoryModal = false;
+  }
+
+  onCategoryModalSubmit(newCategory: Category): void {
+    this.showCategoryModal = false;
+    const searchName = newCategory.newName || newCategory.name;
+    of(null).pipe(delay(200)).subscribe(() => {
+      this.categoryStore.loadCategories();
+
+      this.categoryStore.getCategories().pipe(
+        filter(categories => {
+          return categories.some(cat => cat.name === searchName);
+        }),
+        take(1)
+      ).subscribe(categories => {
+        this.cachedCategories = categories;
+        const created = categories.find(cat => cat.name === searchName);
+        if (created) {
+          this.activityForm.get('categoryId')?.setValue(created.id);
+        } else {
+          console.warn('Catégorie non trouvée après mise à jour/création');
+        }
+      });
+
+    });
+    this.categories$ = this.categoryStore.getCategories().pipe(
+      tap(cats => (this.cachedCategories = cats))
+    );
+  }
+
 
   private handleEditMode(): void {
     this.route.paramMap
@@ -208,8 +257,6 @@ export class AddUpdateActivityComponent implements OnInit, OnDestroy {
         this.activityStore.updateActivity(activity);
         this.activityStore.loadActivities()
       }
-
-      this.router.navigate(['/activities']);
     });
   }
 

@@ -344,3 +344,42 @@
 .info-group:nth-child(8) { animation-delay: 0.8s; }
 .info-group:nth-child(9) { animation-delay: 0.9s; }
 .info-group:nth-child(10) { animation-delay: 1.0s; }
+
+
+.category{
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.btn-category {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 0.6rem 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  transition:
+    background 0.3s ease,
+    transform 0.2s ease,
+    box-shadow 0.3s ease;
+}
+
+.btn-category:hover {
+  background: linear-gradient(135deg, #5563c1, #653c91);
+  box-shadow: 0 8px 25px rgba(85, 99, 193, 0.6);
+  transform: translateY(-2px);
+}
+
+.btn-category:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(85, 99, 193, 0.4);
+}
+
+.btn-category:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.5);
+}

@@ -41,3 +41,5 @@ export const selectCategoryByName = createSelector(
   selectCategoryState,
   (state: CategoryReducer) => state.selectedCategory // ou ce que tu veux
 );
+
+
