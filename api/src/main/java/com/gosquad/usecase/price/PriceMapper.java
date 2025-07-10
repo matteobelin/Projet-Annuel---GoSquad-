@@ -4,6 +4,8 @@ import com.gosquad.domain.price.PriceEntity;
 import com.gosquad.infrastructure.persistence.price.PriceModel;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class PriceMapper {
     public PriceEntity modelToEntity(PriceModel priceModel) {
@@ -24,5 +26,11 @@ public class PriceMapper {
                 priceEntity.getVatAmount(),
                 priceEntity.getGrossPrice()
         );
+    }
+
+    public List<PriceEntity> modelsToEntities(List<PriceModel> byIds) {
+        return byIds.stream()
+                .map(this::modelToEntity)
+                .toList();
     }
 }

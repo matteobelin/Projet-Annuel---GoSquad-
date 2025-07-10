@@ -108,7 +108,6 @@ export class AddCustomerComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log("here")
     if (this.customerForm.valid) {
       let customer = this.customerForm.getRawValue();
       const formData = new FormData();

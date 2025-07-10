@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class CategoryController {
@@ -64,40 +65,40 @@ public class CategoryController {
     }
 
     @PostMapping("/category")
-    public ResponseEntity<String> createCategory(
+    public ResponseEntity<Map<String, String>> createCategory(
             HttpServletRequest request,
             @RequestBody CategoryRequestDTO dto) {
         try {
             categoryPostService.createCategory(request, dto);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Category created successfully.");
+            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message","Category created successfully."));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message",e.getMessage()));
         }
     }
 
 
     @PutMapping("/category")
-    public ResponseEntity<String> updateCategory(
+    public ResponseEntity<Map<String, String>> updateCategory(
             HttpServletRequest request,
             @RequestBody CategoryRequestDTO dto) {
         try {
             categoryUpdateService.updateCategory(request, dto);
-            return ResponseEntity.ok("Category updated successfully.");
+            return ResponseEntity.ok(Map.of("message", "Category updated successfully."));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message",e.getMessage()));
         }
     }
 
 
     @DeleteMapping("/category")
-    public ResponseEntity<String> deleteCategory(
+    public ResponseEntity<Map<String, String>> deleteCategory(
             HttpServletRequest request,
             @RequestBody CategoryRequestDTO dto) {
         try {
             categoryDeleteService.deleteCategory(request, dto);
-            return ResponseEntity.ok("Category deleted successfully.");
+            return ResponseEntity.ok(Map.of("message","Category deleted successfully."));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message",e.getMessage()));
         }
     }
 }

@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { CustomerListComponent } from './features/clients/customer-list/customer-list.component';
 import { VoyagesComponent } from './features/voyages/voyages.component';
-import { ActivitiesComponent } from './features/activities/activities.component';
 import { AccommodationsComponent } from './features/accommodations/accommodations.component';
 import { TransportsComponent } from './features/transports/transports.component';
 import { PaymentsComponent } from './features/payments/payments.component';
@@ -16,11 +15,14 @@ import { LoginComponent } from './shared/auth/login/login.component';
 import { authGuard } from './shared/auth/guards/auth.guard';
 import { AdvisorComponent } from './module/advisor/advisor.component';
 import { CustomerDetailComponent } from './features/clients/customer-detail/customer-detail.component';
-import {AddCustomerComponent} from './features/clients/add-customer/add-customer.component';
+import { AddCustomerComponent } from './features/clients/add-update-customer/add-customer.component';
+import { ActivityListComponent } from './features/activities/activity-list/activity-list.component';
+import { AddUpdateActivityComponent } from './features/activities/add-update-activity/add-update-activity.component'
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   {
+
     path: '',
     component: AdvisorComponent,
     canActivate: [authGuard],
@@ -32,7 +34,9 @@ export const routes: Routes = [
       { path: 'clients/edit', component: AddCustomerComponent },
       { path: 'clients/:id', component: CustomerDetailComponent },
       { path: 'voyages', component: VoyagesComponent },
-      { path: 'activities', component: ActivitiesComponent },
+      { path: 'activities', component: ActivityListComponent },
+      { path: 'activities/add', component: AddUpdateActivityComponent},
+      { path: 'activities/edit/:id', component: AddUpdateActivityComponent},
       { path: 'accommodations', component: AccommodationsComponent },
       { path: 'transports', component: TransportsComponent },
       { path: 'payments', component: PaymentsComponent },

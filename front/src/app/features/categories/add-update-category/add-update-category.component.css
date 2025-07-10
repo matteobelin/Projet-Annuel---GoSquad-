@@ -1,0 +1,149 @@
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Fond assombri */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 800px;
+  margin-left: 10%;
+}
+
+
+
+.category-detail-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.category-card {
+  width: 100%;
+  max-width: 800px; /* Keeping the same max-width as the customer card */
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.category-header h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.category-info {
+  display: grid;
+  /* Adjust grid columns based on your new layout with two info-groups in edit mode */
+  grid-template-columns: 1fr; /* Default to single column for smaller screens or add mode */
+  gap: 1rem;
+}
+
+/* For larger screens in edit mode, if you want two columns for the select and the input */
+@media (min-width: 768px) {
+  .category-info {
+    grid-template-columns: 1fr 1fr; /* Two columns for select and new name input */
+  }
+}
+
+
+.info-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-group label {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: #333;
+}
+
+.info-group input,
+.info-group select { /* Apply styles to both input and select */
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #fff; /* Ensure select has a white background */
+  appearance: none; /* Remove default browser styling for select */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-repeat: no-repeat;
+  background-position: right 0.7em top 50%, 0 0;
+  background-size: 0.65em auto, 100%;
+}
+
+.info-group select{
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%204%205%22%3E%3Cpath%20fill%3D%22%23333%22%20d%3D%22M2%200L0%202h4zm0%205L0%203h4z%22%2F%3E%3C%2Fsvg%3E'); /* Custom arrow */
+
+}
+
+.info-group input:focus,
+.info-group select:focus { /* Apply focus styles to both input and select */
+  outline: none;
+  border-color: #3f51b5;
+  box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+/* Actions buttons are shared, so no class name change needed */
+.btn-back,
+.btn-edit {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-back {
+  padding: 10px 16px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-back:hover {
+  background-color: #5a6268;
+}
+
+.btn-edit {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-edit:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.btn-edit:disabled {
+  background-color: #9fa8da;
+  cursor: not-allowed;
+}
+
