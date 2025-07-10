@@ -10,6 +10,7 @@ import java.util.List;
 public interface CustomerRepository {
     CustomerModel getByIdAndCompanyId(int id,int companyId) throws SQLException, ConstraintViolationException, NotFoundException;
     List<CustomerModel> getAllCustomers(int companyId) throws ConstraintViolationException;
+    List<CustomerModel> getCustomersByGroupId(int groupId) throws ConstraintViolationException;
     void addCustomer(CustomerModel customer) throws SQLException, ConstraintViolationException;
     void updateCustomerPassport(CustomerModel customer) throws ConstraintViolationException;
     void updateCustomerIdCard(CustomerModel customer) throws ConstraintViolationException;

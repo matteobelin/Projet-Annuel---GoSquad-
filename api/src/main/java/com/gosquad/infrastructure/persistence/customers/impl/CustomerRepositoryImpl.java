@@ -167,4 +167,30 @@ public class CustomerRepositoryImpl extends Repository<CustomerModel> implements
         }
     }
 
+    @Override
+    public List<CustomerModel> getCustomersByGroupId(int groupId) throws ConstraintViolationException {
+        try {
+            String query = "SELECT c.* FROM customer c " +
+                          "INNER JOIN customer_group cg ON c.id = cg.customer_id " +
+                          "WHERE cg.group_id = ?";
+            
+            List<CustomerModel> results = new ArrayList<>();
+            
+            try (Connection connection = DataConfig.getConnection();
+                 PreparedStatement stmt = connection.prepareStatement(query)) {
+                
+                stmt.setInt(1, groupId);
+                
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    results.add(mapResultSetToEntity(rs));
+                }
+            }
+            
+            return results;
+        } catch (SQLException e) {
+            throw new ConstraintViolationException("Error finding customers by group ID: " + e.getMessage());
+        }
+    }
+
 }

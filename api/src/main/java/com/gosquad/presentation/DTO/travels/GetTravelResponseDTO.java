@@ -1,7 +1,11 @@
 package com.gosquad.presentation.DTO.travels;
 
+import com.gosquad.presentation.DTO.groups.GroupResponseDTO;
+import com.gosquad.presentation.DTO.customers.GetCustomerResponseDTO;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record GetTravelResponseDTO(
         String uniqueTravelId,  // companyCode + travelId
@@ -14,5 +18,7 @@ public record GetTravelResponseDTO(
         Integer groupId,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
-        String companyCode
+        String companyCode,
+        List<GroupResponseDTO> groups,
+        List<GetCustomerResponseDTO> participants
 ) {}

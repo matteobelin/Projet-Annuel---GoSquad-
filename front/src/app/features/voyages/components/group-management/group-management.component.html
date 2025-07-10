@@ -1,0 +1,279 @@
+<app-main-header></app-main-header>
+
+<div class="group-management-container">
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Chargement des groupes...</p>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="error && !loading" class="error-state">
+    <h2>Erreur</h2>
+    <p>{{ error }}</p>
+    <button type="button" class="btn btn-primary" (click)="goBack()">
+      Retour au voyage
+    </button>
+  </div>
+
+  <!-- Main content -->
+  <div *ngIf="voyage && !loading && !error" class="group-management-content">
+    <!-- Header -->
+    <div class="management-header">
+      <div class="header-info">
+        <h1>Gestion des groupes</h1>
+        <p class="voyage-title">{{ voyage.title }}</p>
+        <div class="stats">
+          <span class="stat">
+            <i class="fas fa-users"></i>
+            {{ groups.length }} groupe(s)
+          </span>
+          <span class="stat">
+            <i class="fas fa-user"></i>
+            {{ getTotalParticipants() }} participant(s) assigné(s)
+          </span>
+          <span class="stat">
+            <i class="fas fa-user-plus"></i>
+            {{ getUnassignedParticipants().length }} non assigné(s)
+          </span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="btn btn-secondary" (click)="goBack()">
+          <i class="fas fa-arrow-left"></i>
+          Retour
+        </button>
+        <button type="button" class="btn btn-success" (click)="showCreateGroupForm()">
+          <i class="fas fa-plus"></i>
+          Nouveau groupe
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-primary" 
+          (click)="saveAllChanges()"
+          [disabled]="saving"
+        >
+          <i class="fas fa-spinner fa-spin" *ngIf="saving"></i>
+          <i class="fas fa-save" *ngIf="!saving"></i>
+          {{ saving ? 'Sauvegarde...' : 'Sauvegarder' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- New group form -->
+    <div *ngIf="showNewGroupForm" class="new-group-form">
+      <div class="form-header">
+        <h3>Créer un nouveau groupe</h3>
+        <button type="button" class="btn-close" (click)="hideCreateGroupForm()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="form-content">
+        <div class="form-section">
+          <label for="groupName">Nom du groupe</label>
+          <input
+            type="text"
+            id="groupName"
+            [(ngModel)]="newGroupName"
+            class="form-control"
+            placeholder="Entrez le nom du groupe"
+          />
+        </div>
+
+        <div class="form-section">
+          <label>Sélectionner les participants</label>
+          <div class="participant-search">
+            <input
+              type="text"
+              [(ngModel)]="searchTerm"
+              (input)="onSearchChange()"
+              class="form-control search-input"
+              placeholder="Rechercher un participant..."
+            />
+            <i class="fas fa-search search-icon"></i>
+          </div>
+          
+          <div class="participants-list">
+            <div 
+              *ngFor="let participant of filteredParticipants" 
+              class="participant-item"
+              [class.selected]="participant.isSelected"
+              (click)="toggleParticipantSelection(participant)"
+            >
+              <div class="participant-info">
+                <span class="participant-name">
+                  {{ participant.prenom }} {{ participant.nom }}
+                </span>
+                <span class="participant-email" *ngIf="participant.email">
+                  {{ participant.email }}
+                </span>
+              </div>
+              <div class="selection-indicator">
+                <i class="fas fa-check" *ngIf="participant.isSelected"></i>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="selectedParticipants.length > 0" class="selected-participants">
+            <h4>Participants sélectionnés ({{ selectedParticipants.length }})</h4>
+            <div class="selected-list">
+              <span 
+                *ngFor="let participant of selectedParticipants" 
+                class="selected-participant"
+              >
+                {{ participant.prenom }} {{ participant.nom }}
+                <button 
+                  type="button" 
+                  class="remove-btn"
+                  (click)="toggleParticipantSelection(participant)"
+                >
+                  <i class="fas fa-times"></i>
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" (click)="hideCreateGroupForm()">
+            Annuler
+          </button>
+          <button type="button" class="btn btn-primary" (click)="createNewGroup()">
+            Créer le groupe
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Groups list -->
+    <div class="groups-container">
+      <div *ngIf="groups.length === 0" class="no-groups">
+        <i class="fas fa-users"></i>
+        <h3>Aucun groupe créé</h3>
+        <p>Commencez par créer un groupe pour organiser les participants</p>
+        <button type="button" class="btn btn-primary" (click)="showCreateGroupForm()">
+          Créer le premier groupe
+        </button>
+      </div>
+
+      <div *ngIf="groups.length > 0" class="groups-grid">
+        <div *ngFor="let group of groups; trackBy: trackByGroupId" class="group-card">
+          <!-- Group header -->
+          <div class="group-header">
+            <div class="group-title-section">
+              <h3 *ngIf="!group.isEditing" class="group-title">
+                {{ group.nom }}
+              </h3>
+              <div *ngIf="group.isEditing" class="edit-title-form">
+                <input
+                  type="text"
+                  [(ngModel)]="group.newName"
+                  class="form-control title-input"
+                  (keyup.enter)="saveGroupName(group)"
+                  (keyup.escape)="cancelEditGroupName(group)"
+                />
+                <div class="edit-actions">
+                  <button type="button" class="btn-icon success" (click)="saveGroupName(group)">
+                    <i class="fas fa-check"></i>
+                  </button>
+                  <button type="button" class="btn-icon danger" (click)="cancelEditGroupName(group)">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <span class="participant-count">
+                {{ getGroupParticipantCount(group) }} participant(s)
+              </span>
+            </div>
+            <div class="group-actions">
+              <button 
+                type="button" 
+                class="btn-icon" 
+                (click)="editGroupName(group)"
+                *ngIf="!group.isEditing"
+                title="Modifier le nom"
+              >
+                <i class="fas fa-edit"></i>
+              </button>
+              <button 
+                type="button" 
+                class="btn-icon danger" 
+                (click)="deleteGroup(group)"
+                title="Supprimer le groupe"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Group participants -->
+          <div class="group-participants">
+            <div *ngIf="group.participants.length === 0" class="no-participants">
+              <p>Aucun participant dans ce groupe</p>
+            </div>
+            
+            <div *ngIf="group.participants.length > 0" class="participants-grid">
+              <div 
+                *ngFor="let participant of group.participants" 
+                class="participant-card"
+              >
+                <div class="participant-details">
+                  <span class="participant-name">
+                    {{ participant.prenom }} {{ participant.nom }}
+                  </span>
+                  <span class="participant-email" *ngIf="participant.email">
+                    {{ participant.email }}
+                  </span>
+                </div>
+                <button 
+                  type="button" 
+                  class="remove-participant-btn"
+                  (click)="removeParticipantFromGroup(group, participant)"
+                  title="Retirer du groupe"
+                >
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add participant to group -->
+          <div class="add-participant-section">
+            <select 
+              class="form-control participant-select"
+              #participantSelect
+              (change)="addParticipantToGroup(group, getParticipantFromSelect(participantSelect.value)); participantSelect.value = ''"
+            >
+              <option value="">Ajouter un participant...</option>
+              <option 
+                *ngFor="let participant of getUnassignedParticipants(); trackBy: trackByParticipantId" 
+                [value]="participant.id"
+              >
+                {{ participant.prenom }} {{ participant.nom }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Unassigned participants -->
+    <div *ngIf="getUnassignedParticipants().length > 0" class="unassigned-section">
+      <h3>Participants non assignés ({{ getUnassignedParticipants().length }})</h3>
+      <div class="unassigned-participants">
+        <div 
+          *ngFor="let participant of getUnassignedParticipants()" 
+          class="unassigned-participant"
+        >
+          <span class="participant-name">
+            {{ participant.prenom }} {{ participant.nom }}
+          </span>
+          <span class="participant-email" *ngIf="participant.email">
+            {{ participant.email }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

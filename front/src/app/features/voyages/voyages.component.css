@@ -284,3 +284,14 @@
   background: #dc3545;
   color: white;
 }
+
+.btn-outline-info {
+  color: #17a2b8;
+  border-color: #17a2b8;
+  background: transparent;
+}
+
+.btn-outline-info:hover {
+  background: #17a2b8;
+  color: white;
+}

@@ -27,7 +27,7 @@
       <form [formGroup]="generalInfoForm" class="general-form">
         <div class="form-grid">
           <div class="form-group">
-            <label for="title">Titre du voyage *</label>
+            <label for="title">title du voyage *</label>
             <input 
               type="text" 
               id="title" 
@@ -35,9 +35,9 @@
               class="form-control"
               placeholder="Ex: Voyage à Paris">
             <div *ngIf="generalInfoForm.get('title')?.invalid && generalInfoForm.get('title')?.touched" class="error-message">
-              <div *ngIf="generalInfoForm.get('title')?.errors?.['required']">Le titre est obligatoire</div>
-              <div *ngIf="generalInfoForm.get('title')?.errors?.['minlength']">Le titre doit contenir au moins 3 caractères</div>
-              <div *ngIf="generalInfoForm.get('title')?.errors?.['maxlength']">Le titre ne peut pas dépasser 100 caractères</div>
+              <div *ngIf="generalInfoForm.get('title')?.errors?.['required']">Le title est obligatoire</div>
+              <div *ngIf="generalInfoForm.get('title')?.errors?.['minlength']">Le title doit contenir au moins 3 caractères</div>
+              <div *ngIf="generalInfoForm.get('title')?.errors?.['maxlength']">Le title ne peut pas dépasser 100 caractères</div>
             </div>
           </div>
 
@@ -232,7 +232,7 @@
           <h4><i class="fas fa-info-circle"></i> Informations générales</h4>
           <div class="summary-details">
             <div class="detail-row">
-              <span class="label">Titre:</span>
+              <span class="label">title:</span>
               <span class="value">{{ summaryData.general.title }}</span>
             </div>
             <div class="detail-row">

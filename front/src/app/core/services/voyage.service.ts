@@ -22,6 +22,22 @@ export interface VoyageApiResponse {
   startDate: string;
   endDate: string;
   budget: number;
+  groups?: Array<{
+    id?: number;
+    name?: string;
+    visible?: boolean;
+    createdAt?: string;
+    updatedAt?: string;
+  }>;
+  participants?: Array<{
+    uniqueCustomerId: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber?: string;
+    birthDate?: string;
+    companyCode?: string;
+  }>;
 }
 
 @Injectable({

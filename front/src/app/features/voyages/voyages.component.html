@@ -58,6 +58,14 @@
                 <span>{{ voyage.budget | currency:'EUR' }} budget total</span>
               </div>
               <div class="info-item">
+                <i class="fas fa-users"></i>
+                <span *ngIf="voyage.groups">{{ voyage.groups.length }} groupe(s)</span>
+              </div>
+              <div class="info-item">
+                <i class="fas fa-user-friends"></i>
+                <span *ngIf="voyage.participants">{{ voyage.participants.length }} participant(s)</span>
+              </div>
+              <div class="info-item">
                 <i class="fas fa-hashtag"></i>
                 <span>ID: {{ voyage.uniqueTravelId }}</span>
               </div>
@@ -72,6 +80,10 @@
             <button class="btn btn-outline-secondary" (click)="editVoyage(voyage)">
               <i class="fas fa-edit"></i>
               Modifier
+            </button>
+            <button class="btn btn-outline-info" (click)="manageGroups(voyage)">
+              <i class="fas fa-users"></i>
+              Groupes
             </button>
             <button class="btn btn-outline-danger" (click)="deleteVoyage(voyage)">
               <i class="fas fa-trash"></i>

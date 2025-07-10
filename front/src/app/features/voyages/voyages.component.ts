@@ -64,13 +64,15 @@ export class VoyagesComponent implements OnInit {
   }
 
   viewVoyage(voyage: VoyageApiResponse): void {
-    // Navigate to voyage detail view (if implemented later)
-    console.log('Viewing voyage:', voyage);
+    this.router.navigate(['/voyages', voyage.uniqueTravelId]);
   }
 
   editVoyage(voyage: VoyageApiResponse): void {
-    // Edit voyage functionality (if implemented later)
-    console.log('Editing voyage:', voyage);
+    this.router.navigate(['/voyages', voyage.uniqueTravelId, 'edit']);
+  }
+
+  manageGroups(voyage: VoyageApiResponse): void {
+    this.router.navigate(['/voyages', voyage.uniqueTravelId, 'groups']);
   }
 
   deleteVoyage(voyage: VoyageApiResponse): void {

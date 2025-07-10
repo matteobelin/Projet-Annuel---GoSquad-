@@ -16,7 +16,10 @@ import { LoginComponent } from './shared/auth/login/login.component';
 import { authGuard } from './shared/auth/guards/auth.guard';
 import { AdvisorComponent } from './module/advisor/advisor.component';
 import { CustomerDetailComponent } from './features/clients/customer-detail/customer-detail.component';
-import {AddCustomerComponent} from './features/clients/add-customer/add-customer.component';
+import { AddCustomerComponent } from './features/clients/add-customer/add-customer.component';
+import { VoyageDetailComponent } from './features/voyages/components/voyage-detail/voyage-detail.component';
+import { VoyageEditComponent } from './features/voyages/components/voyage-form/voyage-edit.component';
+import { GroupManagementComponent } from './features/voyages/components/group-management/group-management.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -28,10 +31,13 @@ export const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'clients', component: CustomerListComponent },
-      { path: 'clients/add', component: AddCustomerComponent},
+      { path: 'clients/add', component: AddCustomerComponent },
       { path: 'clients/edit', component: AddCustomerComponent },
       { path: 'clients/:id', component: CustomerDetailComponent },
       { path: 'voyages', component: VoyagesComponent },
+      { path: 'voyages/:id', component: VoyageDetailComponent },
+      { path: 'voyages/:id/edit', component: VoyageEditComponent },
+      { path: 'voyages/:id/groups', component: GroupManagementComponent },
       { path: 'activities', component: ActivitiesComponent },
       { path: 'accommodations', component: AccommodationsComponent },
       { path: 'transports', component: TransportsComponent },
