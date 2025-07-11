@@ -33,6 +33,11 @@ public class CustomerServiceImpl implements CustomerService {
         return customerMapper.modelToEntity(customerModels);
     };
 
+    public List<CustomerEntity> getCustomersByGroupId(int groupId) throws ConstraintViolationException {
+        List<CustomerModel> customerModels = customerRepository.getCustomersByGroupId(groupId);
+        return customerMapper.modelToEntity(customerModels);
+    };
+
 
     public void addCustomer(CustomerEntity customer) throws SQLException, ConstraintViolationException{
         CustomerModel customerModel = customerMapper.entityToModel(customer);

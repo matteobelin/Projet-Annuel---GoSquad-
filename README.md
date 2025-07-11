@@ -97,7 +97,7 @@ GET    /api/factures/{id} - Récupérer une facture
 ```json
 {
   "_id": "voy456",
-  "titre": "Vacances à Bali",
+  "title": "Vacances à Bali",
   "destination": "Bali, Indonésie",
   "dates": {
     "depart": "2024-07-01",

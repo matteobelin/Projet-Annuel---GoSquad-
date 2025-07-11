@@ -1,0 +1,250 @@
+<app-main-header></app-main-header>
+
+<div class="voyage-edit-container">
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Chargement du voyage...</p>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="error && !loading" class="error-state">
+    <h2>Erreur</h2>
+    <p>{{ error }}</p>
+    <button type="button" class="btn btn-primary" (click)="goBack()">
+      Retour à la liste
+    </button>
+  </div>
+
+  <!-- Edit form -->
+  <div *ngIf="voyage && !loading && !error" class="edit-form-container">
+    <div class="form-header">
+      <h1>Modifier le voyage</h1>
+      <div class="form-actions-header">
+        <button type="button" class="btn btn-secondary" (click)="cancel()">
+          <i class="fas fa-times"></i>
+          Annuler
+        </button>
+      </div>
+    </div>
+
+    <form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="edit-form">
+      <div class="form-grid">
+        <!-- title -->
+        <div class="form-group">
+          <label for="title">title *</label>
+          <input
+            type="text"
+            id="title"
+            formControlName="title"
+            class="form-control"
+            [class.error]="isFieldInvalid('title')"
+            placeholder="Entrez le title du voyage"
+          />
+          <div *ngIf="isFieldInvalid('title')" class="error-message">
+            {{ getFieldError('title') }}
+          </div>
+        </div>
+
+        <!-- Destination -->
+        <div class="form-group">
+          <label for="destination">Destination *</label>
+          <input
+            type="text"
+            id="destination"
+            formControlName="destination"
+            class="form-control"
+            [class.error]="isFieldInvalid('destination')"
+            placeholder="Entrez la destination"
+          />
+          <div *ngIf="isFieldInvalid('destination')" class="error-message">
+            {{ getFieldError('destination') }}
+          </div>
+        </div>
+
+        <!-- Date de début -->
+        <div class="form-group">
+          <label for="startDate">Date de début *</label>
+          <input
+            type="date"
+            id="startDate"
+            formControlName="startDate"
+            class="form-control"
+            [class.error]="isFieldInvalid('startDate')"
+          />
+          <div *ngIf="isFieldInvalid('startDate')" class="error-message">
+            {{ getFieldError('startDate') }}
+          </div>
+        </div>
+
+        <!-- Date de fin -->
+        <div class="form-group">
+          <label for="endDate">Date de fin *</label>
+          <input
+            type="date"
+            id="endDate"
+            formControlName="endDate"
+            class="form-control"
+            [class.error]="isFieldInvalid('endDate')"
+          />
+          <div *ngIf="isFieldInvalid('endDate')" class="error-message">
+            {{ getFieldError('endDate') }}
+          </div>
+        </div>
+
+        <!-- Budget -->
+        <div class="form-group">
+          <label for="budget">Budget (€)</label>
+          <input
+            type="number"
+            id="budget"
+            formControlName="budget"
+            class="form-control"
+            [class.error]="isFieldInvalid('budget')"
+            placeholder="0.00"
+            step="0.01"
+            min="0"
+          />
+          <div *ngIf="isFieldInvalid('budget')" class="error-message">
+            {{ getFieldError('budget') }}
+          </div>
+        </div>
+
+        <!-- Description (large field) -->
+        <div class="form-group description-group">
+          <label for="description">Description</label>
+          <textarea
+            id="description"
+            formControlName="description"
+            class="form-control"
+            rows="5"
+            placeholder="Décrivez le voyage en détail..."
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Participants and Groups Section -->
+      <div *ngIf="voyage" class="participants-section">
+        <h3>Participants et Groupes</h3>
+        
+        <!-- Groups -->
+        <div *ngIf="voyage.groups && voyage.groups.length > 0" class="groups-container">
+          <h4>Groupes associés ({{ voyage.groups.length }})</h4>
+          <div class="groups-list">
+            <div *ngFor="let group of voyage.groups" class="group-item">
+              <div class="group-header">
+                <h5>{{ group.name }}</h5>
+                <span class="participant-count">Groupe #{{ group.id }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!voyage.groups || voyage.groups.length === 0" class="no-groups">
+          <p>Aucun groupe constitué pour ce voyage</p>
+        </div>
+
+        <!-- Individual Participants -->
+        <div *ngIf="voyage.participants && voyage.participants.length > 0" class="participants-container">
+          <h4>Participants ({{ voyage.participants.length }})</h4>
+          <div class="participants-list">
+            <div *ngFor="let participant of voyage.participants" class="participant-item">
+              <i class="fas fa-user"></i>
+              <span class="participant-name">{{ participant.firstName }} {{ participant.lastName }}</span>
+              <span *ngIf="participant.email" class="participant-email">{{ participant.email }}</span>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!voyage.participants || voyage.participants.length === 0" class="no-participants">
+          <p>Aucun participant inscrit pour ce voyage</p>
+        </div>
+
+        <!-- Actions -->
+        <div class="participant-management">
+          <h4>Gestion des participants</h4>
+          
+          <!-- Add participant section -->
+          <div class="add-participant-section">
+            <div class="search-client">
+              <input 
+                type="text" 
+                placeholder="Rechercher un client par nom, prénom ou email..." 
+                class="form-control"
+                [formControl]="searchTermControl"
+              />
+              <button 
+                type="button" 
+                class="btn btn-primary"
+                disabled
+              >
+                <i class="fas fa-search"></i>
+                Rechercher
+              </button>
+            </div>
+            
+            <!-- Search results -->
+            <div *ngIf="searchResults.length > 0" class="search-results">
+              <h5>Résultats de recherche :</h5>
+              <div class="client-results">
+                <div 
+                  *ngFor="let client of searchResults" 
+                  class="client-result-item"
+                >
+                  <span class="client-info">
+                    {{ client.firstName }} {{ client.lastName }}
+                    <small *ngIf="client.email">({{ client.email }})</small>
+                  </span>
+                  <button 
+                    type="button" 
+                    class="btn btn-sm btn-success"
+                    (click)="addParticipant(client)"
+                    [disabled]="isClientAlreadyParticipant(client)"
+                  >
+                    <i class="fas fa-plus"></i>
+                    {{ isClientAlreadyParticipant(client) ? 'Déjà participant' : 'Ajouter' }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Current participants with remove option -->
+          <div *ngIf="voyage.participants && voyage.participants.length > 0" class="current-participants">
+            <h5>Participants actuels :</h5>
+            <div class="participants-list">
+              <div *ngFor="let participant of voyage.participants" class="participant-item-editable">
+                <i class="fas fa-user"></i>
+                <span class="participant-name">{{ participant.firstName }} {{ participant.lastName }}</span>
+                <span *ngIf="participant.email" class="participant-email">{{ participant.email }}</span>
+                <button 
+                  type="button" 
+                  class="btn btn-sm btn-danger"
+                  (click)="removeParticipant(participant)"
+                  title="Supprimer ce participant"
+                >
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form actions -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="cancel()">
+          <i class="fas fa-times"></i>
+          Annuler
+        </button>
+        <button 
+          type="submit" 
+          class="btn btn-primary"
+          [disabled]="!editForm.valid || saving"
+        >
+          <i class="fas fa-spinner fa-spin" *ngIf="saving"></i>
+          <i class="fas fa-save" *ngIf="!saving"></i>
+          {{ saving ? 'Enregistrement...' : 'Enregistrer' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

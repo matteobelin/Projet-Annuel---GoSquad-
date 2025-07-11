@@ -91,7 +91,14 @@ public class CustomerGetServiceImpl implements CustomerGetService {
         String companyCode = tokenInfo.get("companyCode").toString();
         String customerNumber = request.getParameter("customerNumber");
 
-        int customerId = Integer.parseInt(customerNumber.replaceAll(companyCode, ""));
+        // Extraction plus robuste de l'ID customer
+        int customerId;
+        if (customerNumber.startsWith(companyCode)) {
+            String customerIdStr = customerNumber.substring(companyCode.length());
+            customerId = Integer.parseInt(customerIdStr);
+        } else {
+            throw new IllegalArgumentException("Format de customerNumber invalide: " + customerNumber);
+        }
         CompanyEntity company = companyService.getCompanyByCode(companyCode);
         CustomerEntity customer = customerService.getCustomerByIdAndCompanyId(customerId, company.getId());
 

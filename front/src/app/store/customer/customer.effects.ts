@@ -12,8 +12,8 @@ import { CustomerStoreService } from './customer.store.service';
 @Injectable()
 export class CustomerEffects {
   private readonly actions$ = inject(Actions);
-  private getAllCustomersUrl = `${environment.apiUrl}/getAllCustomers`;
-  private getCustomerUrl = `${environment.apiUrl}/getCustomer`;
+  private getAllCustomersUrl = `${environment.apiUrl}/api/clients`;
+  private getCustomerUrl = `${environment.apiUrl}/api/clients`;
   private anonymizeCustomerUrl = `${environment.apiUrl}/updateCustomerToAnonymous`;
   private createCustomerUrl = `${environment.apiUrl}/customer`;
   private updateCustomerUrl = `${environment.apiUrl}/updateCustomer`;
@@ -39,12 +39,36 @@ export class CustomerEffects {
   loadCustomer$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CustomerActions.loadCustomer),
-      mergeMap(action =>
-        this.http.get<Customer>(`${this.getCustomerUrl}?customerNumber=${action.id}`).pipe(
-          map(customer => CustomerActions.loadCustomerSuccess({ customer })),
-          catchError(error => of(CustomerActions.loadCustomerFailure({ error })))
-        )
-      )
+      mergeMap(action => {
+        // D'abord, vérifier si le customer existe dans la liste
+        return this.http.get<any[]>(this.getAllCustomersUrl).pipe(
+          mergeMap(customers => {
+            const customerExists = customers.find(c => c.uniqueCustomerId === action.id);
+            if (!customerExists) {
+              throw new Error(`Customer avec l'ID ${action.id} non trouvé`);
+            }
+            
+            // Si le customer existe, charger les détails complets via l'endpoint individuel
+            return this.http.get<Customer>(`${this.getCustomerUrl}/${action.id}`).pipe(
+              map(customer => CustomerActions.loadCustomerSuccess({ customer })),
+              catchError(error => {
+                // Si l'endpoint individuel échoue, on retourne au moins les données de base
+                console.warn('Endpoint individuel échoué, utilisation des données de base:', error);
+                const basicCustomer: Customer = {
+                  uniqueCustomerId: customerExists.uniqueCustomerId,
+                  firstName: customerExists.firstName,
+                  lastName: customerExists.lastName,
+                  email: customerExists.email
+                };
+                return of(CustomerActions.loadCustomerSuccess({ customer: basicCustomer }));
+              })
+            );
+          }),
+          catchError(error => {
+            return of(CustomerActions.loadCustomerFailure({ error }));
+          })
+        );
+      })
     )
   );
 

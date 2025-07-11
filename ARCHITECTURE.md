@@ -290,7 +290,7 @@ CREATE TABLE clients (
 ```sql
 CREATE TABLE voyages (
   id SERIAL PRIMARY KEY,
-  titre VARCHAR(100) NOT NULL,
+  title VARCHAR(100) NOT NULL,
   destination VARCHAR(100) NOT NULL,
   date_depart DATE NOT NULL,
   date_retour DATE NOT NULL,
