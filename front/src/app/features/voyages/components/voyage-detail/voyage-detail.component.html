@@ -38,9 +38,9 @@
           <i class="fas fa-edit"></i>
           Modifier
         </button>
-        <button type="button" class="btn btn-info" (click)="manageGroups()">
-          <i class="fas fa-users"></i>
-          Gérer les groupes
+        <button type="button" class="btn btn-success" (click)="generatePdf()">
+          <i class="fas fa-file-pdf"></i>
+          Générer PDF
         </button>
         <button type="button" class="btn btn-danger" (click)="deleteVoyage()">
           <i class="fas fa-trash"></i>
@@ -64,14 +64,12 @@
             <p class="price">{{ voyage.budget | currency:'EUR':'symbol':'1.2-2' }}</p>
           </div>
           <div class="info-item">
-            <label>Nombre de participants max</label>
-            <p>{{ voyage.nbParticipantsMax || 'Non défini' }}</p>
+            <label>Destination</label>
+            <p>{{ voyage.destination }}</p>
           </div>
           <div class="info-item">
-            <label>Statut</label>
-            <p class="status" [class]="'status-' + voyage.statut?.toLowerCase()">
-              {{ voyage.statut }}
-            </p>
+            <label>Nombre de participants</label>
+            <p>{{ voyage.participants?.length || 0 }}</p>
           </div>
         </div>
       </div>
@@ -171,9 +169,9 @@
         </div>
         <div *ngIf="voyage.participants && voyage.participants.length > 0" class="participants-list">
           <div *ngFor="let participant of voyage.participants; trackBy: trackByParticipantId" class="participant-item">
-            <span class="participant-name">
+            <a class="participant-name link" [routerLink]="['/clients', participant.uniqueCustomerId]">
               {{ participant.firstName }} {{ participant.lastName }}
-            </span>
+            </a>
             <span class="participant-email" *ngIf="participant.email">
               {{ participant.email }}
             </span>

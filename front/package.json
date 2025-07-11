@@ -26,6 +26,8 @@
     "@ngrx/store-devtools": "^19.0.0",
     "@primeng/themes": "^19.0.10",
     "jwt-decode": "^4.0.0",
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.4",
     "primeicons": "^7.0.0",
     "primeng": "^19.0.10",
     "redux-devtools-extension": "^2.13.9",

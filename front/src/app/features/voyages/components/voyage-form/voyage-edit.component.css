@@ -436,3 +436,156 @@ textarea.form-control {
     padding: 0.75rem;
   }
 }
+
+/* Participant Management Styles */
+.participant-management {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #f9fafb;
+}
+
+.participant-management h4 {
+  color: #374151;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.add-participant-section {
+  margin-bottom: 2rem;
+}
+
+.search-client {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.search-client input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.search-client input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.search-results {
+  margin-top: 1rem;
+}
+
+.search-results h5 {
+  color: #374151;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.client-results {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: white;
+}
+
+.client-result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.client-result-item:last-child {
+  border-bottom: none;
+}
+
+.client-info {
+  flex: 1;
+}
+
+.client-info small {
+  color: #6b7280;
+  margin-left: 0.5rem;
+}
+
+.current-participants h5 {
+  color: #374151;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.participant-item-editable {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  background: white;
+}
+
+.participant-item-editable:last-child {
+  margin-bottom: 0;
+}
+
+.participant-item-editable i {
+  color: #6b7280;
+}
+
+.participant-name {
+  font-weight: 500;
+  color: #374151;
+}
+
+.participant-email {
+  color: #6b7280;
+  font-size: 0.85rem;
+  margin-left: auto;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-success {
+  background-color: #10b981;
+  color: white;
+  border-color: #10b981;
+}
+
+.btn-success:hover:not(:disabled) {
+  background-color: #059669;
+  border-color: #059669;
+}
+
+.btn-success:disabled {
+  background-color: #6b7280;
+  border-color: #6b7280;
+  cursor: not-allowed;
+}
+
+.btn-danger {
+  background-color: #ef4444;
+  color: white;
+  border-color: #ef4444;
+}
+
+.btn-danger:hover {
+  background-color: #dc2626;
+  border-color: #dc2626;
+}

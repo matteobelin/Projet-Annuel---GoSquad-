@@ -159,17 +159,72 @@
         </div>
 
         <!-- Actions -->
-        <div class="individual-participants">
-          <h4>Actions</h4>
-          <div class="action-buttons">
-            <button type="button" class="btn btn-outline-primary" (click)="manageParticipants()">
-              <i class="fas fa-users"></i>
-              Gérer les participants
-            </button>
-            <button type="button" class="btn btn-outline-secondary" (click)="manageGroups()">
-              <i class="fas fa-layer-group"></i>
-              Gérer les groupes
-            </button>
+        <div class="participant-management">
+          <h4>Gestion des participants</h4>
+          
+          <!-- Add participant section -->
+          <div class="add-participant-section">
+            <div class="search-client">
+              <input 
+                type="text" 
+                placeholder="Rechercher un client par nom, prénom ou email..." 
+                class="form-control"
+                [formControl]="searchTermControl"
+              />
+              <button 
+                type="button" 
+                class="btn btn-primary"
+                disabled
+              >
+                <i class="fas fa-search"></i>
+                Rechercher
+              </button>
+            </div>
+            
+            <!-- Search results -->
+            <div *ngIf="searchResults.length > 0" class="search-results">
+              <h5>Résultats de recherche :</h5>
+              <div class="client-results">
+                <div 
+                  *ngFor="let client of searchResults" 
+                  class="client-result-item"
+                >
+                  <span class="client-info">
+                    {{ client.firstName }} {{ client.lastName }}
+                    <small *ngIf="client.email">({{ client.email }})</small>
+                  </span>
+                  <button 
+                    type="button" 
+                    class="btn btn-sm btn-success"
+                    (click)="addParticipant(client)"
+                    [disabled]="isClientAlreadyParticipant(client)"
+                  >
+                    <i class="fas fa-plus"></i>
+                    {{ isClientAlreadyParticipant(client) ? 'Déjà participant' : 'Ajouter' }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Current participants with remove option -->
+          <div *ngIf="voyage.participants && voyage.participants.length > 0" class="current-participants">
+            <h5>Participants actuels :</h5>
+            <div class="participants-list">
+              <div *ngFor="let participant of voyage.participants" class="participant-item-editable">
+                <i class="fas fa-user"></i>
+                <span class="participant-name">{{ participant.firstName }} {{ participant.lastName }}</span>
+                <span *ngIf="participant.email" class="participant-email">{{ participant.email }}</span>
+                <button 
+                  type="button" 
+                  class="btn btn-sm btn-danger"
+                  (click)="removeParticipant(participant)"
+                  title="Supprimer ce participant"
+                >
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -7,4 +7,11 @@ public interface CustomerGroupRepository {
      * @param groupId l'identifiant du groupe
      */
     void addCustomerToGroup(int customerId, int groupId);
+
+    /**
+     * Supprime un participant (customer) d'un groupe dans la table de liaison.
+     * @param customerId l'identifiant du participant
+     * @param groupId l'identifiant du groupe
+     */
+    void removeCustomerFromGroup(int customerId, int groupId);
 }

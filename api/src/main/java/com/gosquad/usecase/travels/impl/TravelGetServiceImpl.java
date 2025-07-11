@@ -52,7 +52,7 @@ public class TravelGetServiceImpl implements TravelGetService {
 
         return travels.stream()
                 .map(travel -> {
-                    String uniqueId = companyCode + travel.getId();
+                    String uniqueId = "TRAVEL" + travel.getId();
                     return new GetAllTravelsResponseDTO(
                             uniqueId,
                             travel.getTitle(),
@@ -76,10 +76,10 @@ public class TravelGetServiceImpl implements TravelGetService {
 
         // Extract numeric ID from the uniqueTravelId
         int travelIdInt;
-        if (travelId.startsWith(companyCode)) {
-            travelIdInt = Integer.parseInt(travelId.substring(companyCode.length()));
+        if (travelId.startsWith("TRAVEL")) {
+            travelIdInt = Integer.parseInt(travelId.substring("TRAVEL".length()));
         } else {
-            // If no company code prefix, try to parse as is
+            // If no TRAVEL prefix, try to parse as is for backward compatibility
             travelIdInt = Integer.parseInt(travelId);
         }
         
@@ -131,7 +131,7 @@ public class TravelGetServiceImpl implements TravelGetService {
         }
 
         return new GetTravelResponseDTO(
-                companyCode + travel.getId(),
+                "TRAVEL" + travel.getId(),
                 travel.getTitle(),
                 travel.getDescription(),
                 travel.getStartDate(),

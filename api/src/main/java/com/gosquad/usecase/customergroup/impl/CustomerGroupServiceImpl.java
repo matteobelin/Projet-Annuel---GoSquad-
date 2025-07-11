@@ -18,4 +18,9 @@ public class CustomerGroupServiceImpl implements CustomerGroupService {
     public void addCustomerToGroup(int customerId, int groupId) {
         customerGroupRepository.addCustomerToGroup(customerId, groupId);
     }
+
+    @Override
+    public void removeCustomerFromGroup(int customerId, int groupId) {
+        customerGroupRepository.removeCustomerFromGroup(customerId, groupId);
+    }
 }

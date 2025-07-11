@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { ApiService } from '../../api.service';
 import { Voyage } from '../models';
 
@@ -78,8 +79,14 @@ export class VoyageService {
    * @param voyage Voyage data
    * @returns Observable of updated Voyage
    */
-  updateVoyage(id: string, voyage: Partial<Voyage>): Observable<Voyage> {
-    return this.apiService.put<Voyage>(`/travel/${id}`, voyage);
+  updateVoyage(id: string, voyage: Partial<Voyage>): Observable<any> {
+    return this.apiService.putText(`/travel/${id}`, voyage).pipe(
+      catchError(error => {
+        console.error('Erreur détaillée de la mise à jour du voyage:', error);
+        // Vous pouvez choisir de renvoyer une erreur plus conviviale ou l'erreur d'origine
+        return throwError(() => new Error('Une erreur est survenue lors de la mise à jour. Détails dans la console.'));
+      })
+    );
   }
 
   /**
