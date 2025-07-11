@@ -24,6 +24,10 @@ public class PriceServiceImpl implements PriceService {
         return priceMapper.modelToEntity(priceRepository.getById(id));
     }
 
+    public java.util.List<PriceEntity> findByIds(java.util.List<Integer> ids) throws Exception{
+        return priceMapper.modelsToEntities(priceRepository.findByIds(ids));
+    }
+
     public void createPrice(PriceEntity price) throws Exception{
         if(price.getVatRate().compareTo(MAX_VAT_RATE) > 0){
             throw new Exception("VAT rate cannot be greater than 50%");

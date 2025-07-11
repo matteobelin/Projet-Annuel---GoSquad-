@@ -301,6 +301,36 @@ public abstract class Repository<T extends Model> {
             stmt.executeUpdate();
         }
     }
+    public List<T> findByIds(List<Integer> ids) throws SQLException {
+        if (ids == null || ids.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        // Construire la chaîne de placeholders "?, ?, ?, ..."
+        String placeholders = String.join(", ", ids.stream().map(id -> "?").toArray(String[]::new));
+        String query = "SELECT * FROM " + tableName + " WHERE id IN (" + placeholders + ")";
+
+        List<T> results = new ArrayList<>();
+
+        try (Connection connection = DataConfig.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            // Set les ids dans la requête
+            for (int i = 0; i < ids.size(); i++) {
+                stmt.setInt(i + 1, ids.get(i));
+            }
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                T item = mapResultSetToEntity(rs);
+                results.add(item);
+            }
+        }
+
+        return results;
+    }
+
+
 
 
 
