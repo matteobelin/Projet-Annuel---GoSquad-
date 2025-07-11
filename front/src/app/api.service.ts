@@ -57,8 +57,20 @@ export class ApiService {
    * @returns Observable of text response
    */
   postText(endpoint: string, body: any): Observable<string> {
-    return this.http.post(`${this.baseUrl}${endpoint}`, body, { 
-      responseType: 'text' 
+    return this.http.post(`${this.baseUrl}${endpoint}`, body, {
+      responseType: 'text'
+    });
+  }
+
+  /**
+   * PUT method that expects text response
+   * @param endpoint API endpoint
+   * @param body Request body
+   * @returns Observable of text response
+   */
+  putText(endpoint: string, body: any): Observable<string> {
+    return this.http.put(`${this.baseUrl}${endpoint}`, body, {
+      responseType: 'text'
     });
   }
 }
