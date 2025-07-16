@@ -1,13 +1,14 @@
-package com.gosquad.usecase.group;
+package com.gosquad.usecase.groups;
 
-import com.gosquad.domain.group.GroupEntity;
-import com.gosquad.infrastructure.persistence.group.GroupModel;
-import org.junit.jupiter.api.Test;
+import com.gosquad.domain.groups.GroupEntity;
+import com.gosquad.infrastructure.persistence.groups.GroupModel;
+import com.gosquad.infrastructure.persistence.groups.GroupModel;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class GroupMapperTest {
 

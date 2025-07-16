@@ -1,11 +1,11 @@
-package com.gosquad.usecase.group.impl;
+package com.gosquad.usecase.groups.impl;
 
 import com.gosquad.core.exceptions.ConstraintViolationException;
 import com.gosquad.core.exceptions.NotFoundException;
-import com.gosquad.domain.group.GroupEntity;
-import com.gosquad.infrastructure.persistence.group.GroupModel;
-import com.gosquad.infrastructure.persistence.group.GroupRepository;
-import com.gosquad.usecase.group.GroupMapper;
+import com.gosquad.domain.groups.GroupEntity;
+import com.gosquad.infrastructure.persistence.groups.GroupModel;
+import com.gosquad.infrastructure.persistence.groups.GroupRepository;
+import com.gosquad.usecase.groups.GroupMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.sql.SQLException;

@@ -34,7 +34,7 @@ class CustomerGroupControllerTest {
 
         doNothing().when(customerGroupService).addCustomerToGroup(123, 1);
 
-        mockMvc.perform(post("/group/1/add-customer")
+        mockMvc.perform(post("/groups/1/add-customer")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -52,7 +52,7 @@ class CustomerGroupControllerTest {
         doThrow(new RuntimeException("Erreur de base de données"))
                 .when(customerGroupService).addCustomerToGroup(123, 1);
 
-        mockMvc.perform(post("/group/1/add-customer")
+        mockMvc.perform(post("/groups/1/add-customer")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isInternalServerError())
@@ -69,7 +69,7 @@ class CustomerGroupControllerTest {
 
         doNothing().when(customerGroupService).addCustomerToGroup(456, 5);
 
-        mockMvc.perform(post("/group/5/add-customer")
+        mockMvc.perform(post("/groups/5/add-customer")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -83,7 +83,7 @@ class CustomerGroupControllerTest {
     void testRemoveCustomerFromGroup_Success() throws Exception {
         doNothing().when(customerGroupService).removeCustomerFromGroup(123, 1);
 
-        mockMvc.perform(delete("/group/1/remove-customer/123"))
+        mockMvc.perform(delete("/groups/1/remove-customer/123"))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", "application/json"))
                 .andExpect(content().json("{\"message\": \"Client retiré du groupe avec succès\"}"));
@@ -96,7 +96,7 @@ class CustomerGroupControllerTest {
         doThrow(new RuntimeException("Client non trouvé dans le groupe"))
                 .when(customerGroupService).removeCustomerFromGroup(123, 1);
 
-        mockMvc.perform(delete("/group/1/remove-customer/123"))
+        mockMvc.perform(delete("/groups/1/remove-customer/123"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(header().string("Content-Type", "application/json"))
                 .andExpect(content().json("{\"error\": \"Erreur lors de la suppression du client du groupe: Client non trouvé dans le groupe\"}"));
@@ -108,7 +108,7 @@ class CustomerGroupControllerTest {
     void testRemoveCustomerFromGroup_WithDifferentIds() throws Exception {
         doNothing().when(customerGroupService).removeCustomerFromGroup(789, 3);
 
-        mockMvc.perform(delete("/group/3/remove-customer/789"))
+        mockMvc.perform(delete("/groups/3/remove-customer/789"))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", "application/json"))
                 .andExpect(content().json("{\"message\": \"Client retiré du groupe avec succès\"}"));
@@ -124,7 +124,7 @@ class CustomerGroupControllerTest {
         doThrow(new NullPointerException("Référence nulle"))
                 .when(customerGroupService).addCustomerToGroup(123, 1);
 
-        mockMvc.perform(post("/group/1/add-customer")
+        mockMvc.perform(post("/groups/1/add-customer")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isInternalServerError())
@@ -139,7 +139,7 @@ class CustomerGroupControllerTest {
         doThrow(new IllegalArgumentException("ID invalide"))
                 .when(customerGroupService).removeCustomerFromGroup(123, 1);
 
-        mockMvc.perform(delete("/group/1/remove-customer/123"))
+        mockMvc.perform(delete("/groups/1/remove-customer/123"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(header().string("Content-Type", "application/json"))
                 .andExpect(content().json("{\"error\": \"Erreur lors de la suppression du client du groupe: ID invalide\"}"));
@@ -154,7 +154,7 @@ class CustomerGroupControllerTest {
 
         doNothing().when(customerGroupService).addCustomerToGroup(0, 1);
 
-        mockMvc.perform(post("/group/1/add-customer")
+        mockMvc.perform(post("/groups/1/add-customer")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -168,7 +168,7 @@ class CustomerGroupControllerTest {
     void testRemoveCustomerFromGroup_WithZeroIds() throws Exception {
         doNothing().when(customerGroupService).removeCustomerFromGroup(0, 0);
 
-        mockMvc.perform(delete("/group/0/remove-customer/0"))
+        mockMvc.perform(delete("/groups/0/remove-customer/0"))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", "application/json"))
                 .andExpect(content().json("{\"message\": \"Client retiré du groupe avec succès\"}"));

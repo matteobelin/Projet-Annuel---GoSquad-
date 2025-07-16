@@ -3,10 +3,10 @@ package com.gosquad.presentation.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gosquad.core.exceptions.ConstraintViolationException;
 import com.gosquad.core.exceptions.NotFoundException;
-import com.gosquad.domain.group.GroupEntity;
-import com.gosquad.presentation.DTO.group.CreateGroupRequestDTO;
-import com.gosquad.presentation.DTO.group.GroupResponseDTO;
-import com.gosquad.usecase.group.GroupService;
+import com.gosquad.domain.groups.GroupEntity;
+import com.gosquad.presentation.DTO.groups.CreateGroupRequestDTO;
+import com.gosquad.presentation.DTO.groups.GroupResponseDTO;
+import com.gosquad.usecase.groups.GroupService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -63,7 +63,7 @@ class GroupControllerTest {
             return null;
         }).when(groupService).addGroup(any(GroupEntity.class));
 
-        mockMvc.perform(post("/group")
+        mockMvc.perform(post("/groups")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -90,7 +90,7 @@ class GroupControllerTest {
             return null;
         }).when(groupService).addGroup(any(GroupEntity.class));
 
-        mockMvc.perform(post("/group")
+        mockMvc.perform(post("/groups")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -107,7 +107,7 @@ class GroupControllerTest {
         doThrow(new ConstraintViolationException("Le nom du groupe est requis"))
                 .when(groupService).addGroup(any(GroupEntity.class));
 
-        mockMvc.perform(post("/group")
+        mockMvc.perform(post("/groups")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
@@ -123,7 +123,7 @@ class GroupControllerTest {
         doThrow(new RuntimeException("Erreur base de données"))
                 .when(groupService).addGroup(any(GroupEntity.class));
 
-        mockMvc.perform(post("/group")
+        mockMvc.perform(post("/groups")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isInternalServerError())
@@ -145,7 +145,7 @@ class GroupControllerTest {
 
         when(groupService.getAllGroups()).thenReturn(List.of(group1, group2));
 
-        mockMvc.perform(get("/group"))
+        mockMvc.perform(get("/groups"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$.length()").value(2))
@@ -163,7 +163,7 @@ class GroupControllerTest {
     void testGetAllGroups_EmptyList() throws Exception {
         when(groupService.getAllGroups()).thenReturn(List.of());
 
-        mockMvc.perform(get("/group"))
+        mockMvc.perform(get("/groups"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$.length()").value(0));
@@ -175,7 +175,7 @@ class GroupControllerTest {
     void testGetAllGroups_ConstraintViolationException() throws Exception {
         when(groupService.getAllGroups()).thenThrow(new ConstraintViolationException("Erreur de contrainte"));
 
-        mockMvc.perform(get("/group"))
+        mockMvc.perform(get("/groups"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().string("Erreur serveur: Erreur de contrainte"));
 
@@ -187,7 +187,7 @@ class GroupControllerTest {
         GroupEntity group = createSampleGroupEntity();
         when(groupService.getGroupById(1)).thenReturn(group);
 
-        mockMvc.perform(get("/group/1"))
+        mockMvc.perform(get("/groups/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("Groupe Test"))
@@ -200,7 +200,7 @@ class GroupControllerTest {
     void testGetGroupById_NotFound() throws Exception {
         when(groupService.getGroupById(999)).thenThrow(new NotFoundException("Groupe non trouvé"));
 
-        mockMvc.perform(get("/group/999"))
+        mockMvc.perform(get("/groups/999"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Groupe non trouvé"));
 
@@ -211,7 +211,7 @@ class GroupControllerTest {
     void testGetGroupById_SQLException() throws Exception {
         when(groupService.getGroupById(1)).thenThrow(new SQLException("Erreur SQL"));
 
-        mockMvc.perform(get("/group/1"))
+        mockMvc.perform(get("/groups/1"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().string("Erreur serveur: Erreur SQL"));
 
@@ -232,7 +232,7 @@ class GroupControllerTest {
             return null;
         }).when(groupService).addGroup(any(GroupEntity.class));
 
-        mockMvc.perform(post("/group")
+        mockMvc.perform(post("/groups")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -255,7 +255,7 @@ class GroupControllerTest {
             return null;
         }).when(groupService).addGroup(any(GroupEntity.class));
 
-        mockMvc.perform(post("/group")
+        mockMvc.perform(post("/groups")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())

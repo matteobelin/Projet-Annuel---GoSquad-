@@ -2,14 +2,14 @@ package com.gosquad.usecase.travels.impl;
 
 import com.gosquad.domain.company.CompanyEntity;
 import com.gosquad.domain.travels.TravelInformationEntity;
-import com.gosquad.domain.group.GroupEntity;
+import com.gosquad.domain.groups.GroupEntity;
 import com.gosquad.domain.customers.CustomerEntity;
 import com.gosquad.infrastructure.jwt.JWTInterceptor;
 import com.gosquad.presentation.DTO.travels.GetAllTravelsResponseDTO;
 import com.gosquad.presentation.DTO.travels.GetTravelResponseDTO;
 import com.gosquad.usecase.company.CompanyService;
 import com.gosquad.usecase.travels.TravelService;
-import com.gosquad.usecase.group.GroupService;
+import com.gosquad.usecase.groups.GroupService;
 import com.gosquad.usecase.customers.CustomerService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -122,9 +122,9 @@ class TravelGetServiceImplTest {
         assertEquals(10, result.groupId());
         assertEquals("COMP", result.companyCode());
 
-        assertEquals(1, result.group().size());
-        assertEquals(10, result.group().get(0).id());
-        assertEquals("Groupe Paris", result.group().get(0).name());
+        assertEquals(1, result.groups().size());
+        assertEquals(10, result.groups().get(0).id());
+        assertEquals("Groupe Paris", result.groups().get(0).name());
 
         assertEquals(2, result.participants().size());
         assertEquals("COMP1", result.participants().get(0).uniqueCustomerId());
@@ -152,7 +152,7 @@ class TravelGetServiceImplTest {
         assertEquals("TRAVEL1", result.uniqueTravelId());
         assertEquals("Voyage Test", result.title());
         assertNull(result.groupId());
-        assertTrue(result.group().isEmpty());
+        assertTrue(result.groups().isEmpty());
         assertTrue(result.participants().isEmpty());
     }
 
@@ -174,7 +174,7 @@ class TravelGetServiceImplTest {
         GetTravelResponseDTO result = travelGetService.getTravel(request);
 
         assertEquals("TRAVEL1", result.uniqueTravelId());
-        assertTrue(result.group().isEmpty());
+        assertTrue(result.groups().isEmpty());
         assertTrue(result.participants().isEmpty());
     }
 
@@ -199,7 +199,7 @@ class TravelGetServiceImplTest {
         GetTravelResponseDTO result = travelGetService.getTravel(request);
 
         assertEquals("TRAVEL1", result.uniqueTravelId());
-        assertEquals(1, result.group().size());
+        assertEquals(1, result.groups().size());
         assertTrue(result.participants().isEmpty());
     }
 

@@ -1,10 +1,10 @@
 package com.gosquad.usecase.travels.impl;
 
 import com.gosquad.domain.travels.TravelInformationEntity;
-import com.gosquad.domain.group.GroupEntity;
+import com.gosquad.domain.groups.GroupEntity;
 import com.gosquad.presentation.DTO.travels.VoyageRequestDTO;
 import com.gosquad.usecase.travels.TravelService;
-import com.gosquad.usecase.group.GroupService;
+import com.gosquad.usecase.groups.GroupService;
 import com.gosquad.usecase.customergroup.CustomerGroupService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

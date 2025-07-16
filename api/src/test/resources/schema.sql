@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS activity;
 DROP TABLE IF EXISTS customer;
 DROP TABLE IF EXISTS advisor;
 DROP TABLE IF EXISTS category;
-DROP TABLE IF EXISTS group;
+DROP TABLE IF EXISTS groups;
 DROP TABLE IF EXISTS price;
 DROP TABLE IF EXISTS addresses;
 DROP TABLE IF EXISTS cities;
@@ -94,7 +94,7 @@ CREATE TABLE price (
                        vat_amount NUMERIC(10,2),
                        gross_price NUMERIC(10,2)
 );
-CREATE TABLE group (
+CREATE TABLE groups (
                          id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
                          name VARCHAR(255) NOT NULL UNIQUE,
                          visible BOOLEAN NOT NULL DEFAULT TRUE,
@@ -113,7 +113,7 @@ CREATE TABLE travel (
                         group_id INTEGER,
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                        CONSTRAINT fk_travel_group FOREIGN KEY (group_id) REFERENCES group(id)
+                        CONSTRAINT fk_travel_group FOREIGN KEY (group_id) REFERENCES groups(id)
 );
 
 CREATE TABLE activity (
@@ -139,7 +139,7 @@ CREATE TABLE activity_customer (
                                    group_id INTEGER NOT NULL,
                                    CONSTRAINT fk_activity_customer_activity FOREIGN KEY (activity_id) REFERENCES activity(id),
                                    CONSTRAINT fk_activity_customer_customer FOREIGN KEY (customer_id) REFERENCES customer(id),
-                                   CONSTRAINT fk_activity_customer_advisor FOREIGN KEY (group_id) REFERENCES group(id)
+                                   CONSTRAINT fk_activity_customer_advisor FOREIGN KEY (group_id) REFERENCES groups(id)
 );
 
 CREATE TABLE customer_group (
@@ -147,7 +147,7 @@ CREATE TABLE customer_group (
     group_id INTEGER NOT NULL,
     PRIMARY KEY (customer_id, group_id),
     CONSTRAINT fk_customer_group_customer FOREIGN KEY (customer_id) REFERENCES customer(id),
-    CONSTRAINT fk_customer_group_group FOREIGN KEY (group_id) REFERENCES group(id)
+    CONSTRAINT fk_customer_group_group FOREIGN KEY (group_id) REFERENCES groups(id)
 );
 
 
@@ -191,8 +191,8 @@ INSERT INTO category (id, name, company_id) VALUES
                                                         (1, 'Sport', 1),
                                                         (2, 'Repas', 1);
 
-INSERT INTO group (id, name) VALUES
-    (1, 'test');
+INSERT INTO groups (id, name, visible, created_at, updated_at) VALUES
+    (1, 'Test Group', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO price(id, net_price, vat_rate, vat_amount, gross_price) VALUES
                                                         (1, 25.00, 20.00, 5.00, 30.00),

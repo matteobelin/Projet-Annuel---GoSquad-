@@ -78,7 +78,7 @@ public class TestDatabaseHelper {
             stmt.execute("DROP TABLE IF EXISTS customer CASCADE");
             stmt.execute("DROP TABLE IF EXISTS advisor CASCADE");
             stmt.execute("DROP TABLE IF EXISTS category CASCADE");
-            stmt.execute("DROP TABLE IF EXISTS group CASCADE");
+            stmt.execute("DROP TABLE IF EXISTS groups CASCADE");
             stmt.execute("DROP TABLE IF EXISTS price CASCADE");
             stmt.execute("DROP TABLE IF EXISTS addresses CASCADE");
             stmt.execute("DROP TABLE IF EXISTS cities CASCADE");
@@ -106,7 +106,7 @@ public class TestDatabaseHelper {
                 stmt.execute("DROP TABLE IF EXISTS customer CASCADE");
                 stmt.execute("DROP TABLE IF EXISTS advisor CASCADE");
                 stmt.execute("DROP TABLE IF EXISTS category CASCADE");
-                stmt.execute("DROP TABLE IF EXISTS group CASCADE");
+                stmt.execute("DROP TABLE IF EXISTS groups CASCADE");
                 stmt.execute("DROP TABLE IF EXISTS price CASCADE");
                 stmt.execute("DROP TABLE IF EXISTS addresses CASCADE");
                 stmt.execute("DROP TABLE IF EXISTS cities CASCADE");
