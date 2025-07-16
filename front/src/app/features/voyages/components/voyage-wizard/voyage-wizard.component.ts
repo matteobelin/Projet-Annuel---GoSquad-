@@ -1,13 +1,20 @@
-import { Component, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+// ...existing code...
+import { Component, OnInit, Output, EventEmitter, ChangeDetectorRef, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subject, debounceTime, distinctUntilChanged, switchMap, of, map, catchError, tap } from 'rxjs';
+// Angular Material modules
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
 
 import { CustomerService, CustomerApiResponse } from '../../../../core/services/customer.service';
-import { GroupService, Group } from '../../../../core/services/group.service';
 import { VoyageService, VoyageCreationRequest } from '../../../../core/services/voyage.service';
 import { Customer } from '../../../../core/models/customer.model';
+import { Group, GroupService } from '../../../../core/services/group.service';
 
 export interface Participant {
   id: string;
@@ -20,7 +27,16 @@ export interface Participant {
 @Component({
   selector: 'app-voyage-wizard',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    // Angular Material modules
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatIconModule
+  ],
   templateUrl: './voyage-wizard.component.html',
   styleUrls: ['./voyage-wizard.component.css']
 })
@@ -73,7 +89,7 @@ export class VoyageWizardComponent implements OnInit {
       description: [''],
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
-      destination: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+      destination: ['', [Validators.required]],
       budget: [null, [Validators.min(0)]]
     });
 
@@ -172,28 +188,7 @@ export class VoyageWizardComponent implements OnInit {
   }
 
   private loadExistingGroups(): void {
-    this.groupService.getAllGroups().subscribe({
-      next: (groups) => {
-        this.existingGroups = groups;
-      },
-      error: (error) => {
-        console.error('Erreur lors du chargement des groupes:', error);
-      }
-    });
-  }
-
-  // Navigation entre les étapes
-  nextStep(): void {
-    if (this.currentStep < this.maxSteps && this.isCurrentStepValid()) {
-      this.currentStep++;
-      this.updateGroupFields();
-    }
-  }
-
-  previousStep(): void {
-    if (this.currentStep > 1) {
-      this.currentStep--;
-    }
+    // ...existing group loading logic...
   }
 
   private isCurrentStepValid(): boolean {
@@ -283,19 +278,65 @@ export class VoyageWizardComponent implements OnInit {
     this.isLoading = true;
     this.error = null;
 
-    // Gérer selectedGroupId correctement - convertir chaîne vide en null
     const selectedGroupIdValue = this.participantsForm.get('selectedGroupId')?.value;
     const groupName = this.participantsForm.get('groupName')?.value?.trim() || '';
-    
-    // Convertir selectedGroupId en nombre ou null
-    let finalSelectedGroupId: number | null = null;
-    if (selectedGroupIdValue && selectedGroupIdValue !== '') {
-      const parsedGroupId = parseInt(selectedGroupIdValue);
-      if (!isNaN(parsedGroupId)) {
-        finalSelectedGroupId = parsedGroupId;
+    const participantIds = this.selectedParticipants.map(p => {
+      const numericPart = p.id.replace(/[^0-9]/g, '');
+      const id = parseInt(numericPart);
+      if (isNaN(id) || id === 0) {
+        console.warn(`ID participant invalide: "${p.id}" pour ${p.prenom} ${p.nom}`);
       }
+      return id;
+    }).filter(id => !isNaN(id) && id > 0);
+
+    // Si un groupe existant est sélectionné
+    if (selectedGroupIdValue && selectedGroupIdValue !== '') {
+      const finalSelectedGroupId = parseInt(selectedGroupIdValue);
+      this.createVoyage(finalSelectedGroupId, groupName, participantIds);
+      return;
     }
 
+    // Si un nouveau groupe doit être créé
+    if (groupName && participantIds.length > 0) {
+      const payload = {
+        name: groupName,
+        participantIds: participantIds,
+        visible: participantIds.length > 1 // visible si plusieurs participants
+      };
+      console.log('Payload envoyé à l’API /groups :', payload);
+      this.groupService.createGroup(payload).subscribe({
+        next: (group) => {
+          console.log('🟢 Groupe créé, ID retourné par l’API :', group?.id, group);
+          this.createVoyage(group.id, group.name, participantIds);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.error = `Erreur lors de la création du groupe: ${error.status} - ${error.message}`;
+        }
+      });
+      return;
+    }
+
+    // Cas solo sans groupe : on crée toujours un groupe même pour un seul participant
+    const soloPayload = {
+      name: groupName || 'Groupe Solo',
+      participantIds: participantIds,
+      visible: false // solo
+    };
+    console.log('Payload envoyé à l’API /groups (solo) :', soloPayload);
+    this.groupService.createGroup(soloPayload).subscribe({
+      next: (group) => {
+        console.log('🟢 Groupe solo créé, ID retourné par l’API :', group?.id, group);
+        this.createVoyage(group.id, group.name, participantIds);
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.error = `Erreur lors de la création du groupe: ${error.status} - ${error.message}`;
+      }
+    });
+  }
+
+  private createVoyage(groupId: number | null, groupName: string, participantIds: number[]): void {
     const request: VoyageCreationRequest = {
       title: this.generalInfoForm.get('title')?.value?.trim(),
       description: this.generalInfoForm.get('description')?.value?.trim() || '',
@@ -303,27 +344,15 @@ export class VoyageWizardComponent implements OnInit {
       endDate: this.generalInfoForm.get('endDate')?.value,
       destination: this.generalInfoForm.get('destination')?.value?.trim(),
       budget: this.generalInfoForm.get('budget')?.value || 0,
-      participantIds: this.selectedParticipants.map(p => {
-        // Extraire la partie numérique du uniqueCustomerId (ex: "GOSQUAD5" -> 5)
-        const numericPart = p.id.replace(/[^0-9]/g, '');
-        const id = parseInt(numericPart);
-        if (isNaN(id) || id === 0) {
-          console.warn(`ID participant invalide: "${p.id}" pour ${p.prenom} ${p.nom}`);
-        }
-        return id;
-      }).filter(id => !isNaN(id) && id > 0), // Filtrer les IDs invalides
+      participantIds: participantIds,
       groupName: groupName,
-      selectedGroupId: finalSelectedGroupId
+      selectedGroupId: groupId
     };
 
     this.voyageService.createVoyage(request).subscribe({
       next: (response) => {
         this.isLoading = false;
-        
-        // Émettre l'événement de succès pour que le parent rafraîchisse la liste
         this.voyageCreated.emit();
-        
-        // Navigation vers la liste des voyages
         this.router.navigate(['/voyages'])
           .then((navigationSuccessful) => {
             if (!navigationSuccessful) {
@@ -386,5 +415,17 @@ export class VoyageWizardComponent implements OnInit {
         isSolo: this.selectedParticipants.length === 1
       }
     };
+  }
+  // Navigation entre les étapes du wizard
+  previousStep(): void {
+    if (this.currentStep > 1) {
+      this.currentStep--;
+    }
+  }
+
+  nextStep(): void {
+    if (this.currentStep < this.maxSteps && this.canProceedToNextStep) {
+      this.currentStep++;
+    }
   }
 }

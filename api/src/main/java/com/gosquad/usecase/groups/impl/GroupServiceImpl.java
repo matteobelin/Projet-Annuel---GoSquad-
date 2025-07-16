@@ -24,6 +24,12 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public GroupEntity getGroupByName(String name) throws SQLException, NotFoundException {
+        GroupModel groupModel = groupRepository.getByName(name);
+        return groupMapper.modelToEntity(groupModel);
+    }
+
+    @Override
     public GroupEntity getGroupById(int id) throws SQLException, NotFoundException {
         GroupModel groupModel = groupRepository.getById(id);
         return groupMapper.modelToEntity(groupModel);

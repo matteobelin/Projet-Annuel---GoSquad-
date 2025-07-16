@@ -1,4 +1,6 @@
+
 package com.gosquad.infrastructure.persistence.travels.impl;
+import org.springframework.test.context.ActiveProfiles;
 
 import com.gosquad.core.exceptions.ConstraintViolationException;
 import com.gosquad.core.exceptions.NotFoundException;
@@ -13,6 +15,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ActiveProfiles("test")
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TravelRepositoryImplTest {

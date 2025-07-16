@@ -94,14 +94,26 @@ public class TravelCreationServiceImpl implements TravelCreationService {
             if (hasMultipleParticipants || hasOneParticipant) {
                 // visible = true si plusieurs participants, false sinon
                 boolean visible = hasMultipleParticipants;
-                GroupEntity newGroup = new GroupEntity(null, groupName);
-                newGroup.setVisible(visible);
-                groupService.addGroup(newGroup);
+                Integer groupId = null;
+                try {
+                    GroupEntity existingGroup = groupService.getGroupByName(groupName);
+                    if (existingGroup != null) {
+                        groupId = existingGroup.getId();
+                    }
+                } catch (Exception e) {
+                    // NotFoundException ou autre, on créera le groupe
+                }
+                if (groupId == null) {
+                    GroupEntity newGroup = new GroupEntity(null, groupName);
+                    newGroup.setVisible(visible);
+                    groupService.addGroup(newGroup);
+                    groupId = newGroup.getId();
+                }
                 // Ajouter tous les participants au groupe
                 for (Long participantId : voyageRequest.getParticipantIds()) {
-                    customerGroupService.addCustomerToGroup(participantId.intValue(), newGroup.getId());
+                    customerGroupService.addCustomerToGroup(participantId.intValue(), groupId);
                 }
-                return newGroup.getId();
+                return groupId;
             }
 
             // Cas 3: Pas de participants (erreur métier)

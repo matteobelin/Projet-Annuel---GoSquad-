@@ -48,24 +48,30 @@ public class TravelUpdateController {
     @DeleteMapping("/travel/{id}")
     public ResponseEntity<String> deleteTravel(@PathVariable String id) {
         try {
+            System.out.println("[DELETE] Requête suppression voyage reçue pour ID: " + id);
             // Extract numeric ID from the uniqueTravelId
             int numericId;
             try {
                 String numericPart = id.replaceAll("[A-Z]+", ""); // Remove alphabetic company code
                 if (numericPart.isEmpty()) {
+                    System.out.println("[DELETE] Format d'ID invalide: " + id);
                     return ResponseEntity.badRequest().body("Format d'ID invalide: " + id);
                 }
                 numericId = Integer.parseInt(numericPart);
             } catch (NumberFormatException e) {
+                System.out.println("[DELETE] ID de voyage invalide: " + id);
                 return ResponseEntity.badRequest().body("ID de voyage invalide: " + id);
             }
-            
+
             travelUpdateService.deleteTravel(numericId);
-            return ResponseEntity.ok("Voyage supprimé avec succès");
+            System.out.println("[DELETE] Voyage supprimé avec succès: " + numericId);
+            return ResponseEntity.ok().body("{\"success\":true,\"message\":\"Voyage supprimé avec succès\"}");
         } catch (SQLException e) {
-            return ResponseEntity.status(500).body("Erreur serveur : " + e.getMessage());
+            System.out.println("[DELETE] Erreur serveur: " + e.getMessage());
+            return ResponseEntity.status(500).body("{\"success\":false,\"error\":\"Erreur serveur: " + e.getMessage() + "\"}");
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Erreur inattendue : " + e.getMessage());
+            System.out.println("[DELETE] Erreur inattendue: " + e.getMessage());
+            return ResponseEntity.status(500).body("{\"success\":false,\"error\":\"Erreur inattendue: " + e.getMessage() + "\"}");
         }
     }
 }

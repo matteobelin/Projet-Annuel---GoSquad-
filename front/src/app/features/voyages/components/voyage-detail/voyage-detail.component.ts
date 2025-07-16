@@ -71,8 +71,11 @@ export class VoyageDetailComponent implements OnInit {
           this.router.navigate(['/voyages']);
         },
         error: (error) => {
-          console.error('Error deleting voyage:', error);
-          alert('Erreur lors de la suppression du voyage');
+          let errorMsg = 'Erreur lors de la suppression du voyage';
+          if (error?.error) {
+            errorMsg += ` : ${typeof error.error === 'string' ? error.error : JSON.stringify(error.error)}`;
+          }
+          console.error(errorMsg);
         }
       });
     }

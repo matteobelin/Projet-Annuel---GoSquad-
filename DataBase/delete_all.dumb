@@ -1,0 +1,82 @@
+-- Script pour supprimer toutes les données et tables de la base PostgreSQL GoSquad
+
+-- Désactivation des contraintes de clé étrangère
+do $$
+declare
+    r record;
+begin
+    for r in (select tablename from pg_tables where schemaname = current_schema()) loop
+        execute 'ALTER TABLE ' || quote_ident(r.tablename) || ' DISABLE TRIGGER ALL;';
+    end loop;
+end$$;
+
+-- Suppression de toutes les tables (ordre pour éviter les FK)
+DROP TABLE IF EXISTS travel_insurance CASCADE;
+DROP TABLE IF EXISTS travel_hotel CASCADE;
+DROP TABLE IF EXISTS travel_activity CASCADE;
+DROP TABLE IF EXISTS travel_information CASCADE;
+DROP TABLE IF EXISTS quote CASCADE;
+DROP TABLE IF EXISTS price CASCADE;
+DROP TABLE IF EXISTS order_form CASCADE;
+DROP TABLE IF EXISTS invoice CASCADE;
+DROP TABLE IF EXISTS insurance CASCADE;
+DROP TABLE IF EXISTS hotel CASCADE;
+DROP TABLE IF EXISTS "groups" CASCADE;
+DROP TABLE IF EXISTS flight_booking_customer CASCADE;
+DROP TABLE IF EXISTS flight_booking CASCADE;
+DROP TABLE IF EXISTS flight CASCADE;
+DROP TABLE IF EXISTS destination CASCADE;
+DROP TABLE IF EXISTS customer_group CASCADE;
+DROP TABLE IF EXISTS customer CASCADE;
+DROP TABLE IF EXISTS countries CASCADE;
+DROP TABLE IF EXISTS company CASCADE;
+DROP TABLE IF EXISTS cities CASCADE;
+DROP TABLE IF EXISTS booking_insurance CASCADE;
+DROP TABLE IF EXISTS booking_hotel_customer CASCADE;
+DROP TABLE IF EXISTS airport CASCADE;
+DROP TABLE IF EXISTS airline_company CASCADE;
+DROP TABLE IF EXISTS aircraft_type CASCADE;
+DROP TABLE IF EXISTS advisor CASCADE;
+DROP TABLE IF EXISTS addresses CASCADE;
+DROP TABLE IF EXISTS activity_customer CASCADE;
+DROP TABLE IF EXISTS activity CASCADE;
+DROP TABLE IF EXISTS category CASCADE;
+
+-- Suppression des séquences
+DROP SEQUENCE IF EXISTS travel_information_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS quote_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS price_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS order_form_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS invoice_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS insurance_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS hotel_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS group_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS flight_booking_customer_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS flight_booking_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS aircraft_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS destination_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS customer_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS countries_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS "Company_id_seq" CASCADE;
+DROP SEQUENCE IF EXISTS cities_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS booking_insurance_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS booking_hotel_customer_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS airport_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS airline_company_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS aircraft_type_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS person_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS addresses_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS activity_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS category_id_seq CASCADE;
+
+-- Réactivation des contraintes de clé étrangère
+do $$
+declare
+    r record;
+begin
+    for r in (select tablename from pg_tables where schemaname = current_schema()) loop
+        execute 'ALTER TABLE ' || quote_ident(r.tablename) || ' ENABLE TRIGGER ALL;';
+    end loop;
+end$$;
+
+-- Fin du script

@@ -77,13 +77,18 @@ export class VoyagesComponent implements OnInit {
 
   deleteVoyage(voyage: VoyageApiResponse): void {
     if (confirm(`Êtes-vous sûr de vouloir supprimer le voyage "${voyage.title}" ?`)) {
+      console.log('🗑️ Suppression du voyage demandé:', voyage);
       this.voyageService.deleteVoyage(voyage.uniqueTravelId).subscribe({
         next: () => {
+          console.log('✅ Voyage supprimé avec succès:', voyage.uniqueTravelId);
           this.loadVoyages(); // Reload the list
         },
         error: (error) => {
-          console.error('Error deleting voyage:', error);
-          alert('Erreur lors de la suppression du voyage');
+          let errorMsg = 'Erreur lors de la suppression du voyage';
+          if (error?.error) {
+            errorMsg += ` : ${typeof error.error === 'string' ? error.error : JSON.stringify(error.error)}`;
+          }
+          console.error('❌', errorMsg, error);
         }
       });
     }

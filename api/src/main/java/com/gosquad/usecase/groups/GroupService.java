@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface GroupService {
     GroupEntity getGroupById(int id) throws SQLException, NotFoundException;
+    GroupEntity getGroupByName(String name) throws SQLException, NotFoundException;
     List<GroupEntity> getAllGroups() throws ConstraintViolationException;
     void addGroup(GroupEntity group) throws SQLException, ConstraintViolationException;
     void updateGroup(GroupEntity group) throws SQLException, ConstraintViolationException;

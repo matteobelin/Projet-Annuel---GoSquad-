@@ -10,6 +10,9 @@ import java.util.List;
 public class GroupMapper {
 
     public GroupEntity modelToEntity(GroupModel groupModel) {
+        if (groupModel == null) {
+            return null;
+        }
         return new GroupEntity(
                 groupModel.getId(),
                 groupModel.getName(),
@@ -20,6 +23,9 @@ public class GroupMapper {
     }
 
     public GroupModel entityToModel(GroupEntity groupEntity) {
+        if (groupEntity == null) {
+            return null;
+        }
         return new GroupModel(
                 groupEntity.getId(),
                 groupEntity.getName(),
@@ -30,6 +36,9 @@ public class GroupMapper {
     }
 
     public List<GroupEntity> modelToEntity(List<GroupModel> groupModels) {
+        if (groupModels == null) {
+            return null;
+        }
         return groupModels.stream()
                 .map(this::modelToEntity)
                 .toList();

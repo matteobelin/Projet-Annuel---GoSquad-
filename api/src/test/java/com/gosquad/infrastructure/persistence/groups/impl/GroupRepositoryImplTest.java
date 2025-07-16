@@ -13,8 +13,12 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.springframework.test.context.jdbc.Sql;
+
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@org.springframework.test.context.ActiveProfiles("test")
+@org.springframework.test.context.TestPropertySource(properties = {"test.env=true"})
 public class GroupRepositoryImplTest {
 
     @Autowired
@@ -23,31 +27,34 @@ public class GroupRepositoryImplTest {
     @Test
     @Order(1)
     void testAddAndGetGroup() throws SQLException, ConstraintViolationException, NotFoundException {
-        GroupModel group = new GroupModel(null, "Test Group", true, null, null);
+        String uniqueName = "Test group " + java.util.UUID.randomUUID();
+        GroupModel group = new GroupModel(null, uniqueName, true, null, null);
         groupRepository.addGroup(group);
         assertNotNull(group.getId());
         GroupModel fetched = groupRepository.getById(group.getId());
-        assertEquals("Test Group", fetched.getName());
+        assertEquals(uniqueName, fetched.getName());
         assertTrue(fetched.getVisible());
     }
 
     @Test
     @Order(2)
     void testUpdateGroup() throws SQLException, ConstraintViolationException, NotFoundException {
-        GroupModel group = new GroupModel(null, "Update Group", true, null, null);
+        String uniqueName = "Update group " + java.util.UUID.randomUUID();
+        GroupModel group = new GroupModel(null, uniqueName, true, null, null);
         groupRepository.addGroup(group);
-        group.setName("Updated Name");
+        group.setName("Updated Name " + java.util.UUID.randomUUID());
         group.setVisible(false);
         groupRepository.updateGroup(group);
         GroupModel updated = groupRepository.getById(group.getId());
-        assertEquals("Updated Name", updated.getName());
+        assertEquals(group.getName(), updated.getName());
         assertFalse(updated.getVisible());
     }
 
     @Test
     @Order(3)
     void testDeleteGroup() throws SQLException, ConstraintViolationException, NotFoundException {
-        GroupModel group = new GroupModel(null, "Delete Group", true, null, null);
+        String uniqueName = "Delete group " + java.util.UUID.randomUUID();
+        GroupModel group = new GroupModel(null, uniqueName, true, null, null);
         groupRepository.addGroup(group);
         int id = group.getId();
         groupRepository.deleteGroup(id);

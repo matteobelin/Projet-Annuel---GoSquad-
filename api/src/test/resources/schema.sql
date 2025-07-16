@@ -1,66 +1,31 @@
 -- Drop existing tables and sequences
 
 
-DROP TABLE IF EXISTS advisor;
-DROP SEQUENCE IF EXISTS PERSON_ID_SEQ;
-
-
 DROP TABLE IF EXISTS activity_customer;
-DROP SEQUENCE IF EXISTS ACTIVITY_CUSTOMER_ID_SEQ;
-
-
-DROP TABLE IF EXISTS "group";
-DROP SEQUENCE IF EXISTS GROUP_ID_SEQ;
-
-
+DROP TABLE IF EXISTS customer_group;
+DROP TABLE IF EXISTS travel;
 DROP TABLE IF EXISTS activity;
-DROP SEQUENCE IF EXISTS ACTIVITY_ID_SEQ;
-
 DROP TABLE IF EXISTS customer;
-DROP SEQUENCE IF EXISTS CUSTOMER_ID_SEQ;
-
+DROP TABLE IF EXISTS advisor;
 DROP TABLE IF EXISTS category;
-DROP SEQUENCE IF EXISTS CATEGORY_ID_SEQ;
-
+DROP TABLE IF EXISTS group;
 DROP TABLE IF EXISTS price;
-DROP SEQUENCE IF EXISTS PRICE_ID_SEQ;
-
 DROP TABLE IF EXISTS addresses;
-DROP SEQUENCE IF EXISTS ADDRESSES_ID_SEQ;
-
 DROP TABLE IF EXISTS cities;
-DROP SEQUENCE IF EXISTS CITIES_ID_SEQ;
-
 DROP TABLE IF EXISTS countries;
-DROP SEQUENCE IF EXISTS COUNTRIES_ID_SEQ;
-
 DROP TABLE IF EXISTS company;
-DROP SEQUENCE IF EXISTS COMPANY_ID_SEQ;
 
 
-
--- Create sequences
-CREATE SEQUENCE ADDRESSES_ID_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-CREATE SEQUENCE CITIES_ID_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-CREATE SEQUENCE COUNTRIES_ID_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-CREATE SEQUENCE CUSTOMER_ID_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-CREATE SEQUENCE PERSON_ID_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-CREATE SEQUENCE COMPANY_ID_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-CREATE SEQUENCE ACTIVITY_ID_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-CREATE SEQUENCE ACTIVITY_CUSTOMER_ID_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-CREATE SEQUENCE CATEGORY_ID_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-CREATE SEQUENCE GROUP_ID_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-CREATE SEQUENCE PRICE_ID_SEQ INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
 
 -- Create tables
 CREATE TABLE company (
-                         id INTEGER DEFAULT NEXT VALUE FOR COMPANY_ID_SEQ NOT NULL PRIMARY KEY,
+                         id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
                          code VARCHAR(255) NOT NULL UNIQUE,
                          name VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE advisor (
-                         id INTEGER DEFAULT NEXT VALUE FOR PERSON_ID_SEQ NOT NULL PRIMARY KEY,
+                         id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
                          firstname VARCHAR(255) NOT NULL,
                          lastname VARCHAR(255) NOT NULL,
                          email VARCHAR(255) NOT NULL UNIQUE,
@@ -72,13 +37,13 @@ CREATE TABLE advisor (
 );
 
 CREATE TABLE countries (
-                           id INTEGER DEFAULT NEXT VALUE FOR COUNTRIES_ID_SEQ NOT NULL PRIMARY KEY,
+                           id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
                            iso_code CHAR(2) NOT NULL UNIQUE,
                            country_name VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE cities (
-                        id INTEGER DEFAULT NEXT VALUE FOR CITIES_ID_SEQ NOT NULL PRIMARY KEY,
+                        id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
                         city_name VARCHAR(100) NOT NULL,
                         postal_code VARCHAR(20) NOT NULL,
                         country_id INTEGER NOT NULL,
@@ -86,14 +51,14 @@ CREATE TABLE cities (
 );
 
 CREATE TABLE addresses (
-                           id INTEGER DEFAULT NEXT VALUE FOR ADDRESSES_ID_SEQ NOT NULL PRIMARY KEY,
+                           id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
                            address_line VARCHAR(255) NOT NULL,
                            city_id INTEGER NOT NULL,
                            CONSTRAINT fk_city FOREIGN KEY (city_id) REFERENCES cities(id)
 );
 
 CREATE TABLE customer (
-                          id INTEGER DEFAULT NEXT VALUE FOR CUSTOMER_ID_SEQ NOT NULL PRIMARY KEY,
+                          id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
                           firstname VARCHAR(255) NOT NULL,
                           lastname VARCHAR(255) NOT NULL,
                           email VARCHAR(255) NOT NULL,
@@ -116,26 +81,43 @@ CREATE TABLE customer (
 );
 
 CREATE TABLE category (
-                          id INTEGER DEFAULT NEXT VALUE FOR CATEGORY_ID_SEQ NOT NULL PRIMARY KEY,
+                          id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
                           name VARCHAR(255) NOT NULL UNIQUE,
                           company_id INTEGER NOT NULL,
                           CONSTRAINT fk_category_company FOREIGN KEY (company_id) REFERENCES company(id)
 );
 
 CREATE TABLE price (
-                       id INTEGER DEFAULT NEXT VALUE FOR PRICE_ID_SEQ NOT NULL PRIMARY KEY,
+                       id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
                        net_price NUMERIC(10,2) NOT NULL,
                        vat_rate NUMERIC(5,2) NOT NULL,
-                       vat_amount NUMERIC(10,2) AS ((net_price * vat_rate) / 100),
-                       gross_price NUMERIC(10,2) AS (net_price + ((net_price * vat_rate) / 100))
+                       vat_amount NUMERIC(10,2),
+                       gross_price NUMERIC(10,2)
 );
-CREATE TABLE "group" (
-                         id INTEGER DEFAULT NEXT VALUE FOR GROUP_ID_SEQ NOT NULL PRIMARY KEY,
-                         name VARCHAR(255) NOT NULL UNIQUE
+CREATE TABLE group (
+                         id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
+                         name VARCHAR(255) NOT NULL UNIQUE,
+                         visible BOOLEAN NOT NULL DEFAULT TRUE,
+                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE travel (
+                        id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
+                        title VARCHAR(255) NOT NULL,
+                        description TEXT,
+                        start_date DATE NOT NULL,
+                        end_date DATE NOT NULL,
+                        destination VARCHAR(255) NOT NULL,
+                        budget DECIMAL(10,2),
+                        group_id INTEGER,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        CONSTRAINT fk_travel_group FOREIGN KEY (group_id) REFERENCES group(id)
 );
 
 CREATE TABLE activity (
-                          id INTEGER DEFAULT NEXT VALUE FOR ACTIVITY_ID_SEQ NOT NULL PRIMARY KEY,
+                          id INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
                           name VARCHAR(255) NOT NULL,
                           description TEXT,
                           address_id INTEGER NOT NULL,
@@ -157,10 +139,16 @@ CREATE TABLE activity_customer (
                                    group_id INTEGER NOT NULL,
                                    CONSTRAINT fk_activity_customer_activity FOREIGN KEY (activity_id) REFERENCES activity(id),
                                    CONSTRAINT fk_activity_customer_customer FOREIGN KEY (customer_id) REFERENCES customer(id),
-                                   CONSTRAINT fk_activity_customer_advisor FOREIGN KEY (group_id) REFERENCES "group"(id)
+                                   CONSTRAINT fk_activity_customer_advisor FOREIGN KEY (group_id) REFERENCES group(id)
 );
 
-
+CREATE TABLE customer_group (
+    customer_id INTEGER NOT NULL,
+    group_id INTEGER NOT NULL,
+    PRIMARY KEY (customer_id, group_id),
+    CONSTRAINT fk_customer_group_customer FOREIGN KEY (customer_id) REFERENCES customer(id),
+    CONSTRAINT fk_customer_group_group FOREIGN KEY (group_id) REFERENCES group(id)
+);
 
 
 
@@ -193,25 +181,33 @@ INSERT INTO addresses (id, address_line, city_id) VALUES
                                                       (5, '12 Rue de la Paix', 4);
 
 INSERT INTO customer (id, firstname, lastname, email, phone_number, birth_date, id_card_number, id_card_expiration_date, id_card_copy_url, passport_number, passport_expiration_date, passport_copy_url, country_id, address_id, billing_address_id, company_id) VALUES
-                                                                                                                                                                                                                                                                     (2, 'anonym', 'anonym', 'anonym@gmail.com', '0000000000', '1900-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
-                                                                                                                                                                                                                                                                     (3, 'Jean', 'Dupont', 'jean.dupont@email.com', '+33123456789', '1990-01-15', '+25gpiK1S4Iva7TxoGp0wu38j+pbGLcD6gK5xYqMDLs=', '2024-12-25', 's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_9e3ce013-7024-4aae-99b2-54843cceee4b.bin', NULL, NULL, NULL, 1, 3, 4, 1),
-                                                                                                                                                                                                                                                                     (4, 'Jean', 'Dupont', 'jean.dupont@email.com', '+33123456789', '1990-01-15', 'Cnri1wVXJDaIsnp7L61r9PRyVhcDAr2txx025C0IqLY=', '2030-01-15', 's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_325234cd-4705-4c9e-bb40-43a019afee7d.bin', NULL, NULL, NULL, 1, 3, 4, 1),
-                                                                                                                                                                                                                                                                     (5, 'Jean', 'DEPUIS', 'jean.dupont@email.com', '+33123456789', '1990-01-15', NULL, NULL, NULL, 'nsjBUxFTHiK3HPhr91jvIUHzRQ9hkQsSRb7450okbqE=', '2029-01-15', 's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_96ba8862-dc3c-49b6-b215-5e72f203a0a5.bin', 1, 3, 4, 1),
-                                                                                                                                                                                                                                                                     (6, 'Jean', 'DEPUIS', 'jean.dupont@email.com', '+33123456789', '1990-01-15', NULL, NULL, NULL, 'b1hnGcWZeNYd+SKHsErsxcV9BgmKAhaidtJOGcfCaAc=', '2029-01-15', 's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_51e4e08d-23ed-43b2-aa6d-50596e0e0a22.bin', 1, 5, 4, 1),
-                                                                                                                                                                                                                                                                     (7, 'Matteo', 'BE', 'jean.dupont@email.com', '+33123456789', '1990-01-15', NULL, NULL, NULL, 'JU2Y1tU6DrRVybCqnrq3SSzD064TK5bwciQoXFVUFlk=', '2029-01-15', 's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_ae32d887-5af0-4406-b1e8-e5f53d0f5b8c.bin', 1, 5, 4, 1);
+    (2, 'Alice', 'Martin', 'alice.martin@email.com', '0000000000', '1900-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+    (3, 'Bob', 'Durand', 'bob.durand@email.com', '+33123456789', '1990-01-15', '+25gpiK1S4Iva7TxoGp0wu38j+pbGLcD6gK5xYqMDLs=', '2024-12-25', 's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_9e3ce013-7024-4aae-99b2-54843cceee4b.bin', NULL, NULL, NULL, 1, 3, 4, 1),
+    (4, 'Carla', 'Bernard', 'carla.bernard@email.com', '+33123456789', '1990-01-15', 'Cnri1wVXJDaIsnp7L61r9PRyVhcDAr2txx025C0IqLY=', '2030-01-15', 's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_325234cd-4705-4c9e-bb40-43a019afee7d.bin', NULL, NULL, NULL, 1, 3, 4, 1),
+    (5, 'David', 'Nguyen', 'david.nguyen@email.com', '+33123456789', '1990-01-15', NULL, NULL, NULL, 'nsjBUxFTHiK3HPhr91jvIUHzRQ9hkQsSRb7450okbqE=', '2029-01-15', 's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_96ba8862-dc3c-49b6-b215-5e72f203a0a5.bin', 1, 3, 4, 1),
+    (6, 'Emma', 'Dubois', 'emma.dubois@email.com', '+33123456789', '1990-01-15', NULL, NULL, NULL, 'b1hnGcWZeNYd+SKHsErsxcV9BgmKAhaidtJOGcfCaAc=', '2029-01-15', 's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_51e4e08d-23ed-43b2-aa6d-50596e0e0a22.bin', 1, 5, 4, 1),
+    (7, 'Fatou', 'Sy', 'fatou.sy@email.com', '+33123456789', '1990-01-15', NULL, NULL, NULL, 'JU2Y1tU6DrRVybCqnrq3SSzD064TK5bwciQoXFVUFlk=', '2029-01-15', 's3.eu-central-003.backblazeb2.com/ProjetGosquad/image_ae32d887-5af0-4406-b1e8-e5f53d0f5b8c.bin', 1, 5, 4, 1);
 INSERT INTO category (id, name, company_id) VALUES
                                                         (1, 'Sport', 1),
                                                         (2, 'Repas', 1);
 
-INSERT INTO "group" (id, name) VALUES
+INSERT INTO group (id, name) VALUES
     (1, 'test');
 
-INSERT INTO price(id, net_price, vat_rate) VALUES
-                                                        (1, 25.00, 20.00),
-                                                        (2, 25.00, 20.00);
+INSERT INTO price(id, net_price, vat_rate, vat_amount, gross_price) VALUES
+                                                        (1, 25.00, 20.00, 5.00, 30.00),
+                                                        (2, 25.00, 20.00, 5.00, 30.00);
 
 INSERT INTO activity (id, name, description, address_id, price_id, category_id, company_id) VALUES
     (1, 'Sport Class', 'A Sport class', 1, 1, 2, 1);
+
+-- Voyages d'exemple
+INSERT INTO travel (id, title, description, start_date, end_date, destination, budget, group_id, created_at, updated_at) VALUES
+    (1, 'Voyage Paris', 'Découverte de Paris', '2025-07-20', '2025-07-25', 'Paris', 1200.00, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (2, 'Trip New York', 'Découverte de la Grosse Pomme', '2025-10-01', '2025-10-10', 'New York', 2500.00, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (3, 'Voyage Tokyo', 'Sakura et traditions japonaises', '2025-11-15', '2025-11-25', 'Tokyo', 3000.00, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (4, 'Séjour Londres', 'Visite de la capitale britannique', '2025-12-05', '2025-12-12', 'Londres', 1800.00, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (5, 'Roadtrip Canada', 'Aventure au Québec', '2026-01-10', '2026-01-20', 'Montréal', 2200.00, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO activity_customer
 (activity_id, customer_id, participation, end_date, start_date, group_id)
@@ -221,16 +217,9 @@ VALUES
     (1, 6, '1', '2025-07-06 12:00:00', '2025-07-06 08:30:00', 1),
     (1, 6, '0', '2025-07-06 12:00:00', '2025-07-06 08:30:00', 1);
 
--- Synchroniser les séquences après les insertions
-ALTER SEQUENCE ADDRESSES_ID_SEQ RESTART WITH 6;  -- Prochain ID libre pour addresses
-ALTER SEQUENCE CITIES_ID_SEQ RESTART WITH 6;     -- Prochain ID libre pour cities
-ALTER SEQUENCE COUNTRIES_ID_SEQ RESTART WITH 2;  -- Prochain ID libre pour countries
-ALTER SEQUENCE CUSTOMER_ID_SEQ RESTART WITH 8;   -- Prochain ID libre pour customer
-ALTER SEQUENCE PERSON_ID_SEQ RESTART WITH 4;     -- Prochain ID libre pour advisor
-ALTER SEQUENCE COMPANY_ID_SEQ RESTART WITH 2;    -- Prochain ID libre pour company
-ALTER SEQUENCE CATEGORY_ID_SEQ RESTART WITH 3; -- Prochain ID libre pour category
-ALTER SEQUENCE GROUP_ID_SEQ RESTART WITH 2; -- Prochain ID libre pour group
-ALTER SEQUENCE ACTIVITY_ID_SEQ RESTART WITH 2; -- Prochain ID libre pour activity
-ALTER SEQUENCE PRICE_ID_SEQ RESTART WITH 3; -- Prochain ID libre pour price
-
+-- Index pour améliorer les performances
+CREATE INDEX IF NOT EXISTS idx_travel_group_id ON travel(group_id);
+CREATE INDEX IF NOT EXISTS idx_travel_dates ON travel(start_date, end_date);
+CREATE INDEX IF NOT EXISTS idx_customer_group_customer ON customer_group(customer_id);
+CREATE INDEX IF NOT EXISTS idx_customer_group_group ON customer_group(group_id);
 
