@@ -14,7 +14,7 @@ import java.util.Map;
 @org.springframework.stereotype.Repository
 public class TravelRepositoryImpl extends Repository<TravelModel> implements TravelRepository {
 
-    public static final String TABLE_NAME = "travel";
+    public static final String TABLE_NAME = "public.travel";
 
     public TravelRepositoryImpl() throws SQLException {
         super(TABLE_NAME);

@@ -279,7 +279,7 @@ WITH (oids = false);
 DROP TABLE IF EXISTS travel;
 DROP SEQUENCE IF EXISTS travel_information_id_seq;
 CREATE SEQUENCE travel_information_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-CREATE TABLE "public".travel (
+CREATE TABLE travel (
     "id" integer DEFAULT nextval('travel_information_id_seq') NOT NULL,
     "group_id" integer NOT NULL,
     "company_id" integer NOT NULL,
