@@ -20,9 +20,9 @@ public class TravelPostController {
     }
 
     @PostMapping("/travel")
-    public ResponseEntity<String> addTravel(@RequestBody VoyageRequestDTO travelRequestDTO) {
+    public ResponseEntity<String> addTravel(jakarta.servlet.http.HttpServletRequest request, @RequestBody VoyageRequestDTO travelRequestDTO) {
         try {
-            travelPostService.createTravelFromDTO(travelRequestDTO);
+            travelPostService.createTravelFromDTO(request, travelRequestDTO);
             return ResponseEntity.ok("Voyage ajouté avec succès");
         } catch (ConstraintViolationException | IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Erreur : " + e.getMessage());

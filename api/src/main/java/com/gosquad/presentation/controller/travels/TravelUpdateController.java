@@ -13,19 +13,22 @@ import java.sql.SQLException;
 public class TravelUpdateController {
     
     private final TravelUpdateService travelUpdateService;
+    private final com.gosquad.infrastructure.jwt.JWTInterceptor jwtInterceptor;
+    private final com.gosquad.usecase.company.CompanyService companyService;
 
-    public TravelUpdateController(TravelUpdateService travelUpdateService) {
+    @org.springframework.beans.factory.annotation.Autowired
+    public TravelUpdateController(TravelUpdateService travelUpdateService, com.gosquad.infrastructure.jwt.JWTInterceptor jwtInterceptor, com.gosquad.usecase.company.CompanyService companyService) {
         this.travelUpdateService = travelUpdateService;
+        this.jwtInterceptor = jwtInterceptor;
+        this.companyService = companyService;
     }
 
     @PutMapping("/travel/{id}")
-    public ResponseEntity<String> updateTravel(@PathVariable String id, @RequestBody VoyageRequestDTO travelRequestDTO) {
+    public ResponseEntity<String> updateTravel(@PathVariable String id, @RequestBody VoyageRequestDTO travelRequestDTO, jakarta.servlet.http.HttpServletRequest request) {
         try {
-            // Extract numeric ID from the uniqueTravelId (similar to TravelGetServiceImpl)
             int numericId;
             try {
-                // Try to extract numeric part - assume format is "COMPANYCODE" + numeric ID
-                String numericPart = id.replaceAll("[A-Z]+", ""); // Remove alphabetic company code
+                String numericPart = id.replaceAll("[A-Z]+", "");
                 if (numericPart.isEmpty()) {
                     return ResponseEntity.badRequest().body("Format d'ID invalide: " + id);
                 }
@@ -33,8 +36,12 @@ public class TravelUpdateController {
             } catch (NumberFormatException e) {
                 return ResponseEntity.badRequest().body("ID de voyage invalide: " + id);
             }
-            
-            travelUpdateService.updateTravelFromDTO(numericId, travelRequestDTO);
+            String authHeader = request.getHeader("Authorization");
+            String token = authHeader.substring(7);
+            java.util.Map<String, Object> tokenInfo = jwtInterceptor.extractTokenInfo(token);
+            String companyCode = tokenInfo.get("companyCode").toString();
+            int companyId = companyService.getCompanyByCode(companyCode).getId();
+            travelUpdateService.updateTravelFromDTO(numericId, travelRequestDTO, companyId);
             return ResponseEntity.ok("Voyage mis à jour avec succès");
         } catch (ConstraintViolationException | IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Erreur : " + e.getMessage());

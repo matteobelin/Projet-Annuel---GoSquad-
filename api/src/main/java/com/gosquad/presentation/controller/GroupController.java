@@ -6,9 +6,12 @@ import com.gosquad.domain.groups.GroupEntity;
 import com.gosquad.presentation.DTO.groups.CreateGroupRequestDTO;
 import com.gosquad.presentation.DTO.groups.GroupResponseDTO;
 import com.gosquad.usecase.groups.GroupService;
+import com.gosquad.usecase.company.CompanyService;
+import com.gosquad.infrastructure.jwt.JWTInterceptor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -20,25 +23,37 @@ import java.util.stream.Collectors;
 public class GroupController {
 
     private final GroupService groupService;
+    private final com.gosquad.usecase.customergroup.CustomerGroupService customerGroupService;
+    private final CompanyService companyService;
+    private final JWTInterceptor jwtInterceptor;
 
-    public GroupController(GroupService groupService) {
+    public GroupController(GroupService groupService, com.gosquad.usecase.customergroup.CustomerGroupService customerGroupService, CompanyService companyService, JWTInterceptor jwtInterceptor) {
         this.groupService = groupService;
+        this.customerGroupService = customerGroupService;
+        this.companyService = companyService;
+        this.jwtInterceptor = jwtInterceptor;
     }
 
     @PostMapping
-    public ResponseEntity<?> createGroup(@RequestBody CreateGroupRequestDTO request) {
+    public ResponseEntity<?> createGroup(@RequestBody CreateGroupRequestDTO request, HttpServletRequest httpRequest) {
         try {
-            // Créer le groupe
-            GroupEntity group = new GroupEntity(null, request.getName());
+            // Extraire le companyId depuis le JWT
+            String authHeader = httpRequest.getHeader("Authorization");
+            String token = authHeader.substring(7);
+            java.util.Map<String, Object> tokenInfo = jwtInterceptor.extractTokenInfo(token);
+            String companyCode = tokenInfo.get("companyCode").toString();
+            int companyId = companyService.getCompanyByCode(companyCode).getId();
+
+            // Créer le groupe avec le companyId
+            GroupEntity group = new GroupEntity(null, request.getName(), companyId);
             group.setVisible(request.getVisible());
             groupService.addGroup(group);
 
             // Ajouter les participants au groupe
             if (request.getParticipantIds() != null && !request.getParticipantIds().isEmpty()) {
-                // TODO: Implémenter l'ajout des customers au groupe quand CustomerService sera disponible
-                // for (Integer customerId : request.getParticipantIds()) {
-                //     customerService.addCustomerToGroup(customerId, group.getId());
-                // }
+                for (Integer customerId : request.getParticipantIds()) {
+                    customerGroupService.addCustomerToGroup(customerId, group.getId());
+                }
             }
 
             GroupResponseDTO response = new GroupResponseDTO(
@@ -60,9 +75,9 @@ public class GroupController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllGroups() {
+    public ResponseEntity<?> getAllGroups(HttpServletRequest request) {
         try {
-            List<GroupEntity> groups = groupService.getAllGroups();
+            List<GroupEntity> groups = groupService.getAllGroups(request);
             List<GroupResponseDTO> response = groups.stream()
                 .map(group -> new GroupResponseDTO(
                     group.getId(), 
@@ -72,7 +87,6 @@ public class GroupController {
                     group.getUpdatedAt()
                 ))
                 .collect(Collectors.toList());
-            
             return ResponseEntity.ok(response);
         } catch (ConstraintViolationException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

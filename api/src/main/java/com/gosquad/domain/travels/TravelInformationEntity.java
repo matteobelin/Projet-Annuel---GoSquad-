@@ -1,34 +1,28 @@
 package com.gosquad.domain.travels;
 
-import com.gosquad.domain.Entity;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class TravelInformationEntity extends Entity {
+public class TravelInformationEntity {
+    private Integer id;
     private String title;
     private String description;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private java.time.LocalDate startDate;
+    private java.time.LocalDate endDate;
     private String destination;
     private Double budget;
     private Integer groupId;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private java.time.LocalDateTime createdAt;
+    private java.time.LocalDateTime updatedAt;
+    private Integer companyId;
 
-    public TravelInformationEntity() {
-        super();
-    }
+    public TravelInformationEntity() {}
 
-    public TravelInformationEntity(Integer id, String title, String description, 
-                                  LocalDate startDate, LocalDate endDate, String destination, 
-                                  Double budget, Integer groupId, LocalDateTime createdAt, 
-                                  LocalDateTime updatedAt) {
-        super(id);
+    public TravelInformationEntity(Integer id, String title, String description,
+                                  java.time.LocalDate startDate, java.time.LocalDate endDate, String destination,
+                                  Double budget, Integer groupId, java.time.LocalDateTime createdAt,
+                                  java.time.LocalDateTime updatedAt, Integer companyId) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.startDate = startDate;
@@ -38,5 +32,6 @@ public class TravelInformationEntity extends Entity {
         this.groupId = groupId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.companyId = companyId;
     }
 }

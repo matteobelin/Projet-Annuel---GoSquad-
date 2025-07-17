@@ -22,12 +22,18 @@ public class TravelPostServiceImpl implements TravelPostService {
     }
 
     @Override
-    public void addTravel(TravelInformationEntity travel) throws SQLException, ConstraintViolationException {
-        travelService.addTravel(travel);
+    public void addTravel(TravelInformationEntity travel) {
+        try {
+            travelService.addTravel(travel);
+        } catch (Exception ignored) {}
     }
 
     @Override
-    public TravelInformationEntity createTravelFromDTO(VoyageRequestDTO travelRequestDTO) throws SQLException, ConstraintViolationException {
-        return travelCreationService.createTravel(travelRequestDTO);
+    public TravelInformationEntity createTravelFromDTO(jakarta.servlet.http.HttpServletRequest request, VoyageRequestDTO travelRequestDTO) {
+        try {
+            return travelCreationService.createTravel(request, travelRequestDTO);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

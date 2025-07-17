@@ -8,5 +8,5 @@ import java.sql.SQLException;
 
 public interface TravelPostService {
     void addTravel(TravelInformationEntity travel) throws SQLException, ConstraintViolationException;
-    TravelInformationEntity createTravelFromDTO(VoyageRequestDTO travelRequestDTO) throws SQLException, ConstraintViolationException;
+    TravelInformationEntity createTravelFromDTO(jakarta.servlet.http.HttpServletRequest request, VoyageRequestDTO travelRequestDTO) throws SQLException, ConstraintViolationException;
 }

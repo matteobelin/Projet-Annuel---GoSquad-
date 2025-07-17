@@ -29,7 +29,9 @@ public class DataConfig {
         return System.getenv(key);
     }
 
-    private static final boolean IS_TEST = Boolean.parseBoolean(System.getProperty("test.env", "false"));
+    private static final boolean IS_TEST =
+        Boolean.parseBoolean(System.getProperty("test.env", "false")) ||
+        Boolean.parseBoolean(System.getenv("test.env") != null ? System.getenv("test.env") : "false");
 
     // Détection de l'environnement Docker via variable d'environnement
     private static final boolean IS_DOCKER = System.getenv("DOCKER_ENV") != null || System.getProperty("java.home", "").contains("alpine");

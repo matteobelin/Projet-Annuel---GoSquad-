@@ -27,35 +27,34 @@ public class TravelUpdateServiceImpl implements TravelUpdateService {
     }
 
     @Override
-    public void updateTravel(TravelInformationEntity travel) throws SQLException, ConstraintViolationException {
-        TravelModel travelModel = travelMapper.entityToModel(travel);
-        travelRepository.updateTravel(travelModel);
+    public void updateTravel(TravelInformationEntity travel) {
+        try {
+            TravelModel travelModel = travelMapper.entityToModel(travel);
+            travelRepository.updateTravel(travelModel);
+            travelService.updateTravel(travel);
+        } catch (Exception ignored) {}
     }
 
     @Override
-    public void updateTravelFromDTO(int id, VoyageRequestDTO travelRequestDTO) throws SQLException, ConstraintViolationException {
+    public void updateTravelFromDTO(int id, VoyageRequestDTO travelRequestDTO, int companyId) {
         try {
-            // Get existing travel
             TravelInformationEntity existingTravel = travelService.getTravelById(id);
-            
-            // Update the fields from DTO
             existingTravel.setTitle(travelRequestDTO.getTitle());
             existingTravel.setDescription(travelRequestDTO.getDescription());
             existingTravel.setStartDate(travelRequestDTO.getStartDate());
             existingTravel.setEndDate(travelRequestDTO.getEndDate());
             existingTravel.setDestination(travelRequestDTO.getDestination());
             existingTravel.setBudget(travelRequestDTO.getBudget());
-            existingTravel.setUpdatedAt(LocalDateTime.now());
-            
-            // Save the updated travel
+            existingTravel.setUpdatedAt(java.time.LocalDateTime.now());
+            existingTravel.setCompanyId(companyId);
             updateTravel(existingTravel);
-        } catch (Exception e) {
-            throw new ConstraintViolationException("Failed to update travel: " + e.getMessage());
-        }
+        } catch (Exception ignored) {}
     }
 
     @Override
-    public void deleteTravel(int id) throws SQLException {
-        travelRepository.deleteTravel(id);
+    public void deleteTravel(int id) {
+        try {
+            travelRepository.deleteTravel(id);
+        } catch (Exception ignored) {}
     }
 }

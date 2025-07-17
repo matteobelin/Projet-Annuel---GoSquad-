@@ -4,70 +4,43 @@ import com.gosquad.domain.travels.TravelInformationEntity;
 import com.gosquad.infrastructure.persistence.travels.TravelModel;
 import org.springframework.stereotype.Component;
 
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class TravelMapper {
+    public TravelInformationEntity modelToEntity(TravelModel model) {
+        if (model == null) return null;
+        TravelInformationEntity entity = new TravelInformationEntity();
+        entity.setId(model.getId());
+        entity.setTitle(model.getTitle());
+        entity.setDescription(model.getDescription());
+        entity.setStartDate(model.getStartDate() != null ? model.getStartDate().toLocalDate() : null);
+        entity.setEndDate(model.getEndDate() != null ? model.getEndDate().toLocalDate() : null);
+        entity.setDestination(model.getDestination());
+        entity.setBudget(model.getBudget());
+        entity.setGroupId(model.getGroupId());
+        return entity;
+    }
 
-    public TravelInformationEntity modelToEntity(TravelModel travelModel) {
-        if (travelModel == null) {
-            return null;
-        }
-        
-        return new TravelInformationEntity(
-                travelModel.getId(),
-                travelModel.getTitle(),
-                travelModel.getDescription(),
-                travelModel.getStartDate() != null ? travelModel.getStartDate().toLocalDate() : null,
-                travelModel.getEndDate() != null ? travelModel.getEndDate().toLocalDate() : null,
-                travelModel.getDestination(),
-                travelModel.getBudget(),
-                travelModel.getGroupId(),
-                null, // createdAt - managed by database
-                null  // updatedAt - managed by database
+    public TravelModel entityToModel(TravelInformationEntity entity) {
+        return entity == null ? null : new TravelModel(
+                entity.getId(),
+                entity.getTitle(),
+                entity.getDestination(),
+                entity.getStartDate() != null ? java.sql.Date.valueOf(entity.getStartDate()) : null,
+                entity.getEndDate() != null ? java.sql.Date.valueOf(entity.getEndDate()) : null,
+                entity.getBudget(),
+                entity.getDescription(),
+                entity.getGroupId(),
+                entity.getCompanyId()
         );
     }
 
-    public TravelModel entityToModel(TravelInformationEntity travelEntity) {
-        if (travelEntity == null) {
-            return null;
-        }
-        
-        return new TravelModel(
-                travelEntity.getId(),
-                travelEntity.getTitle(),
-                travelEntity.getDestination(),
-                travelEntity.getStartDate() != null ? Date.valueOf(travelEntity.getStartDate()) : null,
-                travelEntity.getEndDate() != null ? Date.valueOf(travelEntity.getEndDate()) : null,
-                travelEntity.getBudget(),
-                travelEntity.getDescription(),
-                travelEntity.getGroupId(),
-                null // companyId will be set by the repository or service layer
-        );
+    public List<TravelInformationEntity> modelToEntity(List<TravelModel> models) {
+        return models == null ? List.of() : models.stream().map(this::modelToEntity).toList();
     }
 
-    public List<TravelInformationEntity> modelToEntity(List<TravelModel> travelModels) {
-        if (travelModels == null) {
-            return null;
-        }
-        
-        return travelModels.stream()
-                .map(this::modelToEntity)
-                .collect(Collectors.toList());
-    }
-
-    public List<TravelModel> entityToModel(List<TravelInformationEntity> travelEntities) {
-        if (travelEntities == null) {
-            return null;
-        }
-        
-        return travelEntities.stream()
-                .map(this::entityToModel)
-                .collect(Collectors.toList());
+    public List<TravelModel> entityToModel(List<TravelInformationEntity> entities) {
+        return entities == null ? List.of() : entities.stream().map(this::entityToModel).toList();
     }
 }

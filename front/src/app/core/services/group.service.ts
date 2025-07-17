@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../../api.service';
+import { Customer } from '../models/customer.model';
 
 export interface Group {
   id: number;
@@ -33,5 +34,9 @@ export class GroupService {
 
   getGroupById(id: number): Observable<Group> {
     return this.apiService.get<Group>(`/groups/${id}`);
+  }
+
+  getGroupMembers(groupId: number): Observable<Customer[]> {
+    return this.apiService.get<Customer[]>(`/groups/${groupId}/members`);
   }
 }

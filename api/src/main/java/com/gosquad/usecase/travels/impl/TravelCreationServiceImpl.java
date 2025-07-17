@@ -8,31 +8,37 @@ import com.gosquad.usecase.travels.TravelService;
 import com.gosquad.usecase.groups.GroupService;
 import com.gosquad.usecase.customergroup.CustomerGroupService;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class TravelCreationServiceImpl implements TravelCreationService {
     private final TravelService travelService;
     private final GroupService groupService;
     private final CustomerGroupService customerGroupService;
+    private final com.gosquad.usecase.company.CompanyService companyService;
+    private final com.gosquad.infrastructure.jwt.JWTInterceptor jwtInterceptor;
 
-    public TravelCreationServiceImpl(TravelService travelService, GroupService groupService, CustomerGroupService customerGroupService) {
+    @Autowired
+    public TravelCreationServiceImpl(TravelService travelService, GroupService groupService, CustomerGroupService customerGroupService, com.gosquad.usecase.company.CompanyService companyService, com.gosquad.infrastructure.jwt.JWTInterceptor jwtInterceptor) {
         this.travelService = travelService;
         this.groupService = groupService;
         this.customerGroupService = customerGroupService;
+        this.companyService = companyService;
+        this.jwtInterceptor = jwtInterceptor;
     }
 
     @Override
-    public TravelInformationEntity createTravel(VoyageRequestDTO voyageRequest) {
+    public TravelInformationEntity createTravel(jakarta.servlet.http.HttpServletRequest request, VoyageRequestDTO voyageRequest) {
         try {
-            // 1. Valider les données du voyage
+            String authHeader = request.getHeader("Authorization");
+            String token = authHeader.substring(7);
+            java.util.Map<String, Object> tokenInfo = jwtInterceptor.extractTokenInfo(token);
+            String companyCode = tokenInfo.get("companyCode").toString();
+            int companyId = companyService.getCompanyByCode(companyCode).getId();
             validateTravelData(voyageRequest);
-            
-            // 2. Gérer la logique des groupes (TODO: implémenter plus tard)
-            Integer groupId = handleGroupLogic(voyageRequest);
-            
-            // 3. Créer l'entité voyage
+            Integer groupId = handleGroupLogic(voyageRequest, companyId);
             TravelInformationEntity travel = new TravelInformationEntity(
-                null, // ID sera généré
+                null,
                 voyageRequest.getTitle(),
                 voyageRequest.getDescription(),
                 voyageRequest.getStartDate(),
@@ -40,17 +46,14 @@ public class TravelCreationServiceImpl implements TravelCreationService {
                 voyageRequest.getDestination(),
                 voyageRequest.getBudget(),
                 groupId,
-                null, // createdAt géré par la DB
-                null  // updatedAt géré par la DB
+                null,
+                null,
+                companyId
             );
-            
-            // 4. Sauvegarder le voyage
             travelService.addTravel(travel);
-            
             return travel;
-            
         } catch (Exception e) {
-            throw new RuntimeException("Erreur lors de la création du voyage: " + e.getMessage(), e);
+            return null;
         }
     }
     
@@ -72,7 +75,7 @@ public class TravelCreationServiceImpl implements TravelCreationService {
         }
     }
     
-    private Integer handleGroupLogic(VoyageRequestDTO voyageRequest) {
+    private Integer handleGroupLogic(VoyageRequestDTO voyageRequest, int companyId) {
         // Gestion stricte selon la spécification métier
         try {
             // Cas 1: Un groupe existant est sélectionné
@@ -104,7 +107,7 @@ public class TravelCreationServiceImpl implements TravelCreationService {
                     // NotFoundException ou autre, on créera le groupe
                 }
                 if (groupId == null) {
-                    GroupEntity newGroup = new GroupEntity(null, groupName);
+                    GroupEntity newGroup = new GroupEntity(null, groupName, companyId);
                     newGroup.setVisible(visible);
                     groupService.addGroup(newGroup);
                     groupId = newGroup.getId();

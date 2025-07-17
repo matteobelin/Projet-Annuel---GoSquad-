@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TravelService {
     TravelInformationEntity getTravelById(int id) throws SQLException, ConstraintViolationException, NotFoundException;
-    List<TravelInformationEntity> getAllTravels() throws ConstraintViolationException;
+    List<TravelInformationEntity> getAllTravels(int companyId) throws ConstraintViolationException;
     void addTravel(TravelInformationEntity travel) throws SQLException, ConstraintViolationException;
     void updateTravel(TravelInformationEntity travel) throws SQLException, ConstraintViolationException;
     void deleteTravel(int id) throws SQLException;

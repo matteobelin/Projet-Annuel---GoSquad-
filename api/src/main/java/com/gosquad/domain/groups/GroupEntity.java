@@ -1,34 +1,22 @@
 package com.gosquad.domain.groups;
 
-import com.gosquad.domain.Entity;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-import java.time.LocalDateTime;
-
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class GroupEntity extends Entity {
+public class GroupEntity {
+    private Integer id;
     private String name;
-    private Boolean visible = true; // Default to visible
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private Boolean visible = true;
+    private java.time.LocalDateTime createdAt;
+    private java.time.LocalDateTime updatedAt;
+    private Integer companyId;
 
-    public GroupEntity() {
-        super();
-    }
+    public GroupEntity() {}
 
-    public GroupEntity(Integer id, String name) {
-        super(id);
+    public GroupEntity(Integer id, String name, Integer companyId) {
+        this.id = id;
         this.name = name;
         this.visible = true;
-    }
-
-    public GroupEntity(Integer id, String name, Boolean visible, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        super(id);
-        this.name = name;
-        this.visible = visible;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.companyId = companyId;
     }
 }

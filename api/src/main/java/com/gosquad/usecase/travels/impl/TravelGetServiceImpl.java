@@ -41,28 +41,30 @@ public class TravelGetServiceImpl implements TravelGetService {
     }
 
     @Override
-    public List<GetAllTravelsResponseDTO> getAllTravels(HttpServletRequest request) throws Exception {
-        String authHeader = request.getHeader("Authorization");
-        String token = authHeader.substring(7);
-        Map<String, Object> tokenInfo = jwtInterceptor.extractTokenInfo(token);
-
-        String companyCode = tokenInfo.get("companyCode").toString();
-
-        List<TravelInformationEntity> travels = travelService.getAllTravels();
-
-        return travels.stream()
-                .map(travel -> {
-                    String uniqueId = "TRAVEL" + travel.getId();
-                    return new GetAllTravelsResponseDTO(
-                            uniqueId,
-                            travel.getTitle(),
-                            travel.getDestination(),
-                            travel.getStartDate(),
-                            travel.getEndDate(),
-                            travel.getBudget()
-                    );
-                })
-                .toList();
+    public List<GetAllTravelsResponseDTO> getAllTravels(HttpServletRequest request) {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            String token = authHeader.substring(7);
+            Map<String, Object> tokenInfo = jwtInterceptor.extractTokenInfo(token);
+            String companyCode = tokenInfo.get("companyCode").toString();
+            int companyId = companyService.getCompanyByCode(companyCode).getId();
+            List<TravelInformationEntity> travels = travelService.getAllTravels(companyId);
+            return travels.stream()
+                    .map(travel -> {
+                        String uniqueId = "TRAVEL" + travel.getId();
+                        return new GetAllTravelsResponseDTO(
+                                uniqueId,
+                                travel.getTitle(),
+                                travel.getDestination(),
+                                travel.getStartDate(),
+                                travel.getEndDate(),
+                                travel.getBudget()
+                        );
+                    })
+                    .toList();
+        } catch (Exception e) {
+            return List.of();
+        }
     }
 
     @Override

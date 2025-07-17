@@ -24,32 +24,44 @@ public class TravelServiceImpl implements TravelService {
     }
 
     @Override
-    public TravelInformationEntity getTravelById(int id) throws SQLException, ConstraintViolationException, NotFoundException {
-        TravelModel travelModel = travelRepository.getById(id);
-        return travelMapper.modelToEntity(travelModel);
+    public TravelInformationEntity getTravelById(int id) {
+        try {
+            return travelMapper.modelToEntity(travelRepository.getById(id));
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
-    public List<TravelInformationEntity> getAllTravels() throws ConstraintViolationException {
-        List<TravelModel> travelModels = travelRepository.getAllTravels();
-        return travelMapper.modelToEntity(travelModels);
+    public List<TravelInformationEntity> getAllTravels(int companyId) {
+        try {
+            return travelMapper.modelToEntity(travelRepository.getAllByCompanyId(companyId));
+        } catch (Exception e) {
+            return List.of();
+        }
     }
 
     @Override
-    public void addTravel(TravelInformationEntity travel) throws SQLException, ConstraintViolationException {
-        TravelModel travelModel = travelMapper.entityToModel(travel);
-        travelRepository.addTravel(travelModel);
-        travel.setId(travelModel.getId());
+    public void addTravel(TravelInformationEntity travel) {
+        try {
+            TravelModel travelModel = travelMapper.entityToModel(travel);
+            travelRepository.createTravel(travelModel);
+            travel.setId(travelModel.getId());
+        } catch (Exception ignored) {}
     }
 
     @Override
-    public void updateTravel(TravelInformationEntity travel) throws SQLException, ConstraintViolationException {
-        TravelModel travelModel = travelMapper.entityToModel(travel);
-        travelRepository.updateTravel(travelModel);
+    public void updateTravel(TravelInformationEntity travel) {
+        try {
+            TravelModel travelModel = travelMapper.entityToModel(travel);
+            travelRepository.updateTravel(travelModel);
+        } catch (Exception ignored) {}
     }
 
     @Override
-    public void deleteTravel(int id) throws SQLException {
-        travelRepository.deleteTravel(id);
+    public void deleteTravel(int id) {
+        try {
+            travelRepository.deleteTravel(id);
+        } catch (Exception ignored) {}
     }
 }

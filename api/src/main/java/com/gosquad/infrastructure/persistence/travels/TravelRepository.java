@@ -1,16 +1,17 @@
+
 package com.gosquad.infrastructure.persistence.travels;
 
-import com.gosquad.core.exceptions.ConstraintViolationException;
 import com.gosquad.core.exceptions.NotFoundException;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public interface TravelRepository {
-    TravelModel getById(Integer id) throws SQLException, NotFoundException;
-    List<TravelModel> getAllTravels() throws ConstraintViolationException;
-    void addTravel(TravelModel travel) throws SQLException, ConstraintViolationException;
-    void updateTravel(TravelModel travel) throws SQLException, ConstraintViolationException;
-    void deleteTravel(Integer id) throws SQLException;
-    TravelModel save(TravelModel travel) throws SQLException, ConstraintViolationException;
+    List<TravelModel> getAllByCompanyId(int companyId) throws Exception;
+    TravelModel getById(int id) throws NotFoundException, SQLException;
+    List<TravelModel> findByIds(List<Integer> ids) throws SQLException;
+    TravelModel getTravelByTitleAndCompanyId(String title, int companyId) throws SQLException, NotFoundException;
+    void createTravel(TravelModel travel) throws SQLException;
+    void updateTravel(TravelModel travel) throws SQLException;
+    void deleteTravel(int id) throws SQLException;
 }

@@ -20,9 +20,9 @@ public class TravelModel extends Model {
     private Integer companyId;
     
     public TravelModel() {
-        super();
+        super(null);
     }
-    
+
     public TravelModel(Integer id, String title, String destination, Date startDate, Date endDate, 
                       Double budget, String description, Integer groupId, Integer companyId) {
         super(id);

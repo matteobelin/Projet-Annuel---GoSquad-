@@ -8,6 +8,6 @@ import java.sql.SQLException;
 
 public interface TravelUpdateService {
     void updateTravel(TravelInformationEntity travel) throws SQLException, ConstraintViolationException;
-    void updateTravelFromDTO(int id, VoyageRequestDTO travelRequestDTO) throws SQLException, ConstraintViolationException;
+    void updateTravelFromDTO(int id, VoyageRequestDTO travelRequestDTO, int companyId) throws SQLException, ConstraintViolationException;
     void deleteTravel(int id) throws SQLException;
 }
