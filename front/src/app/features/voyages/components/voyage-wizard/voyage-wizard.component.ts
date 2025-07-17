@@ -1,4 +1,5 @@
 // ...existing code...
+// ...existing code...
 import { Component, OnInit, Output, EventEmitter, ChangeDetectorRef, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -61,6 +62,12 @@ export class VoyageWizardComponent implements OnInit {
   existingGroups: Group[] = [];
   showGroupSelection = false;
   showGroupNameField = false;
+
+  // Liste des membres du groupe sélectionné
+  selectedGroupMembers: any[] = [];
+
+  // Liste des membres du groupe sélectionné
+// ...existing code...
 
   // État du wizard
   isLoading = false;
@@ -188,7 +195,15 @@ export class VoyageWizardComponent implements OnInit {
   }
 
   private loadExistingGroups(): void {
-    // ...existing group loading logic...
+    this.groupService.getAllGroups().subscribe({
+      next: (groups) => {
+        this.existingGroups = groups || [];
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des groupes existants :', err);
+        this.existingGroups = [];
+      }
+    });
   }
 
   private isCurrentStepValid(): boolean {
@@ -255,12 +270,23 @@ export class VoyageWizardComponent implements OnInit {
   onGroupSelectionChange(): void {
     const selectedGroupId = this.participantsForm.get('selectedGroupId')?.value;
     this.showGroupNameField = !selectedGroupId;
-    
+
     if (selectedGroupId) {
       this.participantsForm.get('groupName')?.clearValidators();
       this.participantsForm.get('groupName')?.setValue('');
+      // Charger les membres du groupe sélectionné
+      this.groupService.getGroupMembers(Number(selectedGroupId)).subscribe({
+        next: (members) => {
+          this.selectedGroupMembers = members || [];
+        },
+        error: (err) => {
+          console.error('Erreur lors du chargement des membres du groupe :', err);
+          this.selectedGroupMembers = [];
+        }
+      });
     } else {
       this.participantsForm.get('groupName')?.setValidators([Validators.required]);
+      this.selectedGroupMembers = [];
     }
     this.participantsForm.get('groupName')?.updateValueAndValidity();
   }

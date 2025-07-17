@@ -193,7 +193,7 @@
             (change)="onGroupSelectionChange()">
             <option value="">Créer un nouveau groupe</option>
             <option *ngFor="let group of existingGroups" [value]="group.id">
-              {{ group.name }} ({{ group.memberCount || 0 }} membres)
+              {{ group.name }}
             </option>
           </select>
         </div>

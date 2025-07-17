@@ -312,18 +312,20 @@ INSERT INTO "addresses" ("id", "address_line", "city_id") VALUES
 
 -- Création des groupes nécessaires pour les voyages
 INSERT INTO "groups" ("id", "name", "visible") VALUES
-(1, 'Groupe 1', false),
-(2, 'Groupe 2', false),
-(3, 'Groupe 3', false),
-(4, 'Groupe 4', false),
-(5, 'Groupe 5', false);
+(1, 'Comité d''Entreprise', false),
+(2, 'Enterrement de Vie de Garçon', false),
+(3, 'Anniversaire', false),
+(4, 'Séminaire', false),
+(5, 'Groupe Amis', false);
 
 INSERT INTO "customer_group" ("group_id", "customer_id") VALUES
-(1, 3),
-(2, 3),
-(3, 3),
-(4, 3),
-(5, 3);
+
+
+(1, 3), (1, 4), (1, 5), (1, 6),
+(2, 3), (2, 4), (2, 5), (2, 6),
+(3, 3), (3, 4), (3, 5), (3, 6),
+(4, 3), (4, 4), (4, 5), (4, 6),
+(5, 3), (5, 4), (5, 5), (5, 6);
 
 INSERT INTO "travel_information" ("group_id", "start_date", "end_date", "destination", "title", "budget", "description") VALUES
 (1, '2025-07-20', '2025-07-25', 'Paris', 'Voyage à Paris', 1200.00, 'Découverte de la capitale'),
