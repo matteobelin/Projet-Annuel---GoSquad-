@@ -1,0 +1,183 @@
+<app-main-header></app-main-header>
+
+<div class="voyage-detail-container">
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Chargement du voyage...</p>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="error && !loading" class="error-state">
+    <h2>Erreur</h2>
+    <p>{{ error }}</p>
+    <button type="button" class="btn btn-primary" (click)="goBack()">
+      Retour à la liste
+    </button>
+  </div>
+
+  <!-- Voyage detail content -->
+  <div *ngIf="voyage && !loading && !error" class="voyage-detail-content">
+    <!-- Header section -->
+    <div class="voyage-header">
+      <div class="voyage-title-section">
+        <h1>{{ voyage.title }}</h1>
+        <div class="voyage-meta">
+          <span class="voyage-id">ID: {{ voyage.uniqueTravelId }}</span>
+          <span class="voyage-status" [class]="'status-' + voyage.statut?.toLowerCase()">
+            {{ voyage.statut }}
+          </span>
+        </div>
+      </div>
+      <div class="voyage-actions">
+        <button type="button" class="btn btn-secondary" (click)="goBack()">
+          <i class="fas fa-arrow-left"></i>
+          Retour
+        </button>
+        <button type="button" class="btn btn-primary" (click)="editVoyage()">
+          <i class="fas fa-edit"></i>
+          Modifier
+        </button>
+        <button type="button" class="btn btn-success" (click)="generatePdf()">
+          <i class="fas fa-file-pdf"></i>
+          Générer PDF
+        </button>
+        <button type="button" class="btn btn-danger" (click)="deleteVoyage()">
+          <i class="fas fa-trash"></i>
+          Supprimer
+        </button>
+      </div>
+    </div>
+
+    <!-- Main content grid -->
+    <div class="voyage-content-grid">
+      <!-- Basic information card -->
+      <div class="info-card">
+        <h3><i class="fas fa-info-circle"></i> Informations générales</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Description</label>
+            <p>{{ voyage.description || 'Aucune description' }}</p>
+          </div>
+          <div class="info-item">
+            <label>Prix</label>
+            <p class="price">{{ voyage.budget | currency:'EUR':'symbol':'1.2-2' }}</p>
+          </div>
+          <div class="info-item">
+            <label>Destination</label>
+            <p>{{ voyage.destination }}</p>
+          </div>
+          <div class="info-item">
+            <label>Nombre de participants</label>
+            <p>{{ voyage.participants?.length || 0 }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dates card -->
+      <div class="info-card">
+        <h3><i class="fas fa-calendar"></i> Dates</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Date de début</label>
+            <p>{{ voyage.startDate | date:'fullDate' }}</p>
+          </div>
+          <div class="info-item">
+            <label>Date de fin</label>
+            <p>{{ voyage.endDate | date:'fullDate' }}</p>
+          </div>
+          <div class="info-item">
+            <label>Durée</label>
+            <p>{{ calculateDuration() }} jours</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Location card -->
+      <div class="info-card" *ngIf="voyage.adresse">
+        <h3><i class="fas fa-map-marker-alt"></i> Localisation</h3>
+        <div class="address-info">
+          <p><strong>{{ voyage.adresse.ville }}</strong></p>
+          <p *ngIf="voyage.adresse.rue">{{ voyage.adresse.rue }}</p>
+          <p>
+            <span *ngIf="voyage.adresse.codePostal">{{ voyage.adresse.codePostal }}</span>
+            <span *ngIf="voyage.adresse.pays">, {{ voyage.adresse.pays }}</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Category card -->
+      <div class="info-card" *ngIf="voyage.categorie">
+        <h3><i class="fas fa-tag"></i> Catégorie</h3>
+        <div class="category-info">
+          <p class="category-name">{{ voyage.categorie.nom }}</p>
+          <p class="category-description" *ngIf="voyage.categorie.description">
+            {{ voyage.categorie.description }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Advisor card -->
+      <div class="info-card" *ngIf="voyage.conseiller">
+        <h3><i class="fas fa-user-tie"></i> Conseiller</h3>
+        <div class="advisor-info">
+          <div class="advisor-details">
+            <p class="advisor-name">
+              {{ voyage.conseiller.prenom }} {{ voyage.conseiller.nom }}
+            </p>
+            <p class="advisor-email" *ngIf="voyage.conseiller.email">
+              <i class="fas fa-envelope"></i>
+              <a [href]="'mailto:' + voyage.conseiller.email">{{ voyage.conseiller.email }}</a>
+            </p>
+            <p class="advisor-phone" *ngIf="voyage.conseiller.telephone">
+              <i class="fas fa-phone"></i>
+              <a [href]="'tel:' + voyage.conseiller.telephone">{{ voyage.conseiller.telephone }}</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Groups card -->
+      <div class="info-card groups-card">
+        <h3>
+          <i class="fas fa-users"></i> 
+          Groupes ({{ voyage.groups?.length || 0 }})
+        </h3>
+        <div *ngIf="!voyage.groups || voyage.groups.length === 0" class="no-groups">
+          <p>Aucun groupe constitué pour ce voyage</p>
+        </div>
+        <div *ngIf="voyage.groups && voyage.groups.length > 0" class="groups-list">
+          <div *ngFor="let group of voyage.groups; trackBy: trackByGroupId" class="group-item">
+            <div class="group-header">
+              <h4>{{ group.name || 'Groupe sans nom' }}</h4>
+              <span class="group-size">
+                Groupe #{{ group.id }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Participants card -->
+      <div class="info-card participants-card">
+        <h3>
+          <i class="fas fa-user"></i> 
+          Participants ({{ voyage.participants?.length || 0 }})
+        </h3>
+        <div *ngIf="!voyage.participants || voyage.participants.length === 0" class="no-participants">
+          <p>Aucun participant inscrit pour ce voyage</p>
+        </div>
+        <div *ngIf="voyage.participants && voyage.participants.length > 0" class="participants-list">
+          <div *ngFor="let participant of voyage.participants; trackBy: trackByParticipantId" class="participant-item">
+            <a class="participant-name link" [routerLink]="['/clients', participant.uniqueCustomerId]">
+              {{ participant.firstName }} {{ participant.lastName }}
+            </a>
+            <span class="participant-email" *ngIf="participant.email">
+              {{ participant.email }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

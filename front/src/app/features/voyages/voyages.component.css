@@ -1,0 +1,297 @@
+.voyages-container {
+  padding: 20px;
+  max-width: 1400px; /* Agrandi de 1200px à 1400px */
+  width: 98%; /* Utiliser 98% de la largeur disponible */
+  margin: 0 auto;
+}
+
+.voyages-main {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.voyages-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.voyages-header h2 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.create-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.create-btn:hover {
+  background-color: #0056b3;
+}
+
+.voyages-content {
+  padding: 40px;
+}
+
+.placeholder {
+  text-align: center;
+  color: #6c757d;
+  padding: 60px 20px;
+}
+
+.placeholder i {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  color: #dee2e6;
+}
+
+.placeholder h3 {
+  margin-bottom: 10px;
+  color: #495057;
+}
+
+.placeholder p {
+  max-width: 400px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+.wizard-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.wizard-header {
+  padding: 15px 20px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.back-btn {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.back-btn:hover {
+  background-color: #545b62;
+}
+
+@media (max-width: 768px) {
+  .voyages-container {
+    padding: 10px;
+  }
+
+  .voyages-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .voyages-content {
+    padding: 20px;
+  }
+
+  .placeholder {
+    padding: 40px 10px;
+  }
+
+  .voyage-card {
+    padding: 15px;
+  }
+
+  .voyage-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .voyage-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .voyage-actions .btn {
+    width: 100%;
+  }
+}
+
+/* Loading and Error States */
+.loading-state,
+.error-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6c757d;
+}
+
+.loading-state i,
+.error-state i {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  color: #dee2e6;
+}
+
+.error-state i {
+  color: #dc3545;
+}
+
+.loading-state p,
+.error-state p {
+  margin-bottom: 20px;
+}
+
+/* Voyage List */
+.voyages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.voyage-card {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 20px;
+  transition: box-shadow 0.2s;
+}
+
+.voyage-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.voyage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.voyage-title {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.voyage-date {
+  color: #6c757d;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.voyage-details {
+  margin-bottom: 20px;
+}
+
+.voyage-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.info-item i {
+  color: #007bff;
+  width: 16px;
+  text-align: center;
+}
+
+.voyage-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+  text-decoration: none;
+  border: 1px solid;
+}
+
+.btn-outline-primary {
+  color: #007bff;
+  border-color: #007bff;
+  background: transparent;
+}
+
+.btn-outline-primary:hover {
+  background: #007bff;
+  color: white;
+}
+
+.btn-outline-secondary {
+  color: #6c757d;
+  border-color: #6c757d;
+  background: transparent;
+}
+
+.btn-outline-secondary:hover {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-outline-danger {
+  color: #dc3545;
+  border-color: #dc3545;
+  background: transparent;
+}
+
+.btn-outline-danger:hover {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-outline-info {
+  color: #17a2b8;
+  border-color: #17a2b8;
+  background: transparent;
+}
+
+.btn-outline-info:hover {
+  background: #17a2b8;
+  color: white;
+}

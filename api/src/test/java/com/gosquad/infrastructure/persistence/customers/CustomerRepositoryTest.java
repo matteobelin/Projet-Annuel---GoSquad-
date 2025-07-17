@@ -32,7 +32,7 @@ public class CustomerRepositoryTest {
     public void testGetByIdAndCompanyId_Success() throws SQLException, NotFoundException {
         CustomerModel customer = repository.getByIdAndCompanyId(3, 1);
         assertNotNull(customer, "Le client avec id=3 et companyId=1 doit exister");
-        assertEquals("Jean", customer.getFirstname());
+        assertEquals("Bob", customer.getFirstname());
     }
 
     @Test

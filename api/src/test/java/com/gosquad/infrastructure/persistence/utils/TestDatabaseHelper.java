@@ -19,9 +19,9 @@ public class TestDatabaseHelper {
         // Set test environment flag
         System.setProperty("test.env", "true");
 
-        // Create H2 connection
+        // Create H2 connection in MySQL mode for compatibility
         connection = DriverManager.getConnection(
-                "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL",
+                "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL",
                 "sa",
                 ""
         );
@@ -70,14 +70,52 @@ public class TestDatabaseHelper {
      */
     public static void tearDown() throws SQLException {
         try (Statement stmt = connection.createStatement()) {
-            stmt.execute("DROP TABLE IF EXISTS CUSTOMER CASCADE");
-            stmt.execute("DROP TABLE IF EXISTS ADDRESSES CASCADE");
-            stmt.execute("DROP TABLE IF EXISTS CITIES CASCADE");
-            stmt.execute("DROP TABLE IF EXISTS COUNTRIES CASCADE");
+            // Supprimer toutes les tables dans l'ordre inverse des dépendances
+            stmt.execute("DROP TABLE IF EXISTS activity_customer CASCADE");
+            stmt.execute("DROP TABLE IF EXISTS customer_group CASCADE");
+            stmt.execute("DROP TABLE IF EXISTS travel CASCADE");
+            stmt.execute("DROP TABLE IF EXISTS activity CASCADE");
+            stmt.execute("DROP TABLE IF EXISTS customer CASCADE");
+            stmt.execute("DROP TABLE IF EXISTS advisor CASCADE");
+            stmt.execute("DROP TABLE IF EXISTS category CASCADE");
+            stmt.execute("DROP TABLE IF EXISTS groups CASCADE");
+            stmt.execute("DROP TABLE IF EXISTS price CASCADE");
+            stmt.execute("DROP TABLE IF EXISTS addresses CASCADE");
+            stmt.execute("DROP TABLE IF EXISTS cities CASCADE");
+            stmt.execute("DROP TABLE IF EXISTS countries CASCADE");
+            stmt.execute("DROP TABLE IF EXISTS company CASCADE");
         }
         if (connection != null && !connection.isClosed()) {
             connection.close();
             connection = null;
+        }
+    }
+
+    /**
+     * Réinitialise complètement la base de données (supprime et recrée toutes les tables)
+     * @throws SQLException en cas d'erreur SQL
+     */
+    public static void resetDatabase() throws SQLException {
+        if (connection != null && !connection.isClosed()) {
+            // Supprimer toutes les tables
+            try (Statement stmt = connection.createStatement()) {
+                stmt.execute("DROP TABLE IF EXISTS activity_customer CASCADE");
+                stmt.execute("DROP TABLE IF EXISTS customer_group CASCADE");
+                stmt.execute("DROP TABLE IF EXISTS travel CASCADE");
+                stmt.execute("DROP TABLE IF EXISTS activity CASCADE");
+                stmt.execute("DROP TABLE IF EXISTS customer CASCADE");
+                stmt.execute("DROP TABLE IF EXISTS advisor CASCADE");
+                stmt.execute("DROP TABLE IF EXISTS category CASCADE");
+                stmt.execute("DROP TABLE IF EXISTS groups CASCADE");
+                stmt.execute("DROP TABLE IF EXISTS price CASCADE");
+                stmt.execute("DROP TABLE IF EXISTS addresses CASCADE");
+                stmt.execute("DROP TABLE IF EXISTS cities CASCADE");
+                stmt.execute("DROP TABLE IF EXISTS countries CASCADE");
+                stmt.execute("DROP TABLE IF EXISTS company CASCADE");
+            }
+            
+            // Recharger le schéma
+            loadSchema();
         }
     }
 

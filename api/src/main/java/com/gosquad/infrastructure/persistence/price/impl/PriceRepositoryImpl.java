@@ -32,6 +32,14 @@ public class PriceRepositoryImpl extends Repository<PriceModel> implements Price
         Map<String, Object> values = new HashMap<>();
         values.put("net_price", price.getNetPrice());
         values.put("vat_rate", price.getVatRate());
+        
+        // Calculer vat_amount et gross_price
+        java.math.BigDecimal vatAmount = price.getNetPrice().multiply(price.getVatRate()).divide(java.math.BigDecimal.valueOf(100));
+        java.math.BigDecimal grossPrice = price.getNetPrice().add(vatAmount);
+        
+        values.put("vat_amount", vatAmount);
+        values.put("gross_price", grossPrice);
+        
         price.setId(insert(values));
     }
 
@@ -39,6 +47,14 @@ public class PriceRepositoryImpl extends Repository<PriceModel> implements Price
         Map<String, Object> values = new HashMap<>();
         values.put("net_price", price.getNetPrice());
         values.put("vat_rate", price.getVatRate());
+        
+        // Calculer vat_amount et gross_price
+        java.math.BigDecimal vatAmount = price.getNetPrice().multiply(price.getVatRate()).divide(java.math.BigDecimal.valueOf(100));
+        java.math.BigDecimal grossPrice = price.getNetPrice().add(vatAmount);
+        
+        values.put("vat_amount", vatAmount);
+        values.put("gross_price", grossPrice);
+        
         updateBy("id", price.getId(), values);
     }
 
