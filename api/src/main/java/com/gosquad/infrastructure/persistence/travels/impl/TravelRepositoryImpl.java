@@ -13,41 +13,8 @@ import java.util.Map;
 
 @org.springframework.stereotype.Repository
 public class TravelRepositoryImpl extends Repository<TravelModel> implements TravelRepository {
-    // Granular update methods like CustomerRepositoryImpl
-    public void updateTravelTitle(int id, String newTitle) throws SQLException {
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("title", newTitle);
-        updateBy("id", id, updates);
-    }
 
-    public void updateTravelDates(int id, java.sql.Date startDate, java.sql.Date endDate) throws SQLException {
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("start_date", startDate);
-        updates.put("end_date", endDate);
-        updateBy("id", id, updates);
-    }
-
-    public void updateTravelBudget(int id, Double budget) throws SQLException {
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("budget", budget);
-        updateBy("id", id, updates);
-    }
-
-    public void updateTravelGroup(int id, Integer groupId) throws SQLException {
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("group_id", groupId);
-        updateBy("id", id, updates);
-    }
-
-    // Get by id and companyId like CustomerRepositoryImpl
-    public TravelModel getByIdAndCompanyId(int id, int companyId) throws SQLException, NotFoundException {
-        Map<String, Object> conditions = new HashMap<>();
-        conditions.put("id", id);
-        conditions.put("company_id", companyId);
-        return findByMultiple(conditions);
-    }
-
-    public static final String TABLE_NAME = "travel_information";
+    public static final String TABLE_NAME = "travel";
 
     public TravelRepositoryImpl() throws SQLException {
         super(TABLE_NAME);

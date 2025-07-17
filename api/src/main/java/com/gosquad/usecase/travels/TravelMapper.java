@@ -10,16 +10,19 @@ import java.util.List;
 public class TravelMapper {
     public TravelInformationEntity modelToEntity(TravelModel model) {
         if (model == null) return null;
-        TravelInformationEntity entity = new TravelInformationEntity();
-        entity.setId(model.getId());
-        entity.setTitle(model.getTitle());
-        entity.setDescription(model.getDescription());
-        entity.setStartDate(model.getStartDate() != null ? model.getStartDate().toLocalDate() : null);
-        entity.setEndDate(model.getEndDate() != null ? model.getEndDate().toLocalDate() : null);
-        entity.setDestination(model.getDestination());
-        entity.setBudget(model.getBudget());
-        entity.setGroupId(model.getGroupId());
-        return entity;
+        return new TravelInformationEntity(
+            model.getId(),
+            model.getTitle(),
+            model.getDescription(),
+            model.getStartDate() != null ? model.getStartDate().toLocalDate() : null,
+            model.getEndDate() != null ? model.getEndDate().toLocalDate() : null,
+            model.getDestination(),
+            model.getBudget(),
+            model.getGroupId(),
+            null, // createdAt
+            null, // updatedAt
+            model.getCompanyId()
+        );
     }
 
     public TravelModel entityToModel(TravelInformationEntity entity) {

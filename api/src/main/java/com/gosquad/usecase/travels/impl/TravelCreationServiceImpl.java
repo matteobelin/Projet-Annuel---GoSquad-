@@ -28,7 +28,7 @@ public class TravelCreationServiceImpl implements TravelCreationService {
     }
 
     @Override
-    public TravelInformationEntity createTravel(jakarta.servlet.http.HttpServletRequest request, VoyageRequestDTO voyageRequest) {
+    public TravelInformationEntity createTravel(jakarta.servlet.http.HttpServletRequest request, VoyageRequestDTO voyageRequest) throws Exception {
         try {
             String authHeader = request.getHeader("Authorization");
             String token = authHeader.substring(7);
@@ -53,7 +53,7 @@ public class TravelCreationServiceImpl implements TravelCreationService {
             travelService.addTravel(travel);
             return travel;
         } catch (Exception e) {
-            return null;
+            throw e;
         }
     }
     

@@ -99,7 +99,9 @@ CREATE TABLE groups (
                          name VARCHAR(255) NOT NULL UNIQUE,
                          visible BOOLEAN NOT NULL DEFAULT TRUE,
                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                         company_id INTEGER NOT NULL,
+                         CONSTRAINT fk_groups_company FOREIGN KEY (company_id) REFERENCES company(id)
 );
 
 CREATE TABLE travel (
@@ -111,9 +113,11 @@ CREATE TABLE travel (
                         destination VARCHAR(255) NOT NULL,
                         budget DECIMAL(10,2),
                         group_id INTEGER,
+                        company_id INTEGER NOT NULL,
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                        CONSTRAINT fk_travel_group FOREIGN KEY (group_id) REFERENCES groups(id)
+                        CONSTRAINT fk_travel_group FOREIGN KEY (group_id) REFERENCES groups(id),
+                        CONSTRAINT fk_travel_company FOREIGN KEY (company_id) REFERENCES company(id)
 );
 
 CREATE TABLE activity (
@@ -191,8 +195,8 @@ INSERT INTO category (id, name, company_id) VALUES
                                                         (1, 'Sport', 1),
                                                         (2, 'Repas', 1);
 
-INSERT INTO groups (id, name, visible, created_at, updated_at) VALUES
-    (1, 'Test Group', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO groups (id, name, visible, created_at, updated_at, company_id) VALUES
+    (1, 'Groupe Paris', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1);
 
 INSERT INTO price(id, net_price, vat_rate, vat_amount, gross_price) VALUES
                                                         (1, 25.00, 20.00, 5.00, 30.00),
@@ -202,12 +206,12 @@ INSERT INTO activity (id, name, description, address_id, price_id, category_id, 
     (1, 'Sport Class', 'A Sport class', 1, 1, 2, 1);
 
 -- Voyages d'exemple
-INSERT INTO travel (id, title, description, start_date, end_date, destination, budget, group_id, created_at, updated_at) VALUES
-    (1, 'Voyage Paris', 'Découverte de Paris', '2025-07-20', '2025-07-25', 'Paris', 1200.00, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (2, 'Trip New York', 'Découverte de la Grosse Pomme', '2025-10-01', '2025-10-10', 'New York', 2500.00, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (3, 'Voyage Tokyo', 'Sakura et traditions japonaises', '2025-11-15', '2025-11-25', 'Tokyo', 3000.00, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (4, 'Séjour Londres', 'Visite de la capitale britannique', '2025-12-05', '2025-12-12', 'Londres', 1800.00, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (5, 'Roadtrip Canada', 'Aventure au Québec', '2026-01-10', '2026-01-20', 'Montréal', 2200.00, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO travel (id, title, description, start_date, end_date, destination, budget, group_id, company_id, created_at, updated_at) VALUES
+    (1, 'Voyage Paris', 'Découverte de Paris', '2025-07-20', '2025-07-25', 'Paris', 1200.00, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (3, 'Trip New York', 'Découverte de la Grosse Pomme', '2025-10-01', '2025-10-10', 'New York', 2500.00, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (4, 'Voyage Tokyo', 'Sakura et traditions japonaises', '2025-11-15', '2025-11-25', 'Tokyo', 3000.00, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (5, 'Séjour Londres', 'Visite de la capitale britannique', '2025-12-05', '2025-12-12', 'Londres', 1800.00, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (6, 'Roadtrip Canada', 'Aventure au Québec', '2026-01-10', '2026-01-20', 'Montréal', 2200.00, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO activity_customer
 (activity_id, customer_id, participation, end_date, start_date, group_id)

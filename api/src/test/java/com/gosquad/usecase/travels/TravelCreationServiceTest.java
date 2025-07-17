@@ -31,9 +31,17 @@ class TravelCreationServiceTest {
     @Test
     void testCreateTravel_success() throws Exception {
         VoyageRequestDTO voyageRequest = mock(VoyageRequestDTO.class);
+        jakarta.servlet.http.HttpServletRequest request = mock(jakarta.servlet.http.HttpServletRequest.class);
+        when(request.getHeader("Authorization")).thenReturn("Bearer faketoken");
+        when(jwtInterceptor.extractTokenInfo(anyString())).thenReturn(java.util.Map.of("companyCode", "GOSQUAD"));
+        when(companyService.getCompanyByCode(anyString())).thenReturn(new com.gosquad.domain.company.CompanyEntity(1, "GOSQUAD", "Entreprise Gosquad"));
+        when(voyageRequest.getTitle()).thenReturn("Voyage Test");
+        when(voyageRequest.getDestination()).thenReturn("Paris");
+        when(voyageRequest.getStartDate()).thenReturn(java.time.LocalDate.now());
+        when(voyageRequest.getEndDate()).thenReturn(java.time.LocalDate.now().plusDays(1));
         doNothing().when(travelService).addTravel(any(TravelInformationEntity.class));
 
-        travelCreationService.createTravel(null, voyageRequest);
+        travelCreationService.createTravel(request, voyageRequest);
 
         verify(travelService).addTravel(any(TravelInformationEntity.class));
     }
@@ -41,9 +49,17 @@ class TravelCreationServiceTest {
     @Test
     void testCreateTravel_serviceThrowsException() throws Exception {
         VoyageRequestDTO voyageRequest = mock(VoyageRequestDTO.class);
+        jakarta.servlet.http.HttpServletRequest request = mock(jakarta.servlet.http.HttpServletRequest.class);
+        when(request.getHeader("Authorization")).thenReturn("Bearer faketoken");
+        when(jwtInterceptor.extractTokenInfo(anyString())).thenReturn(java.util.Map.of("companyCode", "GOSQUAD"));
+        when(companyService.getCompanyByCode(anyString())).thenReturn(new com.gosquad.domain.company.CompanyEntity(1, "GOSQUAD", "Entreprise Gosquad"));
+        when(voyageRequest.getTitle()).thenReturn("Voyage Test");
+        when(voyageRequest.getDestination()).thenReturn("Paris");
+        when(voyageRequest.getStartDate()).thenReturn(java.time.LocalDate.now());
+        when(voyageRequest.getEndDate()).thenReturn(java.time.LocalDate.now().plusDays(1));
         doThrow(new RuntimeException("Erreur création voyage")).when(travelService).addTravel(any(TravelInformationEntity.class));
 
-        assertThrows(RuntimeException.class, () -> travelCreationService.createTravel(null, voyageRequest));
+        assertThrows(RuntimeException.class, () -> travelCreationService.createTravel(request, voyageRequest));
         verify(travelService).addTravel(any(TravelInformationEntity.class));
     }
 }

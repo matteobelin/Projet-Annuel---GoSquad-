@@ -110,7 +110,7 @@ CREATE TABLE "public"."airport" (
     "id" integer DEFAULT nextval('airport_id_seq') NOT NULL,
     "nom" character varying(255) NOT NULL,
     "address_id" integer NOT NULL,
--- DROP SEQUENCE IF EXISTS INSERT INTO "travel_information" ("group_id", "start_date", "end_date", "destination", "title", "budget", "description")
+-- DROP SEQUENCE IF EXISTS INSERT INTO travel ("group_id", "start_date", "end_date", "destination", "title", "budget", "description")
 -- VALUES (5, '2025-07-20', '2025-07-25', 'Paris', 'Voyage Test', 1000.00, 'Description du voyage test');category_id_seq;
 WITH (oids = false);
 
@@ -276,10 +276,10 @@ CREATE TABLE "public"."groups" (
 )
 WITH (oids = false);
 
-DROP TABLE IF EXISTS "travel_information";
+DROP TABLE IF EXISTS travel;
 DROP SEQUENCE IF EXISTS travel_information_id_seq;
 CREATE SEQUENCE travel_information_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-CREATE TABLE "public"."travel_information" (
+CREATE TABLE "public".travel (
     "id" integer DEFAULT nextval('travel_information_id_seq') NOT NULL,
     "group_id" integer NOT NULL,
     "company_id" integer NOT NULL,
@@ -328,7 +328,7 @@ INSERT INTO "customer_group" ("group_id", "customer_id") VALUES
 (4, 3), (4, 4), (4, 5), (4, 6),
 (5, 3), (5, 4), (5, 5), (5, 6);
 
-INSERT INTO "travel_information" ("group_id", "company_id", "start_date", "end_date", "destination", "title", "budget", "description") VALUES
+INSERT INTO travel ("group_id", "company_id", "start_date", "end_date", "destination", "title", "budget", "description") VALUES
 (1, 1, '2025-07-20', '2025-07-25', 'Paris', 'Voyage à Paris', 1200.00, 'Découverte de la capitale'),
 (2, 1, '2025-08-10', '2025-08-15', 'New York', 'Séjour à New York', 2000.00, 'Visite de la ville et de ses monuments'),
 (3, 1, '2025-09-05', '2025-09-12', 'Tokyo', 'Voyage au Japon', 2500.00, 'Culture et gastronomie japonaise'),
@@ -337,7 +337,7 @@ INSERT INTO "travel_information" ("group_id", "company_id", "start_date", "end_d
 SELECT setval('group_id_seq', (SELECT MAX(id) FROM "groups"));
 
 -- Synchronisation de la séquence travel_information_id_seq avec le plus grand id existant
-SELECT setval('travel_information_id_seq', (SELECT MAX(id) FROM "travel_information"));
+SELECT setval('travel_information_id_seq', (SELECT MAX(id) FROM travel));
 
 
 
@@ -384,7 +384,7 @@ ALTER TABLE ONLY "public"."flight" ADD CONSTRAINT "aircraft_arrival_airport_id_f
 ALTER TABLE ONLY "public"."flight" ADD CONSTRAINT "aircraft_departure_airport_id_fkey" FOREIGN KEY (departure_airport_id) REFERENCES airport(id) NOT DEFERRABLE;
 
 ALTER TABLE ONLY "public"."flight_booking" ADD CONSTRAINT "flight_booking_flight_id_fkey" FOREIGN KEY (flight_id) REFERENCES flight(id) NOT DEFERRABLE;
-ALTER TABLE ONLY "public"."flight_booking" ADD CONSTRAINT "flight_booking_travel_information_id_fkey" FOREIGN KEY (travel_information_id) REFERENCES travel_information(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."flight_booking" ADD CONSTRAINT "flight_booking_travel_information_id_fkey" FOREIGN KEY (travel_information_id) REFERENCES travel(id) NOT DEFERRABLE;
 
 ALTER TABLE ONLY "public"."flight_booking_customer" ADD CONSTRAINT "flight_booking_customer_customer_id_fkey" FOREIGN KEY (customer_id) REFERENCES customer(id) NOT DEFERRABLE;
 ALTER TABLE ONLY "public"."flight_booking_customer" ADD CONSTRAINT "flight_booking_customer_price_id_fkey" FOREIGN KEY (price_id) REFERENCES price(id) NOT DEFERRABLE;
@@ -393,19 +393,19 @@ ALTER TABLE ONLY "public"."hotel" ADD CONSTRAINT "hotel_address_id_fkey" FOREIGN
 
 ALTER TABLE ONLY "public"."invoice" ADD CONSTRAINT "invoice_order_form_id_fkey" FOREIGN KEY (order_form_id) REFERENCES order_form(id) NOT DEFERRABLE;
 ALTER TABLE ONLY "public"."invoice" ADD CONSTRAINT "invoice_price_id_fkey" FOREIGN KEY (price_id) REFERENCES price(id) NOT DEFERRABLE;
-ALTER TABLE ONLY "public"."invoice" ADD CONSTRAINT "invoice_travel_information_id_fkey" FOREIGN KEY (travel_information_id) REFERENCES travel_information(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."invoice" ADD CONSTRAINT "invoice_travel_information_id_fkey" FOREIGN KEY (travel_information_id) REFERENCES travel(id) NOT DEFERRABLE;
 
 ALTER TABLE ONLY "public"."quote" ADD CONSTRAINT "quote_price_id_fkey" FOREIGN KEY (price_id) REFERENCES price(id) NOT DEFERRABLE;
 
 ALTER TABLE ONLY "public"."travel_activity" ADD CONSTRAINT "travel_activity_activity_id_fkey" FOREIGN KEY (activity_id) REFERENCES activity(id) NOT DEFERRABLE;
-ALTER TABLE ONLY "public"."travel_activity" ADD CONSTRAINT "travel_activity_travel_information_id_fkey" FOREIGN KEY (travel_information_id) REFERENCES travel_information(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."travel_activity" ADD CONSTRAINT "travel_activity_travel_information_id_fkey" FOREIGN KEY (travel_information_id) REFERENCES travel(id) NOT DEFERRABLE;
 
 ALTER TABLE ONLY "public"."travel_hotel" ADD CONSTRAINT "travel_hotel_hotel_id_fkey" FOREIGN KEY (hotel_id) REFERENCES hotel(id) NOT DEFERRABLE;
-ALTER TABLE ONLY "public"."travel_hotel" ADD CONSTRAINT "travel_hotel_travel_information_id_fkey" FOREIGN KEY (travel_information_id) REFERENCES travel_information(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."travel_hotel" ADD CONSTRAINT "travel_hotel_travel_information_id_fkey" FOREIGN KEY (travel_information_id) REFERENCES travel(id) NOT DEFERRABLE;
 
-ALTER TABLE ONLY "public"."travel_information" ADD CONSTRAINT "travel_information_group_id_fkey" FOREIGN KEY (group_id) REFERENCES "groups"(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public".travel ADD CONSTRAINT "travel_information_group_id_fkey" FOREIGN KEY (group_id) REFERENCES "groups"(id) NOT DEFERRABLE;
 
 ALTER TABLE ONLY "public"."travel_insurance" ADD CONSTRAINT "travel_insurance_booking_insurance_id_fkey" FOREIGN KEY (booking_insurance_id) REFERENCES booking_insurance(id) NOT DEFERRABLE;
-ALTER TABLE ONLY "public"."travel_insurance" ADD CONSTRAINT "travel_insurance_travel_information_id_fkey" FOREIGN KEY (travel_information_id) REFERENCES travel_information(id) NOT DEFERRABLE;
+ALTER TABLE ONLY "public"."travel_insurance" ADD CONSTRAINT "travel_insurance_travel_information_id_fkey" FOREIGN KEY (travel_information_id) REFERENCES travel(id) NOT DEFERRABLE;
 
 -- 2025-07-03 16:41:05 UTC

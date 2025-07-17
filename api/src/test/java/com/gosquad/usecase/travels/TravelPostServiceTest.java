@@ -42,7 +42,7 @@ class TravelPostServiceTest {
     }
 
     @Test
-    void testCreateTravelFromDTO_success() throws SQLException, com.gosquad.core.exceptions.ConstraintViolationException {
+    void testCreateTravelFromDTO_success() throws Exception {
         VoyageRequestDTO dto = mock(VoyageRequestDTO.class);
         when(dto.getTitle()).thenReturn("Voyage Rome");
         when(dto.getDescription()).thenReturn("Voyage en Italie");

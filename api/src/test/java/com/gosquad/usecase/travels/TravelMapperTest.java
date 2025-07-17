@@ -41,12 +41,14 @@ class TravelMapperTest {
         assertEquals(model.getId(), entity.getId());
         assertEquals(model.getTitle(), entity.getTitle());
         assertEquals(model.getDescription(), entity.getDescription());
-        assertEquals(model.getStartDate(), entity.getStartDate());
-        assertEquals(model.getEndDate(), entity.getEndDate());
+        assertEquals(model.getStartDate() != null ? model.getStartDate().toLocalDate() : null, entity.getStartDate());
+        assertEquals(model.getEndDate() != null ? model.getEndDate().toLocalDate() : null, entity.getEndDate());
         assertEquals(model.getDestination(), entity.getDestination());
         assertEquals(model.getBudget(), entity.getBudget());
         assertEquals(model.getGroupId(), entity.getGroupId());
         assertEquals(model.getCompanyId(), entity.getCompanyId());
+        assertNull(entity.getCreatedAt());
+        assertNull(entity.getUpdatedAt());
     }
 
     @Test
@@ -57,8 +59,8 @@ class TravelMapperTest {
         assertEquals(entity.getId(), model.getId());
         assertEquals(entity.getTitle(), model.getTitle());
         assertEquals(entity.getDescription(), model.getDescription());
-        assertEquals(entity.getStartDate(), model.getStartDate());
-        assertEquals(entity.getEndDate(), model.getEndDate());
+        assertEquals(entity.getStartDate() != null ? java.sql.Date.valueOf(entity.getStartDate()) : null, model.getStartDate());
+        assertEquals(entity.getEndDate() != null ? java.sql.Date.valueOf(entity.getEndDate()) : null, model.getEndDate());
         assertEquals(entity.getDestination(), model.getDestination());
         assertEquals(entity.getBudget(), model.getBudget());
         assertEquals(entity.getGroupId(), model.getGroupId());
@@ -77,12 +79,14 @@ class TravelMapperTest {
             assertEquals(models.get(i).getId(), entities.get(i).getId());
             assertEquals(models.get(i).getTitle(), entities.get(i).getTitle());
             assertEquals(models.get(i).getDescription(), entities.get(i).getDescription());
-            assertEquals(models.get(i).getStartDate(), entities.get(i).getStartDate());
-            assertEquals(models.get(i).getEndDate(), entities.get(i).getEndDate());
+            assertEquals(models.get(i).getStartDate() != null ? models.get(i).getStartDate().toLocalDate() : null, entities.get(i).getStartDate());
+            assertEquals(models.get(i).getEndDate() != null ? models.get(i).getEndDate().toLocalDate() : null, entities.get(i).getEndDate());
             assertEquals(models.get(i).getDestination(), entities.get(i).getDestination());
             assertEquals(models.get(i).getBudget(), entities.get(i).getBudget());
             assertEquals(models.get(i).getGroupId(), entities.get(i).getGroupId());
             assertEquals(models.get(i).getCompanyId(), entities.get(i).getCompanyId());
+            assertNull(entities.get(i).getCreatedAt());
+            assertNull(entities.get(i).getUpdatedAt());
         }
     }
 }
