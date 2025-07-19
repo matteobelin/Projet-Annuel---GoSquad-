@@ -2,9 +2,12 @@ package com.gosquad.usecase.travel_activity;
 
 import com.gosquad.domain.travel_activity.TravelActivityEntity;
 import com.gosquad.infrastructure.persistence.travel_activity.TravelActivityModel;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.Mapping;
 
 import java.util.List;
 
+@Component
 public class TravelActivityMapper {
 
     public TravelActivityEntity modelToEntity(TravelActivityModel travelActivityModel) {

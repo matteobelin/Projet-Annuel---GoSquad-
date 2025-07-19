@@ -29,8 +29,9 @@ public class VoyageRequestDTO {
     
     // Gestion des groupes (étape 2)
     private String groupName; // Obligatoire si 2+ participants et pas de groupe existant sélectionné
-    private Long selectedGroupId; // ID du groupe existant sélectionné (optionnel)
-    
+    private Long selectedGroupId;// ID du groupe existant sélectionné (optionnel)
+
+
     // Constructeurs
     public VoyageRequestDTO() {}
     

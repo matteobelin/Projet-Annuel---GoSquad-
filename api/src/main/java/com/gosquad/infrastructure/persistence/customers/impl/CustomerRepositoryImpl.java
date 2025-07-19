@@ -169,6 +169,7 @@ public class CustomerRepositoryImpl extends Repository<CustomerModel> implements
 
     @Override
     public List<CustomerModel> getCustomersByGroupId(int groupId) throws ConstraintViolationException {
+        List<CustomerModel> result;
         try {
             String query = "SELECT c.* FROM customer c " +
                           "INNER JOIN customer_group cg ON c.id = cg.customer_id " +
@@ -186,11 +187,11 @@ public class CustomerRepositoryImpl extends Repository<CustomerModel> implements
                     results.add(mapResultSetToEntity(rs));
                 }
             }
-            
-            return results;
+            result = results;
         } catch (SQLException e) {
             throw new ConstraintViolationException("Error finding customers by group ID: " + e.getMessage());
         }
+        return result;
     }
 
 }

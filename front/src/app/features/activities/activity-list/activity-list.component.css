@@ -179,14 +179,12 @@
 }
 
 .btn-secondary {
-  background: rgba(255,255,255,0.8);
-  color: #2d3748;
-  border: 2px solid rgba(102, 126, 234, 0.2);
+  background: #6b7280;
+  color: white;
 }
 
 .btn-secondary:hover {
-  background: rgba(102, 126, 234, 0.1);
-  border-color: rgba(102, 126, 234, 0.3);
+  background: #4b5563;
 }
 
 .empty-state {
@@ -257,5 +255,82 @@
   margin-bottom: 2rem;
   gap: 1rem
 }
+
+.overlay {
+  position: fixed; /* fixe par rapport à la fenêtre */
+  top: 0;
+  left: 0;
+  width: 100vw; /* toute la largeur */
+  height: 100vh; /* toute la hauteur */
+  background-color: rgba(0, 0, 0, 0.5); /* fond noir transparent */
+  display: flex;
+  justify-content: center; /* centrer horizontalement */
+  align-items: center;     /* centrer verticalement */
+  z-index: 1000; /* pour être au-dessus */
+}
+
+.popup {
+  background-color: white;
+  padding: 2rem 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 25px 40px rgba(0, 0, 0, 0.1);
+  max-width: 420px;
+  width: 90%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #2d3748;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.popup label {
+  font-weight: 700;
+  font-size: 1.15rem;
+  margin-bottom: 0.5rem;
+  display: block;
+  color: #4a5568;
+}
+
+.popup input[type="date"] {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: 2px solid #667eea;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  color: #2d3748;
+  font-weight: 500;
+  width: 100%;
+  max-width: 100%;
+}
+
+.popup input[type="date"]:focus {
+  outline: none;
+  border-color: #764ba2;
+  box-shadow: 0 0 8px 3px rgba(118, 75, 162, 0.5);
+  background: #f7fafc;
+}
+
+.popup .error-message {
+  color: #e53e3e; /* rouge vif */
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-top: -0.5rem;
+}
+.popup-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+
+
+
+.popup button.btn-primary:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
 
 

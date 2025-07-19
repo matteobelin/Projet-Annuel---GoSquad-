@@ -3,7 +3,19 @@
     <h1>🌟 Explorez les Activités</h1>
   </div>
   <div class="search-bar">
-    <button (click)="onAdd()" class="btn btn-primary">Ajouter une activité</button>
+    <button
+      *ngIf="!isTravelActivityMode; else backButton"
+      (click)="onAdd()"
+      class="btn btn-primary">
+      Ajouter une activité
+    </button>
+
+    <ng-template #backButton>
+      <button (click)="goBack()" class="btn btn-secondary" >
+        <i class="fas fa-arrow-left"></i>
+        Retour
+      </button>
+    </ng-template>
     <input type="text"
            placeholder="Rechercher une activité..."
            [(ngModel)]="filterText"
@@ -42,15 +54,37 @@
       <div class="activity-footer">
         <div class="activity-price">{{ activity.gross_price }}€</div>
         <div class="activity-actions">
-          <button class="btn btn-primary" (click)="onEdit(activity.id)">
+
+          <button class="btn btn-primary" *ngIf="!isTravelActivityMode" (click)="onEdit(activity.id)">
             Modifier
           </button>
         </div>
         <div class="activity-actions">
-          <button class="btn btn-primary" >
+          <button class="btn btn-primary" (click)="AddActivityCustomer(activity.id)" *ngIf="isTravelActivityMode">
             ✨ Réserver
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isTravelActivityMode && groupeId && OnSelectedActivity" class="overlay">
+    <div class="popup">
+      <label for="datePicker">Choisir une date entre {{startDate}} et {{endDate}}</label>
+      <input
+        id="datePicker"
+        type="date"
+        [min]="startDate"
+        [max]="endDate"
+        (change)="onDateChange($event)"
+      />
+
+      <div *ngIf="errorMessage()" class="error-message">
+        {{ errorMessage() }}
+      </div>
+
+      <div class="popup-buttons">
+        <button class="btn btn-secondary" (click)="OnSelectedActivity=false">Annuler</button>
+        <button class="btn btn-primary" (click)="confirmDate()" [disabled]="!selectedDate()">Confirmer</button>
       </div>
     </div>
   </div>

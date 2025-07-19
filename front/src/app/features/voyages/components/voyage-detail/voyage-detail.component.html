@@ -38,6 +38,10 @@
           <i class="fas fa-edit"></i>
           Modifier
         </button>
+        <button class="btn btn-outline-success" (click)="addActivites()">
+          <i class="fas fa-calendar-plus"></i>
+          Ajouter une activité
+        </button>
         <button type="button" class="btn btn-success" (click)="generatePdf()">
           <i class="fas fa-file-pdf"></i>
           Générer PDF
@@ -60,9 +64,10 @@
             <p>{{ voyage.description || 'Aucune description' }}</p>
           </div>
           <div class="info-item">
-            <label>Prix</label>
+            <label>Budget</label>
             <p class="price">{{ voyage.budget | currency:'EUR':'symbol':'1.2-2' }}</p>
           </div>
+
           <div class="info-item">
             <label>Destination</label>
             <p>{{ voyage.destination }}</p>
@@ -90,6 +95,29 @@
             <label>Durée</label>
             <p>{{ calculateDuration() }} jours</p>
           </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h3><i class="fas fa-info-circle"></i> Description Prix</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Hotel</label>
+            <p>{{ accommodationPrice | currency:'EUR':'symbol':'1.2-2' }}</p>
+          </div>
+          <div class="info-item">
+            <label>Avion</label>
+            <p>{{ flightPrice | currency:'EUR':'symbol':'1.2-2' }}</p>
+          </div>
+          <div class="info-item">
+            <label>Activité</label>
+            <p>{{ ActivityPrice | currency:'EUR':'symbol':'1.2-2' }}</p>
+          </div>
+          <div class="info-item">
+            <label>Total</label>
+            <p>{{ accommodationPrice+flightPrice+ActivityPrice | currency:'EUR':'symbol':'1.2-2' }}</p>
+          </div>
+
         </div>
       </div>
 
@@ -140,7 +168,7 @@
       <!-- Groups card -->
       <div class="info-card groups-card">
         <h3>
-          <i class="fas fa-users"></i> 
+          <i class="fas fa-users"></i>
           Groupes ({{ voyage.groups?.length || 0 }})
         </h3>
         <div *ngIf="!voyage.groups || voyage.groups.length === 0" class="no-groups">
@@ -161,7 +189,7 @@
       <!-- Participants card -->
       <div class="info-card participants-card">
         <h3>
-          <i class="fas fa-user"></i> 
+          <i class="fas fa-user"></i>
           Participants ({{ voyage.participants?.length || 0 }})
         </h3>
         <div *ngIf="!voyage.participants || voyage.participants.length === 0" class="no-participants">
