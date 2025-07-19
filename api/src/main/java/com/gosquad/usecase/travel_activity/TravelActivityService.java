@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface TravelActivityService {
     List<TravelActivityEntity> getActivitiesByTravelId(int travelId) throws SQLException , InvalidArgumentException;
-    void addActivityToTravel(int travelId, int activityId) ;
+    void addActivityToTravel(int travelId, int activityId) throws SQLException;
 }

@@ -1,6 +1,7 @@
 package com.gosquad.infrastructure.persistence.customergroup.impl;
 
 import com.gosquad.infrastructure.persistence.customergroup.CustomerGroupRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,7 +9,8 @@ import java.sql.SQLException;
 
 @Repository
 public class CustomerGroupRepositoryImpl implements CustomerGroupRepository {
-    @org.springframework.beans.factory.annotation.Autowired
+
+    @Autowired
     private javax.sql.DataSource dataSource;
 
     @Override
@@ -20,6 +22,7 @@ public class CustomerGroupRepositoryImpl implements CustomerGroupRepository {
             stmt.setInt(2, groupId);
             stmt.executeUpdate();
         } catch (SQLException e) {
+            System.out.println("Erreur lors de l'ajout du participant au groupe : " + e.getMessage());
             throw new RuntimeException("Erreur lors de l'ajout du participant au groupe : " + e.getMessage(), e);
         }
     }

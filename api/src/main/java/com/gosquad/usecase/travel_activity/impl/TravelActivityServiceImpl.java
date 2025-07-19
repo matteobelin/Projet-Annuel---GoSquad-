@@ -6,10 +6,12 @@ import com.gosquad.infrastructure.persistence.travel_activity.TravelActivityMode
 import com.gosquad.infrastructure.persistence.travel_activity.TravelActivityRepository;
 import com.gosquad.usecase.travel_activity.TravelActivityMapper;
 import com.gosquad.usecase.travel_activity.TravelActivityService;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
 
+@Service
 public class TravelActivityServiceImpl implements TravelActivityService {
 
     private final TravelActivityMapper travelActivityMapper;
@@ -30,8 +32,7 @@ public class TravelActivityServiceImpl implements TravelActivityService {
         return travelActivities;
     }
 
-    public void addActivityToTravel(int travelId, int activityId) {
-        TravelActivityModel travelActivityModel = new TravelActivityModel(travelId, activityId);
-        travelActivityMapper.modelToEntity(travelActivityModel);
+    public void addActivityToTravel(int travelId, int activityId) throws SQLException {
+        travelActivityRepository.addActivityToTravel(travelId,activityId);
     }
 }

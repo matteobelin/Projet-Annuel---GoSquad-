@@ -46,6 +46,7 @@ export const routes: Routes = [
       { path: 'activities', component: ActivityListComponent },
       { path: 'activities/add', component: AddUpdateActivityComponent},
       { path: 'activities/edit/:id', component: AddUpdateActivityComponent},
+      { path: 'activities/travelActivity/:id/:groupId/:startDate/:endDate/:destination', component: ActivityListComponent},
       { path: 'accommodations', component: AccommodationsComponent },
       { path: 'transports', component: TransportsComponent },
       { path: 'payments', component: PaymentsComponent },

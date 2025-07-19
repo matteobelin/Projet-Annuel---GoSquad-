@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MainHeaderComponent } from "../../../presenter/main-header/main-header.component";
 import { VoyageService } from '../../../../core/services/voyage.service';
 import { Voyage } from '../../../../core/models';
+import {CustomerActivityService,CustomerActivityResponse} from '../../../../core/services/activityCustomer.service';
 
 @Component({
   selector: 'app-voyage-detail',
@@ -21,11 +22,17 @@ export class VoyageDetailComponent implements OnInit {
   loading = false;
   error: string | null = null;
   voyageId: string = '';
+  customerActivities: CustomerActivityResponse[] = []
+  ActivityPrice= 0;
+  accommodationPrice= 900;
+  flightPrice= 1200;
+
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private voyageService: VoyageService
+    private voyageService: VoyageService,
+    private activityCustomerService: CustomerActivityService
   ) {}
 
   ngOnInit(): void {
@@ -49,11 +56,28 @@ export class VoyageDetailComponent implements OnInit {
         console.log('👥 Participants:', voyage.participants);
         this.voyage = voyage;
         this.loading = false;
+
+        if (voyage.groupId) {
+          this.loadCustomerActivities(voyage.groupId);
+        }
       },
       error: (error) => {
         console.error('Error loading voyage detail:', error);
         this.error = 'Erreur lors du chargement du voyage';
         this.loading = false;
+      }
+    });
+  }
+
+  loadCustomerActivities(groupId: number): void {
+    this.activityCustomerService.getAllCustomerActivities(groupId).subscribe({
+      next: (activities) => {
+        this.customerActivities = activities;
+        this.ActivityPrice = this.customerActivities
+          .reduce((total, activity) => total + (activity.gross_price || 0), 0);
+      },
+      error: (error) => {
+        console.error('Erreur lors du chargement des activités clients:', error);
       }
     });
   }
@@ -81,18 +105,31 @@ export class VoyageDetailComponent implements OnInit {
     }
   }
 
+  addActivites(): void{
+    if (!this.voyage) return
+    this.router.navigate([
+      '/activities',
+      'travelActivity',
+      this.voyageId,
+      this.voyage.groupId,
+      this.voyage.startDate,
+      this.voyage.endDate,
+      this.voyage.destination
+    ]);
+  }
+
   goBack(): void {
     this.router.navigate(['/voyages']);
   }
 
   calculateDuration(): number {
     if (!this.voyage?.startDate || !this.voyage?.endDate) return 0;
-    
+
     const startDate = new Date(this.voyage.startDate);
     const endDate = new Date(this.voyage.endDate);
     const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
+
     return diffDays;
   }
 
@@ -178,7 +215,48 @@ export class VoyageDetailComponent implements OnInit {
         theme: 'striped',
         headStyles: { fillColor: [41, 128, 185] },
       });
+      y = doc.lastAutoTable.finalY + 15;
     }
+
+    if (this.customerActivities && this.customerActivities.length > 0) {
+      doc.setFontSize(16);
+      doc.text('Activités', 14, y);
+      y += 8;
+
+      const head = [['Nom', 'Ville', 'Pays','Date', 'Prix Unitaire TTC', 'Participants', "Prix Total TTC"]];
+
+      const activityMap = new Map<number, { activity: CustomerActivityResponse, count: number }>();
+
+      this.customerActivities.forEach(activity => {
+        if (activityMap.has(activity.activityId)) {
+          activityMap.get(activity.activityId)!.count += 1;
+        } else {
+          activityMap.set(activity.activityId, { activity, count: 1 });
+        }
+      });
+
+      const body = Array.from(activityMap.values()).map(({ activity, count }) => [
+        activity.activityName || 'N/A',
+        activity.city || 'N/A',
+        activity.country || 'N/A',
+        activity.startDate ? new Date(activity.startDate).toLocaleDateString('fr-FR') : 'N/A',
+        (activity.gross_price || 0).toFixed(2).replace('.', ','),
+        count.toString(),
+        (activity.gross_price*count || 0).toFixed(2).replace('.', ','),
+      ]);
+
+      doc.autoTable({
+        startY: y,
+        head: head,
+        body: body,
+        theme: 'striped',
+        headStyles: { fillColor: [41, 128, 185] }, // Couleur différente pour différencier
+      });
+
+      y = doc.lastAutoTable.finalY + 15;
+    }
+
+
 
     // Sauvegarder le PDF
     doc.save(`voyage-${voyage.uniqueTravelId}.pdf`);
