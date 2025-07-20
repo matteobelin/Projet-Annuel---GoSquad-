@@ -2,39 +2,102 @@
   [icon]="'fas fa-car'"
   [title]="'Transports'"
 ></app-main-header>
-<div>
-  <form (ngSubmit)="onSearch()">
-    <input [(ngModel)]="from" name="from" placeholder="Code IATA départ (ex: CDG)" required>
-    <input [(ngModel)]="to" name="to" placeholder="Code IATA arrivée (ex: JFK)" required>
-    <button type="submit">Rechercher</button>
-  </form>
+<div class="transports-container">
+
+  <div class="filter-container">
+    <form (ngSubmit)="onSearch()">
+      <div class="filter">
+        <label>Départ :</label>
+        <select [(ngModel)]="from" name="from" required class="dropdown">
+          <option [ngValue]="null" disabled selected>Choisir une ville de départ</option>
+          <option *ngFor="let city of cities" [value]="city.code">{{ city.name }}</option>
+        </select>
+      </div>
+
+      <div class="filter">
+        <label>Arrivée :</label>
+        <select [(ngModel)]="to" name="to" required class="dropdown">
+          <option [ngValue]="null" disabled selected>Choisir une ville d’arrivée</option>
+          <option *ngFor="let city of cities" [value]="city.code">{{ city.name }}</option>
+        </select>
+      </div>
+
+      <div class="filter">
+        <label>Prix maximum (€) :</label>
+        <input type="number" [(ngModel)]="maxPrice" name="maxPrice" min="0" placeholder="ex: 200">
+      </div>
+      <div class="filter">
+        <label>Durée maximale (min) :</label>
+        <input type="number" [(ngModel)]="maxDuration" name="maxDuration" min="0" placeholder="ex: 180">
+      </div>
+      <div class="filter">
+        <label>CO₂ max (kg) :</label>
+        <input type="number" [(ngModel)]="maxCO2" name="maxCO2" min="0" placeholder="ex: 150">
+      </div>
+      <button type="submit">Rechercher</button>
+    </form>
+  </div>
+
+
+  @if(loading){
+    <div class="no-results">
+      <h2>Recherche en cours...</h2>
+    </div>
+  }
+
+  @if(results.length != 0 && !loading) {
+    <div class="flight-card-container">
+      <div class="flight-card" *ngFor="let flight of results; let i = index">
+        <div class="flight-header">
+          <span class="trip-type">{{ flight.flightNumber }}</span>
+        </div>
+
+        <div class="flight-info">
+          <div class="flight-dates">
+            <span>{{ flight.departureDateTime | date:'short' }}</span>
+            <span class="arrow">
+            {{ (flight.duration / 60) | number:'1.0-0' }} h {{ (flight.duration % 60) | number:'1.0-0' }} min
+            <i class="fas fa-plane"></i>
+            direct
+          </span>
+            <span>{{ flight.arrivalDateTime | date:'short' }}</span>
+          </div>
+
+          <div class="flight-airports">
+            <span>{{ flight.departureCity }} ({{ flight.departureAirport }})</span>
+            <span class="arrow">
+            <i class="fas fa-arrow-right"></i>
+          </span>
+            <span>{{ flight.arrivalCity }} ({{ flight.arrivalAirport }})</span>
+          </div>
+
+          <div class="flight-co2">
+            🌱 CO₂ : {{ flight.co2 }} kg
+          </div>
+
+          <div class="flight-details">
+            <img class="airline-logo" [src]="'https://dummyimage.com/60x30/ddd/000&text=' + flight.airline" alt="Logo">
+            <div class="baggage-info">
+              🧳 Bagages : {{ flight.baggage }}
+            </div>
+          </div>
+        </div>
+
+        <div class="flight-price">
+          💶 Prix : <strong>{{ flight.price }} €</strong>
+        </div>
+
+        <div class="flight-actions">
+          <button (click)="onSelectFlight(flight)">Sélectionner</button>
+          <a *ngIf="flight.bookingLink" [href]="flight.bookingLink" target="_blank">Réserver</a>
+        </div>
+      </div>
+    </div>
+  } @else if(results.length === 0 && !loading) {
+    <div class="no-results">
+      <img src="assets/img/not-flight.png" alt="No results">
+      <h2>Aucun vol trouvé</h2>
+    </div>
+  }
+
 </div>
-
-<div *ngIf="loading">Recherche en cours...</div>
-<div *ngIf="error">{{ error }}</div>
-
-<table *ngIf="results.length">
-  <thead>
-    <tr>
-      <th>Départ</th>
-      <th>Arrivée</th>
-      <th>Date/Heure Départ</th>
-      <th>Date/Heure Arrivée</th>
-      <th>Compagnie</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let flight of results">
-      <td>{{ flight.departureCity }} ({{ flight.departureAirport }})</td>
-      <td>{{ flight.arrivalCity }} ({{ flight.arrivalAirport }})</td>
-      <td>{{ flight.departureDateTime | date:'short' }}</td>
-      <td>{{ flight.arrivalDateTime | date:'short' }}</td>
-      <td>{{ flight.airline }}</td>
-      <td>
-        <button (click)="selectFlight(flight)">Sélectionner</button>
-        <a *ngIf="flight.bookingLink" [href]="flight.bookingLink" target="_blank">Réserver</a>
-      </td>
-    </tr>
-  </tbody>
-</table>

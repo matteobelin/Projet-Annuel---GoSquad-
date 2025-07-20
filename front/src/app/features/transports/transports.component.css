@@ -1,18 +1,24 @@
+.transports-container{
+  padding: 0 2rem 1rem;
+  display: flex;
+  gap: 15px;
+}
 /* Style du formulaire */
 form {
   display: flex;
   gap: 1rem;
-  margin: 2rem 0 1.5rem 0;
-  align-items: center;
+  align-items: flex-end;
+  flex-direction: column;
 }
 input {
   padding: 0.5rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 5px;
   font-size: 1rem;
+  background: #ffffff69;
+  border: 1px solid #b27eeda1;
 }
 button[type="submit"] {
-  background: #1976d2;
+  background: #b481ec;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -20,9 +26,10 @@ button[type="submit"] {
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.2s;
+  width: 100%;
 }
 button[type="submit"]:hover {
-  background: #125ea2;
+  background: #b481ec;
 }
 
 /* Style du tableau */
@@ -40,7 +47,7 @@ th, td {
   text-align: left;
 }
 th {
-  background: #f5f5f5;
+  background: #b481ec91;
   font-weight: 600;
   border-bottom: 2px solid #e0e0e0;
 }
@@ -53,7 +60,7 @@ tbody tr:hover {
 
 /* Style des boutons d'action */
 td button {
-  background: #43a047;
+  background: #b481ec;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -64,10 +71,10 @@ td button {
   transition: background 0.2s;
 }
 td button:hover {
-  background: #2e7031;
+  background: #8e5ec7;
 }
 td a {
-  color: #1976d2;
+  color: #b481ec;
   text-decoration: none;
   font-weight: 500;
 }
@@ -82,8 +89,143 @@ td a:hover {
   font-weight: 500;
 }
 .loading {
-  color: #1976d2;
+  color: #b481ec;
 }
 .error {
   color: #d32f2f;
+}
+
+.dropdown {
+  padding: 0.5rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  border: 1px solid #b27eeda1;
+  transition: border-color 0.3s;
+  background: #ffffff69;
+}
+.filter{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.filter-container{
+  width: 300px;
+  background: #b481ec38;
+  height: 100%;
+  padding: 15px;
+  border-radius: 10px;
+  margin-right: 15px;
+  border: 1px solid #b481ec;
+}
+
+/* Style des vols en mode carte */
+
+.flight-card-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  overflow: auto;
+  height: 80vh;
+}
+
+.flight-card-container::-webkit-scrollbar {
+  display: none;
+}
+
+.flight-card {
+  border-radius: 12px;
+  padding: 1.2rem;
+  background: #e5d3fb;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #b27eed;
+}
+
+.flight-header {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 0.8rem;
+  color: #b481ec;
+}
+
+.flight-info {
+  margin-bottom: 1rem;
+}
+
+.flight-dates, .flight-airports {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.arrow {
+  margin: 0 0.5rem;
+  font-weight: bold;
+  background: #b481ec;
+  padding: 3px 15px;
+  border-radius: 50px;
+}
+
+.flight-co2 {
+  font-size: 0.9rem;
+  color: #28a745;
+  margin-bottom: 0.7rem;
+}
+
+.flight-details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.airline-logo {
+  height: 30px;
+  width: 60px;
+  object-fit: contain;
+  border: 1px solid #ccc;
+  background: #fff;
+}
+
+.baggage-info {
+  font-size: 0.95rem;
+}
+
+.flight-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.flight-actions button, .flight-actions a {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.flight-actions button {
+  background-color: white;
+  color: #b481ec;
+  font-weight: bold;
+}
+
+.flight-actions a {
+  background-color: #28a745;
+  color: white;
+}
+
+.no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+}
+
+.no-results img {
+  width: 450px;
+  margin-bottom: 1rem;
 }

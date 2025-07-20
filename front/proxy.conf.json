@@ -2,5 +2,21 @@
   "/api": {
     "target": "http://localhost:8080",
     "secure": false
+  },
+  "/hotels-api": {
+    "target": "https://hotels-com-free.p.rapidapi.com",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": { "^/hotels-api": "" },
+    "headers": {
+      "X-RapidAPI-Key": "b37e688798msh6ff35ede1c3c872p1f8708jsnd45541fee169",
+      "X-RapidAPI-Host": "hotels-com-free.p.rapidapi.com"
+    }
+  },
+  "/makcorps-api": {
+    "target": "https://api.makcorps.com",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": { "^/makcorps-api": "" }
   }
 }

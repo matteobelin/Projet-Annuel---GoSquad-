@@ -3,9 +3,13 @@ export interface Flight {
   arrivalCity: string;
   departureAirport: string;
   arrivalAirport: string;
-  departureDateTime: string; // ISO string
-  arrivalDateTime: string;   // ISO string
+  departureDateTime: string;
+  arrivalDateTime: string;
   airline: string;
-  bookingLink?: string;      // facultatif
+  bookingLink?: string;
   flightNumber: string;
+  price: string;
+  duration: number;
+  co2: string;
+  baggage: string;
 }

@@ -1,0 +1,110 @@
+<div class="container">
+  <!-- Search Section -->
+  <div class="search-section" *ngIf="!selectedHotel">
+    <h2>Rechercher un hôtel</h2>
+    <div class="hotel-search">
+      <input [(ngModel)]="query" placeholder="Ville, hôtel..." class="search-input" />
+      <button (click)="searchHotels()" [disabled]="loading" class="search-button">Rechercher</button>
+    </div>
+
+    <div *ngIf="loading" class="loading">Chargement des hôtels...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+
+    <!-- Hotel List -->
+    <div class="hotel-list" *ngIf="hotels.length && !loading">
+      <h3>Résultats de recherche</h3>
+      <div class="hotel-card" *ngFor="let hotel of hotels">
+        <div class="hotel-info">
+          <h4>{{ hotel.name }}</h4>
+          <p *ngIf="hotel.city">{{ hotel.city }}</p>
+          <div *ngIf="hotel.thumbnail" class="hotel-thumbnail">
+            <img [src]="hotel.thumbnail" alt="{{ hotel.name }}" />
+          </div>
+        </div>
+        <button (click)="viewHotelDetails(hotel)" class="view-details-button">Voir détails</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hotel Details Section -->
+  <div class="hotel-details" *ngIf="selectedHotel && !bookingConfirmation">
+    <button (click)="backToResults()" class="back-button">← Retour aux résultats</button>
+
+    <div *ngIf="loadingDetails" class="loading">Chargement des détails...</div>
+
+    <div class="hotel-detail-card" *ngIf="!loadingDetails">
+      <h2>{{ selectedHotel.name }}</h2>
+
+      <div class="hotel-image" *ngIf="selectedHotel.thumbnail">
+        <img [src]="selectedHotel.thumbnail" alt="{{ selectedHotel.name }}" />
+      </div>
+
+      <div class="hotel-info-details">
+        <p *ngIf="selectedHotel.address">
+          <strong>Adresse:</strong> {{ selectedHotel.address }}
+        </p>
+        <p *ngIf="selectedHotel.city">
+          <strong>Ville:</strong> {{ selectedHotel.city }}
+        </p>
+        <p *ngIf="selectedHotel.starRating">
+          <strong>Étoiles:</strong> {{ selectedHotel.starRating }}
+        </p>
+        <p *ngIf="selectedHotel.price">
+          <strong>Prix par nuit:</strong> {{ selectedHotel.price }} {{ selectedHotel.currency }}
+        </p>
+        <p *ngIf="selectedHotel.description">
+          <strong>Description:</strong> {{ selectedHotel.description }}
+        </p>
+      </div>
+
+      <!-- Booking Form -->
+      <div class="booking-form">
+        <h3>Réserver cet hôtel</h3>
+
+        <div class="form-group">
+          <label for="checkIn">Date d'arrivée:</label>
+          <input type="date" id="checkIn" [(ngModel)]="bookingForm.checkIn" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label for="checkOut">Date de départ:</label>
+          <input type="date" id="checkOut" [(ngModel)]="bookingForm.checkOut" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label for="guests">Nombre de personnes:</label>
+          <input type="number" id="guests" [(ngModel)]="bookingForm.guests" min="1" max="10" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label for="rooms">Nombre de chambres:</label>
+          <input type="number" id="rooms" [(ngModel)]="bookingForm.rooms" min="1" max="5" class="form-control" />
+        </div>
+
+        <div class="total-price">
+          <strong>Prix total estimé:</strong> {{ calculateTotalPrice() }} {{ selectedHotel.currency || 'EUR' }}
+        </div>
+
+        <button (click)="bookHotel()" [disabled]="bookingInProgress" class="book-button">
+          {{ bookingInProgress ? 'Réservation en cours...' : 'Réserver maintenant' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Booking Confirmation -->
+  <div class="booking-confirmation" *ngIf="bookingConfirmation">
+    <h2>Réservation confirmée!</h2>
+
+    <div class="confirmation-details">
+      <p><strong>Numéro de réservation:</strong> {{ bookingConfirmation.bookingId }}</p>
+      <p><strong>Hôtel:</strong> {{ bookingConfirmation.hotelName }}</p>
+      <p><strong>Arrivée:</strong> {{ bookingConfirmation.checkIn }}</p>
+      <p><strong>Départ:</strong> {{ bookingConfirmation.checkOut }}</p>
+      <p><strong>Prix total:</strong> {{ bookingConfirmation.totalPrice }} {{ bookingConfirmation.currency }}</p>
+      <p><strong>Statut:</strong> {{ bookingConfirmation.status }}</p>
+    </div>
+
+    <button (click)="backToResults()" class="back-button">Nouvelle recherche</button>
+  </div>
+</div>
