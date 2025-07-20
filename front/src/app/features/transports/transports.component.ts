@@ -14,7 +14,7 @@ import { FlightConverter } from './flight.converter';
   styleUrl: './transports.component.css',
 })
 export class TransportsComponent {
-  /* depature from */
+  /* departure from */
   from = '';
   /* arrival */
   to = '';
