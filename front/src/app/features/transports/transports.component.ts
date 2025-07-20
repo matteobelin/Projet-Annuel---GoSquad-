@@ -75,7 +75,7 @@ export class TransportsComponent {
         // Utilisation du converter pour enrichir les données
         const enriched = this.flightConverter.convert(response || []);
         // Ajout du nom des villes à partir des codes IATA
-        let filtered = enriched.map((f: any) => ({
+        let filtered = enriched.map((f: EnrichedFlight) => ({
           ...f,
           departureCity: this.getCityName(f.departureAirport),
           arrivalCity: this.getCityName(f.arrivalAirport)
