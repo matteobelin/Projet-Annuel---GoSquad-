@@ -44,9 +44,9 @@ export class HotelService {
   private apiUrl = '/makcorps-api/auth';
   private authToken: string | null = null;
 
-  // Default credentials - in a real app, these would be securely stored or provided by the user
-  private username = 'gmutikanga';
-  private password = 'Gosquad2025';
+  // Credentials are now securely retrieved from environment variables
+  private username = (window as any).__env?.HOTEL_API_USERNAME || '';
+  private password = (window as any).__env?.HOTEL_API_PASSWORD || '';
 
   constructor(private http: HttpClient) {}
 
