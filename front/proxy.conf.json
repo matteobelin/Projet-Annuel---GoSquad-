@@ -9,7 +9,7 @@
     "changeOrigin": true,
     "pathRewrite": { "^/hotels-api": "" },
     "headers": {
-      "X-RapidAPI-Key": "b37e688798msh6ff35ede1c3c872p1f8708jsnd45541fee169",
+      "X-RapidAPI-Key": "${RAPIDAPI_KEY}",
       "X-RapidAPI-Host": "hotels-com-free.p.rapidapi.com"
     }
   },
