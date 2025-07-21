@@ -29,7 +29,7 @@
 }
 
 .create-btn {
-  background-color: #007bff;
+  background-color: #B481EC;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -43,7 +43,7 @@
 }
 
 .create-btn:hover {
-  background-color: #0056b3;
+  background-color: #B481EC;
 }
 
 .voyages-content {
@@ -176,7 +176,7 @@
 
 .voyage-card {
   background: #f8f9fa;
-  border: 1px solid #e9ecef;
+  border: 1px solid #b481ec;
   border-radius: 8px;
   padding: 20px;
   transition: box-shadow 0.2s;
@@ -192,7 +192,7 @@
   align-items: center;
   margin-bottom: 15px;
   padding-bottom: 15px;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid #b481ec;
 }
 
 .voyage-title {
@@ -227,7 +227,7 @@
 }
 
 .info-item i {
-  color: #007bff;
+  color: #B481EC;
   width: 16px;
   text-align: center;
 }
@@ -240,7 +240,7 @@
 
 .btn {
   padding: 8px 16px;
-  border-radius: 6px;
+  border-radius: 60px;
   font-weight: 500;
   cursor: pointer;
   display: flex;
@@ -253,31 +253,31 @@
 }
 
 .btn-outline-primary {
-  color: #007bff;
-  border-color: #007bff;
-  background: transparent;
+  color: #B481EC;
+  border-color: #B481EC;
+  background: #f4ebff;
 }
 
 .btn-outline-primary:hover {
-  background: #007bff;
+  background: #B481EC;
   color: white;
 }
 
 .btn-outline-secondary {
-  color: #6c757d;
-  border-color: #6c757d;
-  background: transparent;
+  color: #fdad00;
+  border-color: #fdad00;
+  background: #f9eda540;;
 }
 
 .btn-outline-secondary:hover {
-  background: #6c757d;
+  background: #fdad00;
   color: white;
 }
 
 .btn-outline-danger {
   color: #dc3545;
   border-color: #dc3545;
-  background: transparent;
+  background: #ff00001c;
 }
 
 .btn-outline-danger:hover {

@@ -1,9 +1,6 @@
 <div class="client-list-container">
   <!-- Header avec bouton d'ajout et filtre -->
   <div class="header-actions">
-    <button class="btn btn-add-client" (click)="onAddCustomer()">
-      Ajouter un client
-    </button>
 
     <!-- Champ de filtre -->
     <div class="filter-container">
@@ -16,6 +13,12 @@
                (input)="filterText.set($any($event.target).value)" />
       </div>
     </div>
+
+    <button class="btn btn-add-client" (click)="onAddCustomer()">
+    <span class="icon">➕</span>
+      Ajouter un client
+    </button>
+
   </div>
 
   <div *ngIf="filteredCustomers().length === 0" class="no-clients">
@@ -30,7 +33,7 @@
       <th>Nom</th>
       <th>Prénom</th>
       <th>Email</th>
-      <th></th>
+      <th>Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -44,7 +47,10 @@
       <td>{{ customer.email }}</td>
       <td class="actions">
         <button (click)="$event.stopPropagation(); onDeleteCustomer(customer.uniqueCustomerId!)"
-                class="btn btn-delete">Supprimer</button>
+                class="btn btn-delete">
+          <span class="icon">🗑️</span>
+          Supprimer
+        </button>
       </td>
     </tr>
     </tbody>

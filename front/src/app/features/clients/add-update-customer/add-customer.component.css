@@ -10,7 +10,8 @@
   background-color: #fff;
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(180, 129, 236, 0.1);
+  border: 1px solid #F4EBFF;
 }
 
 .customer-header {
@@ -45,15 +46,16 @@
 
 .info-group input {
   padding: 0.5rem;
-  border: 1px solid #ccc;
+  border: 1px solid #F4EBFF;
   border-radius: 6px;
   font-size: 1rem;
+  color: #B481EC;
 }
 
 .info-group input:focus {
   outline: none;
-  border-color: #3f51b5;
-  box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
+  border-color: #B481EC;
+  box-shadow: 0 0 0 2px rgba(180, 129, 236, 0.2);
 }
 
 .actions {
@@ -74,7 +76,7 @@
 
 .btn-back {
   padding: 10px 16px;
-  background-color: #6c757d;
+  background-color: #B481EC;
   color: white;
   border: none;
 
@@ -86,50 +88,51 @@
 }
 
 .btn-back:hover {
-  background-color: #5a6268;
+  background-color: #9A68D3;
 }
 
 .btn-edit {
-  background-color: #007bff;
+  background-color: #B481EC;
   color: white;
 }
 
 .btn-edit:hover:not(:disabled) {
-  background-color: #0056b3;
+  background-color: #9A68D3;
 }
 
 .btn-edit:disabled {
-  background-color: #9fa8da;
+  background-color: #F4EBFF;
+  color: #9A68D3;
   cursor: not-allowed;
 }
 
 
 .btn-doc {
-  background-color: #f8f9fa; /* gris très clair */
-  color: #343a40; /* gris foncé pour le contraste */
-  border: 1px solid #ced4da;
+  background-color: #F4EBFF; /* couleur secondaire */
+  color: #B481EC; /* couleur principale pour le contraste */
+  border: 1px solid #B481EC;
   border-radius: 6px;
   padding: 10px 18px;
   cursor: pointer;
   font-weight: 600;
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 5px rgba(180, 129, 236, 0.1);
   margin-top: 10px;
   display: inline-block;
 }
 
 .btn-doc:hover {
-  background-color: #e2e6ea;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #E9DAFF;
+  box-shadow: 0 4px 8px rgba(180, 129, 236, 0.2);
 }
 
 .update{
-  background-color: #0d6efd;
-  color: #f8f9fa;
+  background-color: #B481EC;
+  color: #ffffff;
 }
 
 .update:hover {
-  background-color: #0b5ed7;
+  background-color: #9A68D3;
 }
 
 .iso{
@@ -137,9 +140,9 @@
 }
 
 .customer-id {
-  color: #666;
+  color: #B481EC;
   font-size: 14px;
-  background-color: #f8f9fa;
+  background-color: #F4EBFF;
   padding: 4px 8px;
   border-radius: 4px;
 }
