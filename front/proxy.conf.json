@@ -4,5 +4,21 @@
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
+  },
+  "/hotels-api": {
+    "target": "https://hotels-com-free.p.rapidapi.com",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": { "^/hotels-api": "" },
+    "headers": {
+      "X-RapidAPI-Key": "${RAPIDAPI_KEY}",
+      "X-RapidAPI-Host": "hotels-com-free.p.rapidapi.com"
+    }
+  },
+  "/makcorps-api": {
+    "target": "https://api.makcorps.com",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": { "^/makcorps-api": "" }
   }
 }
