@@ -225,13 +225,14 @@ export class VoyageDetailComponent implements OnInit {
 
       const head = [['Nom', 'Ville', 'Pays','Date', 'Prix Unitaire TTC', 'Participants', "Prix Total TTC"]];
 
-      const activityMap = new Map<number, { activity: CustomerActivityResponse, count: number }>();
+      const activityMap = new Map<string, { activity: CustomerActivityResponse, count: number }>();
 
       this.customerActivities.forEach(activity => {
-        if (activityMap.has(activity.activityId)) {
-          activityMap.get(activity.activityId)!.count += 1;
+        const key = `${activity.activityId}-${activity.startDate}`;
+        if (activityMap.has(key)) {
+          activityMap.get(key)!.count += 1;
         } else {
-          activityMap.set(activity.activityId, { activity, count: 1 });
+          activityMap.set(key, { activity, count: 1 });
         }
       });
 
