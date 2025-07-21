@@ -51,8 +51,11 @@ public class JWTInterceptor implements HandlerInterceptor {
 
             return true;
         }catch (Exception e){
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Invalid or expired token");
+            response.getWriter().write("{\"error\": \"Invalid or expired token\"}");
+            response.getWriter().flush();
             return false;
         }
 
