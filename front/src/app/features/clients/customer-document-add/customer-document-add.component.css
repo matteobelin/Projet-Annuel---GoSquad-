@@ -52,11 +52,12 @@ input[type="date"] {
 
 h3{
   padding-bottom: 15px;
+  color: #B481EC;
 }
 
 /* Bouton personnalisé pour le file input */
 .btn-file-select {
-  background-color: #007bff;
+  background-color: #B481EC;
   color: #fff;
   padding: 8px 16px;
   border: none;
@@ -67,7 +68,7 @@ h3{
 }
 
 .btn-file-select:hover {
-  background-color: #0056b3;
+  background-color: #B481EC;
 }
 
 img {
@@ -98,22 +99,22 @@ img {
 }
 /* Bouton Valider avec classe .btn-edit */
 .btn-edit {
-  background-color: #007bff;
+  background-color: #B481EC;
   color: #fff;
 }
 
 .btn-edit:disabled {
-  background-color: #9fa8da;
+  background-color: #e3ccfd;
   cursor: not-allowed;
 }
 
 .btn-edit:hover:not(:disabled) {
-  background-color: #0056b3;
+  background-color: #B481EC;
 }
 
 .btn-back {
   padding: 10px 16px;
-  background-color: #6c757d;
+  background-color: #000000;
   color: white;
   border: none;
   cursor: pointer;

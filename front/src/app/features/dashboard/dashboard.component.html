@@ -3,12 +3,148 @@
   [title]="'Dashboard'"
 />
 
-<!--<div class="advisor-list">-->
-<!--  @for (advisor of advisors; track advisor.id) {-->
-<!--    <div class="advisor-card">-->
-<!--      <p class="name">{{ advisor.firstname }} {{ advisor.lastname }}</p>-->
-<!--      <p class="contact">Téléphone : {{ advisor.phone_number }}</p>-->
-<!--      <p class="email">Email : {{ advisor.email }}</p>-->
-<!--    </div>-->
-<!--  }-->
-<!--</div>-->
+<div class="dashboard-container">
+  <!-- Statistics Cards -->
+  <div class="stats-container">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-content">
+        <h3>Clients</h3>
+        <p class="stat-number">{{ totalCustomers }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-plane"></i>
+      </div>
+      <div class="stat-content">
+        <h3>Voyages</h3>
+        <p class="stat-number">{{ totalVoyages }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-calendar-alt"></i>
+      </div>
+      <div class="stat-content">
+        <h3>Voyages à venir</h3>
+        <p class="stat-number">{{ upcomingVoyages }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-hiking"></i>
+      </div>
+      <div class="stat-content">
+        <h3>Activités</h3>
+        <p class="stat-number">{{ totalActivities }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Clients Section -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Clients récents</h2>
+      <button class="view-all-btn">Voir tous</button>
+    </div>
+
+    <div class="loading-indicator" *ngIf="loadingCustomers">
+      <i class="fas fa-spinner fa-spin"></i> Chargement des clients...
+    </div>
+
+    <div class="card-list" *ngIf="!loadingCustomers">
+      @for (customer of customers.slice(0, 4); track customer.uniqueCustomerId) {
+        <div class="card">
+          <div class="card-header">
+            <h3>{{ customer.firstName }} {{ customer.lastName }}</h3>
+          </div>
+          <div class="card-content">
+            <p><i class="fas fa-envelope"></i> {{ customer.email }}</p>
+          </div>
+          <div class="card-footer">
+            <button class="action-btn">Voir détails</button>
+          </div>
+        </div>
+      }
+
+      <div class="empty-state" *ngIf="customers.length === 0">
+        <p>Aucun client trouvé</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Voyages Section -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Voyages récents</h2>
+      <button class="view-all-btn">Voir tous</button>
+    </div>
+
+    <div class="loading-indicator" *ngIf="loadingVoyages">
+      <i class="fas fa-spinner fa-spin"></i> Chargement des voyages...
+    </div>
+
+    <div class="card-list" *ngIf="!loadingVoyages">
+      @for (voyage of voyages.slice(0, 4); track voyage.uniqueTravelId) {
+        <div class="card">
+          <div class="card-header">
+            <h3>{{ voyage.title }}</h3>
+          </div>
+          <div class="card-content">
+            <p><i class="fas fa-map-marker-alt"></i> {{ voyage.destination }}</p>
+            <p><i class="fas fa-calendar"></i> {{ voyage.startDate | date:'dd/MM/yyyy' }} - {{ voyage.endDate | date:'dd/MM/yyyy' }}</p>
+            <p><i class="fas fa-euro-sign"></i> Budget: {{ voyage.budget }}</p>
+            <p><i class="fas fa-users"></i> {{ voyage.participants?.length || 0 }} participants</p>
+          </div>
+          <div class="card-footer">
+            <button class="action-btn">Voir détails</button>
+          </div>
+        </div>
+      }
+
+      <div class="empty-state" *ngIf="voyages.length === 0">
+        <p>Aucun voyage trouvé</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activities Section -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Activités récentes</h2>
+      <button class="view-all-btn">Voir tous</button>
+    </div>
+
+    <div class="loading-indicator" *ngIf="loadingActivities">
+      <i class="fas fa-spinner fa-spin"></i> Chargement des activités...
+    </div>
+
+    <div class="card-list" *ngIf="!loadingActivities">
+      @for (activity of activities.slice(0, 4); track activity.id) {
+        <div class="card">
+          <div class="card-header">
+            <h3>{{ activity.name }}</h3>
+          </div>
+          <div class="card-content">
+            <p><i class="fas fa-info-circle"></i> {{ activity.description }}</p>
+            <p><i class="fas fa-map-marker-alt"></i> {{ activity.city }}, {{ activity.country }}</p>
+            <p><i class="fas fa-euro-sign"></i> Prix: {{ activity.gross_price || (activity.netPrice * (1 + activity.vatRate / 100)) }}</p>
+          </div>
+          <div class="card-footer">
+            <button class="action-btn">Voir détails</button>
+          </div>
+        </div>
+      }
+
+      <div class="empty-state" *ngIf="activities.length === 0">
+        <p>Aucune activité trouvée</p>
+      </div>
+    </div>
+  </div>
+</div>
