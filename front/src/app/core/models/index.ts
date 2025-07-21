@@ -13,18 +13,66 @@ export interface Client {
 }
 
 /**
- * Voyage interface.
+ * Voyage interface - matches backend GetTravelResponseDTO
  */
 export interface Voyage {
-  id: number;
-  titre: string;
+  uniqueTravelId: string;
+  title: string;
+  description?: string;
+  startDate: string;
+  endDate: string;
   destination: string;
-  date_depart: string;
-  date_retour: string;
-  participants: number;
-  budget: number;
-  client_id: number;
-  statut: 'PLANIFIE' | 'EN_COURS' | 'TERMINE';
+  budget?: number;
+  groupId?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  companyCode?: string;
+  statut?: string;
+  prix?: number;
+  nbParticipantsMax?: number;
+  adresse?: {
+    rue?: string;
+    ville: string;
+    codePostal?: string;
+    pays?: string;
+  };
+  categorie?: {
+    nom: string;
+    description?: string;
+  };
+  conseiller?: {
+    nom: string;
+    prenom: string;
+    email?: string;
+    telephone?: string;
+  };
+  groups?: Array<{
+    id?: number;
+    name?: string;
+    visible?: boolean;
+    createdAt?: string;
+    updatedAt?: string;
+  }>;
+  participants?: Array<{
+    uniqueCustomerId: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber?: string;
+    birthDate?: string;
+    companyCode?: string;
+  }>;
+  // Legacy field for backward compatibility
+  groupes?: Array<{
+    id?: number;
+    nom?: string;
+    participants?: Array<{
+      id?: number;
+      nom: string;
+      prenom: string;
+      email?: string;
+    }>;
+  }>;
 }
 
 /**

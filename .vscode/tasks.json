@@ -1,0 +1,14 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "Run backend tests after customer_group data fix",
+			"command": "./gradlew.bat test",
+			"group": "test",
+			"problemMatcher": [
+				"$javac"
+			]
+		}
+	]
+}

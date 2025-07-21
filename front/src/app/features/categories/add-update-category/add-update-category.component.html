@@ -1,0 +1,50 @@
+
+
+<div class="modal-backdrop">
+  <div class="modal-content">
+
+    <div class="category-detail-container">
+      <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" class="category-card">
+
+      <div class="category-header">
+          <h2>{{ mode === 'edit' ? 'Modifier une category' : 'Ajouter une category' }}</h2>
+        </div>
+
+        <div class="category-info">
+          @if (mode === 'edit') {
+            <div class="info-group">
+
+              <label for="categorySelect">Sélectionner une catégorie : *</label>
+              <select id="categorySelect" formControlName="categoryId">
+                <option [ngValue]="null" disabled>Choisir une catégorie</option>
+                @for (category of categories$ | async; track category.id) {
+                  <option [ngValue]="category.id">{{ category.name }}</option>
+                }
+              </select>
+
+
+
+            </div>
+            <div class="info-group"><label>Nouveau nom de la catégorie: *</label><input formControlName="newCategoryName" /></div>
+          }
+          @else {
+            <div class="info-group"><label>Nom de la catégorie : *</label><input formControlName="categoryName"  /></div>
+          }
+        </div>
+
+        <div class="actions">
+          <div class="actions-left">
+            <button type="button" class="btn-back" (click)="onClose()">Annuler</button>
+          </div>
+          <div class="actions-right">
+            <button type="submit" class="btn-edit" [disabled]="isSubmitDisabled()" >  {{ mode === 'edit' ? 'Valider' : 'Ajouter' }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+

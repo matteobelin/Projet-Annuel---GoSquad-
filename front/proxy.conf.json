@@ -1,7 +1,9 @@
 {
-  "/api": {
+  "/api/*": {
     "target": "http://localhost:8080",
-    "secure": false
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
   },
   "/hotels-api": {
     "target": "https://hotels-com-free.p.rapidapi.com",

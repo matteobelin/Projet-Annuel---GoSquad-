@@ -1,5 +1,105 @@
 <app-main-header
   [icon]="'fas fa-map'"
-    [title]="'Voyages'"
+  [title]="'Voyages'"
 ></app-main-header>
-<p>voyages works!</p>
+
+<div class="voyages-container">
+  <!-- Vue principale des voyages -->
+  <div *ngIf="!showWizard" class="voyages-main">
+    <div class="voyages-header">
+      <h2>Gestion des voyages</h2>
+      <button class="btn btn-primary create-btn" (click)="openWizard()">
+        <i class="fas fa-plus"></i>
+        Créer un nouveau voyage
+      </button>
+    </div>
+
+    <div class="voyages-content">
+      <!-- Loading state -->
+      <div *ngIf="loading" class="loading-state">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Chargement des voyages...</p>
+      </div>
+
+      <!-- Error state -->
+      <div *ngIf="error && !loading" class="error-state">
+        <i class="fas fa-exclamation-circle"></i>
+        <h3>Erreur</h3>
+        <p>{{ error }}</p>
+        <button class="btn btn-primary" (click)="loadVoyages()">
+          <i class="fas fa-redo"></i>
+          Réessayer
+        </button>
+      </div>
+
+      <!-- Empty state -->
+      <div *ngIf="!loading && !error && voyages.length === 0" class="placeholder">
+        <i class="fas fa-map"></i>
+        <h3>Aucun voyage pour le moment</h3>
+        <p>Commencez par créer votre premier voyage en cliquant sur le bouton ci-dessus.</p>
+      </div>
+
+      <!-- Voyage list -->
+      <div *ngIf="!loading && !error && voyages.length > 0" class="voyages-list">
+        <div class="voyage-card" *ngFor="let voyage of voyages">
+          <div class="voyage-header">
+            <h3 class="voyage-title">{{ voyage.title }}</h3>
+            <span class="voyage-date">{{ voyage.startDate | date:'mediumDate' }} - {{ voyage.endDate | date:'mediumDate' }}</span>
+          </div>
+
+          <div class="voyage-details">
+            <div class="voyage-info">
+              <div class="info-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>{{ voyage.destination }}</span>
+              </div>
+              <div class="info-item">
+                <i class="fas fa-euro-sign"></i>
+                <span>{{ voyage.budget | currency:'EUR' }} budget total</span>
+              </div>
+              <!-- <div class="info-item" *ngIf="voyage.groups && voyage.groups.length > 0">
+                <i class="fas fa-users"></i>
+                <span>{{ voyage.groups[0].name }}</span>
+              </div>
+              <div class="info-item">
+                <i class="fas fa-user-friends"></i>
+                <span>{{ voyage.participants?.length || 0 }} voyageur{{ voyage.participants?.length > 1 ? 's' : '' }}</span>
+              </div> -->
+              <div class="info-item">
+                <i class="fas fa-hashtag"></i>
+                <span>ID: {{ voyage.uniqueTravelId }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="voyage-actions">
+            <button class="btn btn-outline-primary" (click)="viewVoyage(voyage)">
+              <i class="fas fa-eye"></i>
+              Voir
+            </button>
+            <button class="btn btn-outline-secondary" (click)="editVoyage(voyage)">
+              <i class="fas fa-edit"></i>
+              Modifier
+            </button>
+            <!-- Bouton Groupes supprimé car la gestion des groupes est intégrée à la modification du voyage -->
+            <button class="btn btn-outline-danger" (click)="deleteVoyage(voyage)">
+              <i class="fas fa-trash"></i>
+              Supprimer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wizard de création -->
+  <div *ngIf="showWizard" class="wizard-container">
+    <div class="wizard-header">
+      <button class="btn btn-secondary back-btn" (click)="closeWizard()">
+        <i class="fas fa-arrow-left"></i>
+        Retour à la liste
+      </button>
+    </div>
+    <app-voyage-wizard (voyageCreated)="onWizardSuccess()"></app-voyage-wizard>
+  </div>
+</div>

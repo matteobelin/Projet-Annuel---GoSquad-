@@ -2,12 +2,17 @@ package com.gosquad.infrastructure.persistence.customers.impl;
 
 import com.gosquad.core.exceptions.ConstraintViolationException;
 import com.gosquad.core.exceptions.NotFoundException;
+import com.gosquad.infrastructure.config.DataConfig;
 import com.gosquad.infrastructure.persistence.Repository;
 import com.gosquad.infrastructure.persistence.customers.CustomerModel;
 import com.gosquad.infrastructure.persistence.customers.CustomerRepository;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,12 +128,6 @@ public class CustomerRepositoryImpl extends Repository<CustomerModel> implements
             updates.put("address_id", customer.getAddressId());
             updates.put("billing_address_id", customer.getBillingAddressId());
             updates.put("birth_date", customer.getBirthDate());
-            updates.put("id_card_number", customer.getIdCardNumber());
-            updates.put("id_card_expiration_date", customer.getIdCardExpirationDate());
-            updates.put("id_card_copy_url", customer.getIdCardCopyUrl());
-            updates.put("passport_number", customer.getPassportNumber());
-            updates.put("passport_expiration_date", customer.getPassportExpirationDate());
-            updates.put("passport_copy_url", customer.getPassportCopyUrl());
 
 
             updateBy("id",customer.getId(),updates);
@@ -137,5 +136,62 @@ public class CustomerRepositoryImpl extends Repository<CustomerModel> implements
         }
     }
 
+    @Override
+    public List<CustomerModel> findAllById(List<Long> ids) throws SQLException, ConstraintViolationException {
+        if (ids == null || ids.isEmpty()) {
+            return new ArrayList<>();
+        }
+        
+        try {
+            List<CustomerModel> results = new ArrayList<>();
+            // Create placeholders for the IN clause
+            String placeholders = String.join(",", Collections.nCopies(ids.size(), "?"));
+            String query = "SELECT * FROM " + TABLE_NAME + " WHERE id IN (" + placeholders + ")";
+            
+            try (Connection connection = DataConfig.getConnection();
+                 PreparedStatement stmt = connection.prepareStatement(query)) {
+                
+                for (int i = 0; i < ids.size(); i++) {
+                    stmt.setLong(i + 1, ids.get(i));
+                }
+                
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    results.add(mapResultSetToEntity(rs));
+                }
+            }
+            
+            return results;
+        } catch (SQLException e) {
+            throw new ConstraintViolationException("Error finding customers by IDs: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<CustomerModel> getCustomersByGroupId(int groupId) throws ConstraintViolationException {
+        List<CustomerModel> result;
+        try {
+            String query = "SELECT c.* FROM customer c " +
+                          "INNER JOIN customer_group cg ON c.id = cg.customer_id " +
+                          "WHERE cg.group_id = ?";
+            
+            List<CustomerModel> results = new ArrayList<>();
+            
+            try (Connection connection = DataConfig.getConnection();
+                 PreparedStatement stmt = connection.prepareStatement(query)) {
+                
+                stmt.setInt(1, groupId);
+                
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    results.add(mapResultSetToEntity(rs));
+                }
+            }
+            result = results;
+        } catch (SQLException e) {
+            throw new ConstraintViolationException("Error finding customers by group ID: " + e.getMessage());
+        }
+        return result;
+    }
 
 }

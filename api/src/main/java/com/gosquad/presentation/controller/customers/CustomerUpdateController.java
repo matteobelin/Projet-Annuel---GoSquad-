@@ -47,7 +47,7 @@ public class CustomerUpdateController {
 
     @PutMapping("/updateCustomerPassport")
     public ResponseEntity<?> updateCustomerPassport(HttpServletRequest request,
-                                                    @RequestPart("dto") CustomerRequestDTO body,
+                                                    @RequestPart("customer") CustomerRequestDTO body,
                                                     @RequestPart("file") MultipartFile passport) {
         return handleUpdate(() -> {
             String companyCode = null;
@@ -66,7 +66,7 @@ public class CustomerUpdateController {
 
     @PutMapping("/updateCustomerIdCard")
     public ResponseEntity<?> updateCustomerIdCard(HttpServletRequest request,
-                                                  @RequestPart("dto") CustomerRequestDTO body,
+                                                  @RequestPart("customer") CustomerRequestDTO body,
                                                   @RequestPart("file") MultipartFile idCard) {
         return handleUpdate(() -> {
             String companyCode = null;

@@ -10,6 +10,7 @@ import com.gosquad.usecase.addresses.AddressService;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.List;
 
 @Service
 public class AddressServiceImpl implements AddressService {
@@ -30,6 +31,11 @@ public class AddressServiceImpl implements AddressService {
     public AddressEntity getAddressByAddressLineByCityId(String addressLine, int cityId) throws SQLException, NotFoundException, ConstraintViolationException {
         AddressModel addressModel = addressRepository.getByAddressLineByCityId(addressLine, cityId);
         return addressMapper.modelToEntity(addressModel);
+    }
+
+    public List<AddressEntity> findByIds(List<Integer> ids) throws SQLException{
+        List<AddressModel> addressModels = addressRepository.findByIds(ids);
+        return addressMapper.modelsToEntities(addressModels);
     }
 
     public void addAddress(AddressEntity address) throws SQLException{
