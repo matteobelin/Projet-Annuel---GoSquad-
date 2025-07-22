@@ -190,14 +190,14 @@
 
 
 .btn-delete {
-  background: linear-gradient(135deg, rgba(62, 57, 66, 0.96) 0%, #bf97ef 100%);
-  color: white;
+  color: #dc3545;
+  border-color: #dc3545;
+  background: #ff00001c;
 }
 
-
 .btn-delete:hover {
-  background: linear-gradient(135deg, #9A68D3 0%, #8351BC 100%);
-  box-shadow: 0 4px 8px rgba(180, 129, 236, 0.3);
+  background: #dc3545;
+  color: white;
 }
 
 .btn-view:active,

@@ -55,14 +55,15 @@
         <div class="activity-price">{{ activity.gross_price }}€</div>
         <div class="activity-actions">
 
-          <button class="btn btn-primary" *ngIf="!isTravelActivityMode" (click)="onEdit(activity.id)">
-            Modifier
-          </button>
-        </div>
-        <div class="activity-actions">
-          <button class="btn btn-primary" (click)="AddActivityCustomer(activity.id)" *ngIf="isTravelActivityMode">
-            ✨ Réserver
-          </button>
+          @if(isTravelActivityMode){
+            <button class="btn btn-primary" (click)="AddActivityCustomer(activity.id)">
+              ✨ Réserver
+            </button>
+          } @else {
+            <button class="btn btn-primary" (click)="onEdit(activity.id)">
+              Modifier
+            </button>
+          }
         </div>
       </div>
     </div>
