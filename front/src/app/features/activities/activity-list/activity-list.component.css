@@ -15,7 +15,7 @@
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: #B481EC;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -35,7 +35,7 @@
 
 .activity-card {
   background: white;
-  border-radius: 20px;
+  border-radius: 10px;
   padding: 2rem;
   box-shadow: 0 20px 40px rgba(0,0,0,0.1);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -51,8 +51,6 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
-  border-radius: 20px 20px 0 0;
 }
 
 .activity-card:hover {
@@ -69,7 +67,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .activity-name {
@@ -81,7 +79,7 @@
 }
 
 .activity-category {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: #B481EC;
   color: white;
   padding: 0.5rem 1rem;
   border-radius: 25px;
@@ -96,7 +94,7 @@
   color: #4a5568;
   font-size: 1rem;
   line-height: 1.6;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
 }
 
 .activity-details {
@@ -118,7 +116,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea, #764ba2);
   border-radius: 50%;
   color: white;
   font-size: 0.75rem;
@@ -135,14 +132,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 1.5rem;
+  padding-top: 0.5rem;
   border-top: 1px solid rgba(0,0,0,0.1);
 }
 
 .activity-price {
   font-size: 1.75rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: #B481EC;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -168,7 +165,7 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: #B481EC;
   color: white;
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
@@ -229,7 +226,7 @@
   display: block;
   padding: 0.75rem 1.25rem;
   font-size: 1rem;
-  border: 2px solid #667eea;
+  border: 1px solid #B481EC;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
