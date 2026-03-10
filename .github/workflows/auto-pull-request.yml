@@ -1,0 +1,31 @@
+name: Auto Pull Request from develop to main
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create Pull Request
+        run: |
+          gh pr create \
+            --base main \
+            --head develop \
+            --title "Merge develop into main" \
+            --body "Automated pull request created by the auto-pull-request workflow. This PR merges the latest changes from \`develop\` into \`main\`." \
+            --label automated-pr \
+            || echo "A pull request already exists for develop → main, skipping creation."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
